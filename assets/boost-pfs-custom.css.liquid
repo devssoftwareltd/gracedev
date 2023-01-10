@@ -1,0 +1,97 @@
+/*********************** Custom CSS for Boost Filter & Search  ************************/
+{% assign breakpointMobile = '767px' %}
+{% assign breakpointDesktop = '768px' %}
+{% assign searchBoxMobileHeight = '64px' %}
+/**************************** Place your custom css below  ****************************/
+.boost-pfs-filter-option-block {padding-top: 0;}
+.boost-pfs-filter-option-block, .boost-pfs-filter-selection-wrapper {border: none; margin: 0;}
+.boost-pfs-filter-option-block .boost-pfs-filter-block-title, .boost-pfs-filter-selection-wrapper .boost-pfs-filter-block-title {border-bottom: 1px solid #ccc;}
+.boost-pfs-filter-option-block .boost-pfs-filter-block-title h3, .boost-pfs-filter-selection-wrapper .boost-pfs-filter-block-title h3 {border: none; font-size: 18px; font-weight: lighter; line-height: 35px;}
+.boost-pfs-filter-option-block .boost-pfs-filter-block-title h3 span:before {content: '-'; border: none; font-size: 25px; position: absolute; right: 0;}
+.boost-pfs-filter-option-block .boost-pfs-filter-block-title h3 span.up:before {content: '+'; right: 5px;}
+.boost-pfs-filter-clear, .boost-pfs-filter-clear-all {margin-top: 9px;}  
+.boost-pfs-filter-clear {padding-right: 30px;}
+.boost-pfs-filter-top-sorting select {width: auto; display: inline-block; padding-right: 30px;}
+@media screen and (max-width: {{breakpointMobile}}) {
+  	.boost-pfs-filter-top-sorting {width: 100%; margin-top: 20px;}
+    .boost-pfs-filter-tree-mobile-button {margin-top: 0 !important;}
+}
+
+.sidebar ul li {
+    padding: 0 9px;
+}
+
+.boost-pfs-addtocart-btn>span svg{
+	margin-bottom:0;
+}
+
+.boost-pfs-action-list-enabled .boost-pfs-select-option-wrapper .boost-pfs-quickview-cart-btn{
+	padding:0;
+}
+
+.boost-pfs-quickview-title{
+	font-weight: 300 !important;
+}
+
+.boost-pfs-action-list-enabled .boost-pfs-select-option-wrapper .boost-pfs-quickview-cart-btn,
+.boost-pfs-quickview-selector-wrapper .boost-pfs-swatch-element:not(.boost-pfs-quickview-option-color) input:checked+label,
+button#boost-pfs-quickview-cart-btn{
+  
+    background: rgba(88,89,91,1) !important;
+    color: rgba(255,255,255,1) !important;
+    border-color: rgba(88,89,91,1) !important;
+}
+
+
+.boost-pfs-filter-products .smartwishlist {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+body.search .thumbnail .info {
+  text-align: left;
+}
+
+.bc-al-style2 .boost-pfs-addtocart-btn {
+border-radius: 0px;
+}
+
+.boost-pfs-filter-products .thumbnail a {
+  padding-bottom: 0;
+}
+
+
+body.collection .thumbnail .info span.title {
+  line-height: 20px;
+  width: 100%;
+}
+
+.boost-pfs-filter-products .sc-pb-element .info, .boost-custom-html .collection_swatches {
+	text-align: left;
+}
+
+.oke-sr {
+  display: block !important;
+}
+
+.boost-pfs-filter-products .collection_swatches {
+  text-align: left;
+}
+
+.boost-pfs-filter-products.products .thumbnail img {
+	margin-bottom: 0px;
+}
+
+.boost-pfs-filter-products .info {
+	line-height: 1.4em;
+text-align: left !important;
+}
+
+.okeReviews {
+	margin-top: 3px;
+}
+
+.thumbnail .info {
+  text-align: center;
+}

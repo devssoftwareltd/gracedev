@@ -1,0 +1,106 @@
+<div class="sixteen columns">
+  <div class="section clearfix">
+    <h1>{{ page.title }}</h1>
+  </div>
+</div>
+{% if customer %}
+  {% if customer.email == 'molly.d@graceandlace.com' or customer.email == 'nicole.t@graceandlace.com' or customer.email == 'support@graceandlace.com' or customer.email == 'marketing@graceandlace.com' %}
+  <div class="sixteen columns">
+    <div class="section clearfix">  
+      <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+      <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+      <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+      <form>
+        <input type="text" class="created_at_min" value="" placeholder= "Start Date">
+        <input type="text" class="created_at_max" value="" placeholder= "End Date">
+        <button class="get_data">Get Activities</button>
+      </form>
+	  <br>
+      <table class="rules_table" style="display: none;">
+          <thead>
+            <tr>
+              <th>Customer Email</th>
+              <th>Rule Name</th>
+              <th>Rule Points</th>
+              <th>Approved/Pending</th>
+              <th>Actions</th>
+            <tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    $( ".created_at_min" ).datepicker();
+    $( ".created_at_max" ).datepicker();
+
+
+    $('.get_data').on('click', function(e){
+      e.preventDefault();
+      var min_date = $( ".created_at_min" ).val();
+      var max_date = $( ".created_at_max" ).val();
+      var date1 = new Date(min_date);
+      date1= date1.toISOString();
+      var date2 = new Date(max_date);
+      date2= date2.toISOString();
+      console.log(date1);console.log(date2);
+      $.ajax({
+         method: "GET",
+         data: { created_at_min: date1, created_at_max: date2, limit: 500 },
+         url: "http://api.graceandlace.com/bgsdev/dashboard-activities.php",
+         dataType: 'json', 
+         success:function(json){
+           $('.rules_table tbody').empty();
+           //console.log(json.activities);
+           var get_values= json.activities;
+           console.log(get_values);
+           for(var i=0;i<get_values.length;i++){
+             var state_value = get_values[i].state;
+             if(state_value == 'approved' || state_value == 'declined'){
+              state_value = get_values[i].state;
+             }else{
+              if(get_values[i].rule.name == 'sms' || get_values[i].rule.name == 'facebook_vip' || get_values[i].rule.name == 'tiktok' || get_values[i].rule.name == 'pinterest' || get_values[i].rule.name == 'pushnotifications'){
+              	state_value = '<button class="approve_decline_state" data-rule="'+get_values[i].rule.name+'" data-merchant="'+get_values[i].customer.merchant_id+'" data-value="approved">approve</button><button class="approve_decline_state" data-rule="'+get_values[i].rule.name+'" data-merchant="'+get_values[i].customer.merchant_id+'" data-value="declined">decline</button>';
+              	$('.rules_table tbody').append('<tr class="row_'+get_values[i].customer.merchant_id+'_'+get_values[i].rule.name+'"><td>'+get_values[i].customer.email+'</td><td>'+get_values[i].rule.name+'</td><td>'+get_values[i].value+'</td><td>'+get_values[i].state+'</td><td>'+state_value+'</td></tr>');
+              }
+             }
+
+           }
+           $('.rules_table').show();
+         },
+         error:function(){
+           alert("Error");
+         }      
+      });
+    });
+
+    $(document).on('click', '.approve_decline_state', function(e){
+      e.preventDefault();
+      var rule_name = $(this).data('rule');
+      var rule_merchant = $(this).data('merchant');
+      var rule_value = $(this).data('value');
+      $.ajax({
+         method: "GET",
+         data: { rule_name: rule_name, rule_merchant: rule_merchant, rule_value: rule_value },
+         url: "http://api.graceandlace.com/bgsdev/put-activity.php",
+         dataType: 'json', 
+         success:function(response){
+alert('Error');
+         },
+         error:function(){
+           alert('Approved');
+           //alert("Error");
+           $('tr.row_'+rule_merchant+'_'+rule_name).remove();
+         }      
+      });
+    });
+  </script>
+  {% else %}
+	<script>window.location.href= '/'</script>
+  {% endif %}
+{% else %}
+<script>window.location.href= '/'</script>
+{% endif %}

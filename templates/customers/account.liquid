@@ -1,0 +1,146 @@
+{% paginate customer.orders by 5 %}
+  <div class="sixteen columns">
+    <div class="section clearfix" style="text-align: center;">
+      <h1>{{ 'customer.account.details' | t }}</h1>
+      <span style="font-size: 18px;">{{ 'layout.customer.log_out' | t | customer_logout_link }}</span>
+    </div>
+  </div>
+
+  <div class="clear"></div>
+
+  <div class="section clearfix">  
+    <div class="four columns">
+      <div id="customer_detail" class="group">
+        <h4 class="name">{{ customer.name }}</h4>
+        <p class="email note">{{ customer.email }}</p> 
+        <div class="address note">
+          {% if customer.default_address != nil %}
+            <p>{{ customer.default_address.address1 }}</p>
+            {% if customer.default_address.address2 != "" %}
+              <p>{{ customer.default_address.address2 }}</p>
+            {% endif %}
+            <p>{{ customer.default_address.city}}, {% if address.province_code %}{{customer.default_address.province_code}}, {% endif %}{{customer.default_address.country}}</p>
+            <p>{{ customer.default_address.zip}}</p>
+            <p>{{ customer.default_address.phone }}</p>
+          {% endif %}
+            <p><a href="/account/addresses">{{ 'customer.account.view_addresses' | t }} ({{ customer.addresses_count }})</a></p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="twelve columns">
+      <div id="customer_orders">
+        <h4>{{ 'customer.orders.title' | t }}</h4>
+
+        {% if customer.orders.size != 0 %}
+        <table width="100%">
+          <thead>
+            <tr>
+              <th>{{ 'customer.orders.order_number' | t }}</th>
+              <th>{{ 'customer.orders.date' | t }}</th>
+              <th>{{ 'customer.orders.payment_status' | t }}</th>
+              <th>{{ 'customer.orders.fulfillment_status' | t }}</th>
+              
+              <th>{{ 'customer.orders.total' | t }}</th>
+              <th>Refunded Amount</th>
+              {% comment %} 
+              <th>Return</th>
+              {% endcomment %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in customer.orders %}
+            <tr class="{% cycle 'odd', 'even' %} {% if order.cancelled %}cancelled_order{% endif %}">
+                <td>{{ order.name | link_to: order.customer_url }}</td>
+                <td>{{ order.created_at | date: format: "month_day_year" }}</td>
+                <td>{{ order.financial_status_label }}</td>
+                <td>{{ order.fulfillment_status_label }}</td>
+                <td>
+                  <span class="money">{{ order.total_price | money }}</span>
+                </td>
+              	<td data-label="Refunded Amount">{{ order.total_refunded_amount | money }}</td>
+
+                            {% comment %}
+               <td data-label="Request a return">{% if order.financial_status_label !='Refunded' %} <a href="/a/returns?order={{order.order_number}}&email={{customer.email}}"> Request a return </a> {% endif %} </td>  
+              {% endcomment %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p>{{ 'customer.orders.none' | t }}</p>
+        {% endif %}
+
+        {% include 'pagination' with true %}
+      </div>
+    </div>
+  </div>
+{% endpaginate %}
+
+
+
+    {%- comment -%}
+    --------------------------------------------------------------------------------------------------------------------
+    LOYALTY
+    --------------------------------------------------------------------------------------------------------------------
+    {%- endcomment -%}
+
+    <div class="sixteen columns">
+      <div class="section clearfix" id="loyalty-rewards">  
+            {% render 'loyalty-new-dashboard' %}
+            {% render 'loyalty-new-rewards' %}
+            {% render 'loyalty-new-marketplace' %}
+            {% render 'loyalty-new-campaigns' %}
+    	    {% render 'loyalty-new-rules' %}
+            {% render 'loyalty-new-histoy' %}
+            {% render 'loyalty-reference' %}
+      </div>
+    </div>
+
+	{{ 'loyaltylion-main-css.css' | asset_url | stylesheet_tag }}
+    {% render 'loyalty-main-js' %}
+
+
+{%- comment -%}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css">
+
+
+
+{{ 'loyalty-main.css' | asset_url | stylesheet_tag }}
+
+<div class="loyalty-page-container">
+<div class="loyalty-container">
+
+
+
+  {% include 'loyalty-dashboard' %}
+
+  {% include 'loyalty-vip-tiers' %}
+
+  {% include 'loyalty-redemptions' %}
+
+  {% include 'loyalty-referral' %}
+
+  
+  {% include 'loyalty-referral-history' %}
+
+
+
+
+</div>
+</div>
+
+
+
+
+<!-- Main JS file-->
+{{ 'loyalty-main.js' | asset_url | script_tag }}
+{{ 'loyalty-refer-main.js' | asset_url | script_tag }}
+
+<!-- object with all text that is not pulled automatically -->
+{{ 'loyalty-constants.js' | asset_url | script_tag }}
+
+<script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/FOUsYawUt24zmz5czZz90g" async></script>
+
+{%- endcomment -%}

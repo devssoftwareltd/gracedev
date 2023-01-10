@@ -1,0 +1,55 @@
+{% comment %} Please don’t update this content {% endcomment %}
+
+{% layout none %}
+{% paginate collection.products by 50 %}
+  {
+    "products":
+      [
+        {% for product in collection.products %}
+          {
+            "id":{{ product.id }},
+            "position":{{ forloop.index }},
+            "metafields":[
+              
+              {% comment %}
+                Single Metafield
+              {% endcomment %}
+              {% assign v_ProductListingSnippet = product.metafields.okendo["ProductListingSnippet"] %}
+              {% if v_ProductListingSnippet != blank %}
+                {
+                  "namespace": "okendo",
+                  "key": "ProductListingSnippet",
+                  "value": {{ v_ProductListingSnippet | json }}
+                },
+              {% endif %}
+        
+              {% comment %}
+                Single Metafield
+              {% endcomment %}
+              {% assign v_summaryData = product.metafields.okendo["summaryData"] %}
+              {% if v_summaryData != blank %}
+                {
+                  "namespace": "okendo",
+                  "key": "summaryData",
+                  "value": {{ v_summaryData | json }}
+                },
+              {% endif %}
+        
+              {% comment %}
+                Single Metafield
+              {% endcomment %}
+              {% assign v_StarRatingSnippet = product.metafields.okendo["StarRatingSnippet"] %}
+              {% if v_StarRatingSnippet != blank %}
+                {
+                  "namespace": "okendo",
+                  "key": "StarRatingSnippet",
+                  "value": {{ v_StarRatingSnippet | json }}
+                },
+              {% endif %}
+        
+            ]
+          },
+        {% endfor %}
+      ]
+  }
+{% endpaginate %}

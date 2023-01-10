@@ -1,0 +1,70 @@
+{% assign easylockdownLocationsCan = '' | split: ',' %}{% assign easylockdownLocationsCannot = '' | split: ',' %}{% assign easylockdownPasswordItems = '' | split: ',' %}
+{% assign easylockdownNow = 'now' | date:'%s' | times: 1 %}{% assign easylockdownNowWeekDay = easylockdownNow | date:'%u' %}{% assign easylockdownNowMonthDay = easylockdownNow | date:'%d' %}{% assign easylockdownNowHM = easylockdownNow | date:'%H%M' | times: 1 %}{% if customer %}{% assign easylockdownPlacedOrder = customer.orders.first.created_at | date:'%s' %}{% assign easylockdownOldestPlacedOrder = customer.orders.last.created_at | date:'%s' %}{% assign easylockdownDateDifference = easylockdownNow | minus: easylockdownPlacedOrder %}{% endif %}
+{% for t in customer.tags %}
+{% assign tag = t | downcase %}
+{% if tag == 'freegifttest' %}{% assign elcTag1 = true %}{% endif %}
+{% if tag == 'employee' %}{% assign elcTag2 = true %}{% endif %}
+{% if tag == 'happyreturns' %}{% assign elcTag3 = true %}{% endif %}
+{% if tag == 'canusemaplocator' %}{% assign elcTag4 = true %}{% endif %}
+{% if tag == 'blocked - fraud' %}{% assign elcTag5 = true %}{% endif %}
+{% if tag == 'test' %}{% assign elcTag6 = true %}{% endif %}
+{% endfor %}
+{% for t in easylockdown_filter_collections.tags %}
+{% assign tag = t | downcase %}
+{% if tag == 'cm_fg_limited qty' %}{% assign elpTag1 = true %}{% endif %}
+{% endfor %}
+{% assign easylockdownCollectionsException = false %}
+{% unless easylockdownCollectionsException %}
+{% if easylockdown_filter_collections.id == 169268707410 %}
+{% unless customer %}
+{% if easylockdownRender %}continue{% endif %}{% continue %}
+{% else %}
+{% unless elcTag2 or elcTag3 %}{% if easylockdownRender %}continue{% endif %}{% continue %}{% endunless %}
+{% endunless %}
+{% endif %}
+{% endunless %}
+
+{% assign easylockdownCollectionsException = false %}
+{% unless easylockdownCollectionsException %}
+{% if easylockdown_filter_collections.id == 33218953333 %}
+{% unless customer %}
+{% if easylockdownRender %}continue{% endif %}{% continue %}
+{% else %}
+{% unless elcTag6 %}{% if easylockdownRender %}continue{% endif %}{% continue %}{% endunless %}
+{% endunless %}
+{% endif %}
+{% endunless %}
+
+{% assign easylockdownCollectionsException = false %}
+{% unless easylockdownCollectionsException %}
+{% if easylockdown_filter_collections.id == 296744550592 %}
+{% assign easylockdownTmp = '34bbf59084' | split: ',' %}
+{% assign easylockdownPasswordItems = easylockdownPasswordItems | concat: easylockdownTmp | uniq %}
+{% endif %}
+{% endunless %}
+
+{% assign easylockdownCollectionsException = false %}
+{% unless easylockdownCollectionsException %}
+{% if easylockdown_filter_collections.id == 296658075840 %}
+{% assign easylockdownTmp = 'e167258824' | split: ',' %}
+{% assign easylockdownPasswordItems = easylockdownPasswordItems | concat: easylockdownTmp | uniq %}
+{% endif %}
+{% endunless %}
+
+{% assign easylockdownCollectionsException = false %}
+{% unless easylockdownCollectionsException %}
+{% if easylockdown_filter_collections.id == 296324432064 %}
+{% assign easylockdownTmp = 'ddcca57750' | split: ',' %}
+{% assign easylockdownPasswordItems = easylockdownPasswordItems | concat: easylockdownTmp | uniq %}
+{% endif %}
+{% endunless %}
+
+{% assign easylockdownCollectionsException = false %}
+{% unless easylockdownCollectionsException %}
+{% if easylockdown_filter_collections.id == 167528628306 %}
+{% assign easylockdownTmp = '3f80627071' | split: ',' %}
+{% assign easylockdownPasswordItems = easylockdownPasswordItems | concat: easylockdownTmp | uniq %}
+{% endif %}
+{% endunless %}
+
+{% unless easylockdownItemSelectorOff %}<div class='easylockdown-collection-item-selector easy-item-selector' data-eld-loc-can='{{ easylockdownLocationsCan | join: "," }}' data-eld-loc-cannot='{{ easylockdownLocationsCannot | join: "," }}' data-eld-loc-auth='{{ easylockdownPasswordItems | join: "," }}' style='display:none;'></div>{% endunless %}

@@ -1,0 +1,61 @@
+<div class="privacy-popup" style="display: none;">
+    <span class="close ss-icon" >␡</span>
+    <div class="content">
+        <p>We’ve updated our Privacy Statement to support new EU data protection laws.</p>
+        <a class="link" href="/pages/privacy-notice/">click here to learn more</a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() { 
+        if( $.cookie('_p_pop') != "dismiss" ){
+            console.log("cookie not set");
+            $(".privacy-popup").show();
+            $.cookie('_p_pop', 'dismiss', { expires: 30 });
+        }
+        $(".privacy-popup .close").click(function(){
+            $(".privacy-popup").hide();
+        });
+    });
+</script>
+
+<style>
+    .privacy-popup{
+        position: fixed;
+        z-index: 10000000;
+        width: 100%;
+        max-width: 480px;
+        padding: 10px;
+        left: 0;
+        bottom: 0;
+        background: #fff;
+        text-align: center;
+        border: 1px solid #f7f7f7;
+        box-shadow: rgb(242 242 242) 0px 0px 4px 1px, rgb(0 0 0 / 0%) 0px 0px 0px inset;
+    }
+    .privacy-popup p{
+        color: rgb(175, 175, 175);
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+    .privacy-popup a.link{
+        color: rgb(204, 163, 83);
+        background-color: rgba(255, 255, 255, 0);
+        font-weight: 700;
+        font-size: 16px;
+        line-height: 2;
+        padding: 15px;
+        border: 1px solid rgb(204, 163, 83);
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .privacy-popup .close{
+        position: absolute;
+        font-size: 20px;
+        color: #c0c0c0;
+        right: 0;
+        top: -10px;
+        cursor: pointer;
+    }
+</style>

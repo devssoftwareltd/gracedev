@@ -1,0 +1,58 @@
+{% assign get_tag = false %}
+{% for tag in customer.tags %}
+  {% if tag contains 'tier: Diamond' %}
+    {% assign get_tag = true %}
+  {% endif %}
+  {% if tag contains 'tier: Platinum' %}
+    {% assign get_tag = true %}
+  {% endif %}
+{% endfor %}
+<div id="loyalty-campaigns-grid" class="rewards-marketplace">
+  <h1>Rewards Marketplace</h1>
+  {% if get_tag == true %}
+    <p class="loyalty-redemption-tagline">Apply your points to get any of these products for a steal! <br> For Platinum &amp; Diamond VIPs exclusively.</p>
+    <p class="points_section">You have <span data-lion-points="approved"></span> points</p>
+    <div data-lion-seamless-product-reward-widget></div> 
+
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script>
+      setTimeout(function(){
+        $('.lion-in-cart-rewards-widget__rewards-slider').slick({
+          dots: false,
+          infinite: true,
+          speed: 300,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          adaptiveHeight: true,
+          prevArrow: '<button class="slide-arrow prev-arrow">❮</button>',
+          nextArrow: '<button class="slide-arrow next-arrow">❯</button>',
+          responsive: [
+            {
+              breakpoint: 1024,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3
+              }
+            },
+            {
+              breakpoint: 600,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+              }
+            }
+           ]
+        });
+      },2000);
+    </script>
+  {% else %}
+  	<p class="loyalty-redemption-tagline">Redeem your points for exclusive merchandise when you become a Platinum or Diamond member.</p>
+  {% endif %}
+</div>

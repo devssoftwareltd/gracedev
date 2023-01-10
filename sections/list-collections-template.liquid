@@ -1,0 +1,146 @@
+{%- comment -%}
+This file has been modified by the Yoast SEO for Shopify app.
+You can learn more about this (and learn how to cleanly revert these changes) at https://yoa.st/removing-theme-changes.
+{%- endcomment -%}
+{%- liquid
+	assign disabled_by_yoast_seo = true
+	if content_for_header contains 'yoast-active-script'
+		assign disabled_by_yoast_seo = false
+	endif
+-%}
+{% paginate collections by section.settings.pagination_limit %}
+  {% assign collections_per_row = section.settings.collections_per_row %}
+
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      <h1>{{ 'collections.general.title' | t }}</h1>
+
+      <div class="breadcrumb eight columns alpha" {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/BreadcrumbList"{% endif %}>
+        {% if section.settings.collection_breadcrumb %}
+          <span {% if disabled_by_yoast_seo %}itemprop="itemListElement"{% endif %} {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/ListItem"{% endif %}><a href="{{ shop.url }}" title="{{ shop.name | escape }}" {% if disabled_by_yoast_seo %}itemprop="item"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="name"{% endif %}>{{ 'general.breadcrumbs.home' | t }}</span></a></span>
+          <span class="icon-right-arrow"></span>
+          <span {% if disabled_by_yoast_seo %}itemprop="itemListElement"{% endif %} {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/ListItem"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="name"{% endif %}>{{ 'collections.general.title' | t }}</span></span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% capture new_row %}
+      <br class="clear product_clear" />
+  {% endcapture %}
+
+ {% for link in linklists.all-collections.links %}{% include 'easylockdown_filter_collections' with l %}
+{% assign collection = link.object %}
+
+    {% if settings.align_height %}
+      {% if collection.image %}
+        {% assign collection_image = collection.image %}
+      {% else %}
+        {% assign collection_image = collection.products.first.featured_image %}
+      {% endif %}
+
+      {% assign collection_height = settings.collection_height | plus: 0 %}
+      {% assign product_aspect_ratio = collection_image.aspect_ratio | plus: 0 %}
+      {% assign product_set_width = product_aspect_ratio | times: collection_height %}
+
+      {% if product.featured_image.width >= product.featured_image.height %}
+        {% assign align_height_value = 'width: 100%; height: auto;' %}
+      {% else %}
+        {% assign align_height_value = 'width: 100%;' %}
+      {% endif %}
+    {% endif %}
+
+    {% unless collection.handle == 'frontpage' %}
+      {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
+      <div class="{% if collections_per_row == 2 %}eight columns{% elsif collections_per_row == 3 %}one-third column{% else %}four columns{% endif %} thumbnail {% cycle 'even', 'odd' %}">
+        <a href="{{ collection.url }}" title="{{ collection_title }}">
+          <div class="image__container" style="{% if settings.align_height %} max-width: {{ product_set_width }}px; {% else %} max-width: {%- if collection.image -%}{{- collection.image.width -}}{%- else -%}{{- collection.products.first.featured_image.width -}}{%- endif -%}px; {% endif %}">
+            {% if collection.image %}
+              <img  src="{{ collection.image.src | img_url: '300x' }}"
+                    class="lazyload lazyload--fade-in"
+                    alt="{{ collection.image.alt | escape }}"
+                    style="max-width: {{- collection.image.width -}}px;"
+                    data-sizes="auto"
+                    data-src="{{ collection.image.src | img_url: '1160x' }}"
+                    data-srcset=" {{ collection.image.src | img_url: '2048x' }} 2048w,
+                                  {{ collection.image.src | img_url: '1600x' }} 1600w,
+                                  {{ collection.image.src | img_url: '1200x' }} 1200w,
+                                  {{ collection.image.src | img_url: '1000x' }} 1000w,
+                                  {{ collection.image.src | img_url: '800x' }} 800w,
+                                  {{ collection.image.src | img_url: '600x' }} 600w,
+                                  {{ collection.image.src | img_url: '400x' }} 400w"
+                    />
+            {% else %}
+              <img  src="{{ collection.products.first.featured_image | img_url: '300x' }}"
+                    class="lazyload lazyload--fade-in"
+                    alt="{{ collection.image.alt | escape }}"
+                    style="max-width: {{- collection.image.width -}}px;"
+                    data-sizes="auto"
+                    data-src="{{ collection.products.first.featured_image | img_url: '1160x' }}"
+                    data-srcset=" {{ collection.products.first.featured_image | img_url: '2048x' }} 2048w,
+                                  {{ collection.products.first.featured_image | img_url: '1600x' }} 1600w,
+                                  {{ collection.products.first.featured_image | img_url: '1200x' }} 1200w,
+                                  {{ collection.products.first.featured_image | img_url: '1000x' }} 1000w,
+                                  {{ collection.products.first.featured_image | img_url: '800x' }} 800w,
+                                  {{ collection.products.first.featured_image | img_url: '600x' }} 600w,
+                                  {{ collection.products.first.featured_image | img_url: '400x' }} 400w"
+                    />
+            {% endif %}
+          </div>
+
+          <div class="info">
+            <span class="price">
+              {{ 'layout.counts.items_with_count' | t: count: collection.all_products_count }}
+            </span>
+            <span class="title">{{ collection.title }}</span>
+          </div>
+        </a>
+      </div>
+
+      {% if collections_per_row == 2 %}
+        {% cycle '', new_row %}
+      {% elsif collections_per_row == 3 %}
+        {% cycle '', '', new_row %}
+      {% elsif collections_per_row == 4 %}
+        {% cycle '', '', '', new_row %}
+      {% endif %}
+    {% endunless %}
+  {% endfor %}
+
+  {% include 'pagination' %}
+{% endpaginate %}
+
+{% schema %}
+
+{
+  "name": "Collections",
+  "class": "collection-template-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "collection_breadcrumb",
+      "label": "Show breadcrumb links",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "collections_per_row",
+      "label": "Collections per row",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "pagination_limit",
+      "label": "Collections per page",
+      "min": 2,
+      "max": 50,
+      "step": 1,
+      "default": 48
+    }
+  ]
+}
+
+{% endschema %}

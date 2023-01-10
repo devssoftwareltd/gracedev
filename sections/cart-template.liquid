@@ -1,0 +1,257 @@
+<script data-cfasync="false" type="text/javascript">if (typeof Shopify === "undefined") var Shopify = {}; Shopify.cart = {{ cart | json }};</script> 
+<div id="sca-fg-owl-carousel">
+  <div id="freegift_cart_container" class="sca-fg-cart-container" style="display: none;">
+    <div id="freegift_message" class="owl-carousel"></div>
+  </div> 
+  <div id="sca-fg-slider-cart" style="display: none;">
+    <div class="sca-fg-cart-title">
+      <strong>Select your free gift (s)</strong>
+    </div>
+    <div id="sca_freegift_list" class="owl-carousel"></div>
+  </div>
+</div>
+<div id="sca_fg_cart">
+<div class="sixteen columns">
+  <div class="section clearfix">
+    <h1>{{ 'cart.general.title' | t }}</h1>
+  </div>
+</div>
+
+{% if cart.item_count == 0 %}
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      <p class="quote">{{ 'cart.general.continue_browsing_html' | t }}</p>
+      <br class="clear" />
+      <br class="clear" />
+    </div>
+  </div>
+{% else %}
+
+  <div class="sixteen columns">
+    <form action="/cart" method="post" id="cart_form">
+      <div class="checkout_table_header">
+        
+        <div class="eight columns alpha">
+          <h4>{{ 'cart.general.item' | t }}</h4>
+        </div>
+
+        <div class="two columns">
+          <h4>{{ 'cart.general.price' | t }}</h4>
+        </div>
+
+        <div class="two columns">
+          <h4>{{ 'cart.general.quantity' | t }}</h4>
+        </div>
+
+        <div class="four columns omega">
+          <h4>{{ 'cart.general.total' | t }}</h4>
+        </div>
+
+        <div class="clear"></div>
+      </div>
+        {% assign promo_prod_in_cart = false %}
+      <ul class="none">
+        {% for item in cart.items %}
+            {% if item.product.handle == all_products[settings.promo_product].handle and settings.enable_promo == true and item.properties['_freeGift']!='' %}
+
+                {% assign promo_prod_in_cart = true %}
+                {% assign isPromoProduct =true %}
+            {% else %}
+                {% assign isPromoProduct =false %}
+
+            {% endif %}
+        {% comment %}
+        {%- include 'bold-cart-item' with item -%}
+        {% endcomment %}
+        <li>
+        <div class="eight columns title_column alpha {{ promo_prod_in_cart }}">
+          <a href="  {%if item.variant.metafields.secomapp.freegifts%}{{ item.product.url }}{%else%}{{ item.url }}{%endif%}" title="{{ item.title | remove: '/ Default Title'| remove: 'Default Title' | remove: '/ Default' | remove: 'Default' | replace: '(Freegifts)', ''  | escape }}" class="cart_image">
+            <img  src="{{ item | img_url: '300x' }}"
+                  alt="{{ item.title | remove: '/ Default Title'| remove: 'Default Title' | remove: '/ Default' | remove: 'Default' | replace: '(Freegifts)', ''  | escape }}"
+                  class="lazyload lazyload--fade-in"
+                  sizes="180px"
+                  srcset="{{ item | img_url: '2048x' }} 2048w,
+                          {{ item | img_url: '1600x' }} 1600w,
+                          {{ item | img_url: '1200x' }} 1200w,
+                          {{ item | img_url: '1000x' }} 1000w,
+                          {{ item | img_url: '800x' }} 800w,
+                          {{ item | img_url: '600x' }} 600w,
+                          {{ item | img_url: '400x' }} 400w,
+                          {{ item | img_url: '300x' }} 300w,
+                          {{ item | img_url: '200x' }} 200w,
+                          {{ item | img_url: '100x' }} 100w"
+                   />
+          </a>
+
+          <p class="cart_price">
+            <span class="">
+              <span class="saso-cart-item-price" data-key="{{item.key}}">{{ item.price | money }}</span>
+            </span>
+            <span class="price_total_text">
+              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" title="{{ 'cart.general.remove' | t }}" class="remove"><span class="ss-icon">&#x2421;</span></a>
+            </span>
+          </p>
+          <p>
+            <a href="  {%if item.variant.metafields.secomapp.freegifts%}{{ item.product.url }}{%else%}{{ item.url }}{%endif%}">
+              {{ item.product.title }}
+              <span class="saso-cart-item-discount-notes" data-key="{{item.key}}"></span>
+              <span class="saso-cart-item-upsell-notes" data-key="{{item.key}}"></span>
+
+            </a>
+          </p>
+
+          {% unless item.product.has_only_default_variant or item.variant.title contains "Title" %}
+            <p class="meta">
+              {% for option in item.product.options %}
+                <span class="label">{{ option }}:</span> <span>{{ item.variant.options[forloop.index0] }}</span><br />
+              {% endfor %}
+            </p>
+          {% endunless %}
+
+          {% if item.properties %}
+            <p>
+            {% for p in item.properties %}
+              {% if p.first.first == "_" %}{% continue %}{% endif %}
+            {% comment %} loyalty edit below {% endcomment %}
+               {% unless p.last == blank or p.first contains '_swell' %}
+                {% if p.last contains '/uploads/' %}
+                  {{ p.first }}: <a class="lightbox" href="{{ p.last }}">{{ 'cart.general.uploaded_file' | t }}</a><br />
+                {% elsif  p.first != '_freeGift'  %}
+                  {{ p.first }}: {{ p.last }}<br />
+
+                {% endif %}
+              {% endunless %}
+            {% endfor %}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="two columns">
+          <p class="price_total">
+            <span class="">
+              <span class="saso-cart-item-price" data-key="{{item.key}}">{% if  item.line_price!=0 %}{{ item.price | money }}{% else %}Free{% endif %}</span>
+            </span>
+          </p>
+        </div>
+
+        <div class="two columns mobile_right" id="quantity_{{ forloop.index }}">
+          <span class="quantity_label">{{ 'cart.general.quantity' | t }}:</span>
+            <span class="quantity">{% if isPromoProduct==false %}{{  item.quantity }}{% else %}-{% endif %}</span>
+			{% comment %}
+          <input type="hidden"  oninvalid="this.setCustomValidity('Not enough in stock')"
+                 oninput="this.setCustomValidity('')"  min="0" size="2" class="quantity" name="updates[]" id="updates_{{ item.id }}" {% if item.product.type == "MOTIVATOR_HIDDEN_PRODUCT" %}value="1" readonly="readonly"{% else %}value="{{ item.quantity }}"{% endif %} {{ bold_qty_attr }}  {% if settings.limit_quantity and item.variant.inventory_management != blank and item.variant.inventory_quantity > 0 and item.variant.inventory_policy == "deny" %}max="{{ item.variant.inventory_quantity }}"{% endif %} />
+          {% endcomment %}
+          <input type="hidden"  oninvalid="this.setCustomValidity('Not enough in stock')"
+                 oninput="this.setCustomValidity('')"  min="0" size="2" class="quantity" name="updates[]" id="updates_{{ item.id }}" {% if item.product.type == "MOTIVATOR_HIDDEN_PRODUCT" %}value="1" readonly="readonly"{% else %}value="{{ item.quantity }}"{% endif %} {% if settings.limit_quantity and item.variant.inventory_management != blank and item.variant.inventory_quantity > 0 and item.variant.inventory_policy == "deny" %}max="{{ item.variant.inventory_quantity }}"{% endif %} />
+        </div>
+
+
+
+        <div class="four columns mobile_right omega">
+          <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" title="{{ 'cart.general.remove' | t }}" class="right mobile_hidden remove"><span class="ss-icon">&#x2421;</span></a>
+
+          <span class="price_total">
+            <span class="">
+              <span class="saso-cart-item-line-price" data-key="{{item.key}}">{% if item.line_price!=0 %}{{ item.line_price | money }}{% else %}Free{% endif %}</span>
+            </span>
+          </span>
+          </div>
+
+        <div class="sixteen columns clearfix alpha omega">
+          <hr />
+        </div>
+      </li>
+      {% endfor %}
+      </ul>
+      <div class="twelve columns alpha">
+        <h4 class="subtotal">
+          {{ 'cart.general.subtotal' | t }}
+        </h4>
+      </div>
+
+      <div class="four columns omega">
+          <h4>
+            <span class="">
+<span class="saso-cart-original-total">{{ cart.total_price | money_with_currency }}</span>
+<span class="saso-cart-total"></span>
+</span>
+          </h4>
+          {% comment %}
+          <small id="estimated-shipping" style="display:none">+ <em><span class="">{{ 0 | money }}</span></em> {{ 'cart.shipping_calculator.estimated_shipping' | t }}</small>
+          {% endcomment %}
+
+          <p>
+            <small class="excluding_tax"><em>{{ 'cart.general.excluding_tax_shipping' | t }}</em></small>
+
+            {% if settings.show_multiple_currencies %}
+              <small>
+                <em>{{ 'cart.general.orders_processed_in_currency_html' | t: currency: shop.currency }}</em>
+              </small>
+            {% endif %}
+
+            {% if section.settings.display_tos_checkbox %}
+              <div>
+                <input type="checkbox" class="tos_agree" id="cart_agree" required />
+                <label class="tos_label" for="cart_agree">
+                  {{ 'cart.general.agree_to_terms_html' | t }}
+                </label>
+              </div>
+            {% endif %}
+          </p>
+      </div>
+
+      {% if section.settings.display_special_instructions %}
+        <div class="three columns mobile_left alpha">
+          <label for="note">Purchasing a gift? Leave a note for your recipient and we'll make sure they get it!</label>
+        </div>
+
+        <div class="six columns">
+          <textarea id="note" maxlength="250"  name="note" rows="2">{{ cart.note }}</textarea>
+        </div>
+      {% endif %}
+
+      <div class="three columns update_subtotal_text align_right {% unless section.settings.display_special_instructions %}offset-by-nine alpha{% endunless %}">
+        <p>
+          <a href="#" class="update_subtotal">{{ 'cart.general.update' | t }}</a>
+          <br />
+          <em>{{ 'cart.general.or' | t }}</em>
+            <a href="{% if cart.items.first.product.collections != blank %}{{ cart.items.first.product.collections.last.url }}{% else %}/collections/all{% endif %}">{{ 'cart.general.continue_shopping_link_html' | t }}</a>
+        </p>
+      </div>
+
+      <div class="four columns omega">
+        <p>
+          <input type="submit" class="action_button" id="checkout" name="checkout" value="{{ 'cart.general.checkout' | t }}" />
+        </p>
+      </div>
+    </form>
+  </div>
+    {% render "promo_free_product", enable: settings.enable_promo, free_gift_product: all_products[settings.promo_product],prod_in_cart:promo_prod_in_cart %}
+
+ <div class="sixteen columns">
+	{% render 'loyaltylion-in-cart-rewards' %}
+ </div>
+
+{% endif %}
+
+{% schema %}
+
+{
+  "name": "Cart page",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "display_special_instructions",
+      "label": "Show \"note\" text box"
+    },
+    {
+      "type": "checkbox",
+      "id": "display_tos_checkbox",
+      "label": "Show \"agree to terms\" checkbox"
+    }
+  ]
+}
+
+{% endschema %}
+
+</div>

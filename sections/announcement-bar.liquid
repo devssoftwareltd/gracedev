@@ -1,0 +1,164 @@
+{% if section.settings.a_bar_enable %}
+<div id="a-bar-{{ section.id }}" style="background-color: {{ section.settings.a_bar_bg_color }}; font-family: {% if a_bar_font_custom != blank %}{{ section.settings.a_bar_font_custom }}{% else %}{{ section.settings.a_bar_font }}{% endif %}, Arial, 'Helvetica Neue', Helvetica, sans-serif !important;">
+  {% for block in section.blocks %}
+    {% if block.settings.a_bar_filtering_enable %}
+      {% assign kw = block.settings.a_bar_keyword %}
+      {% if product.handle contains kw or collection.handle contains kw or page.handle contains kw %}
+      <p{% if forloop.first %} class="show"{% endif %}><a href="{{ block.settings.a_bar_url }}" style="color: {{ section.settings.a_bar_text_color }};">{{ block.settings.a_bar_text }}</a></p>
+      {% endif %}
+    {% else %}
+      <p{% if forloop.first %} class="show"{% endif %}><a href="{{ block.settings.a_bar_url }}" style="color: {{ section.settings.a_bar_text_color }};">{{ block.settings.a_bar_text }}</a></p>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+<style>
+  #shopify-section-announcement-bar {
+    margin: 0 !important;
+  }
+
+  #a-bar-{{ section.id }} {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    padding: 0;
+  }
+  #a-bar-{{ section.id }} p {
+    display: none;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+    padding: 5px 0;
+    line-height: 1.2em;
+  }
+  #a-bar-{{ section.id }} .show {
+    display: block;
+  }
+
+  #a-bar-{{ section.id }} br {
+    display: none;
+  }
+
+  @media screen and (max-width: 667px){
+    #a-bar-{{ section.id }} br {
+      display: block;
+    }
+  }
+</style>
+
+<script>
+$(function(){
+
+  function slideShow(){
+    var current = $('#a-bar-{{ section.id }} .show');
+    var next = current.next().length ?
+      current.next() :
+      current.siblings().first();
+
+    current.hide().removeClass('show');
+    next.fadeIn(1000).addClass('show');
+
+    setTimeout(slideShow, {{ section.settings.a_bar_speed }}000);
+  };
+
+  if( $('#a-bar-{{ section.id }} p').length > 1 ) {
+    setTimeout(slideShow, {{ section.settings.a_bar_speed }}000);
+  }
+
+});
+</script>
+
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "class": "announcement-section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "a_bar_enable",
+      "label": "Enable announcement bar",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "a_bar_speed",
+      "label": "Announcement Transition Speed",
+      "default": "5",
+      "info": "In seconds. Enter whole number."
+    },
+    {
+      "type": "color",
+      "id": "a_bar_text_color",
+      "label": "Text Color",
+      "default": "#fff"
+    },
+    {
+      "type": "color",
+      "id": "a_bar_bg_color",
+      "label": "Background Color",
+      "default": "#f49587"
+    },
+    {
+      "type":"select",
+      "id":"a_bar_font",
+      "label":"Font",
+      "options": [
+        {
+          "value": "Montserrat",
+          "label": "Montserrat"
+        },
+        {
+          "value": "'Roboto Slab'",
+          "label": "Roboto Slab"
+        }
+      ],
+      "default": "'Roboto Slab'"
+    },
+    {
+      "type": "text",
+      "id": "a_bar_font_custom",
+      "label": "Custom Font",
+      "info": "Must be used in from main fonts section so it gets loaded in"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Announcement",
+      "type": "text",
+      "settings": [
+        {
+          "type": "html",
+          "id": "a_bar_text",
+          "label": "Announcement Text"
+        },
+        {
+          "type": "url",
+          "id": "a_bar_url",
+          "label": "Announcement Link"
+        },
+        {
+          "type": "checkbox",
+          "id": "a_bar_filtering_enable",
+          "label": "Enable display filtering by handle",
+          "default": false,
+          "info": "Enabling will allow you to control specific pages where bar is shown. Disabled will be global."
+        },
+        {
+          "type": "text",
+          "id": "a_bar_keyword",
+          "label": "Handle keywords",
+          "info": "Add product handle. This will match collections, content pages, and products pages."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement"
+    }
+  ]
+}
+{% endschema %}

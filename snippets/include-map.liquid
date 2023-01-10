@@ -1,0 +1,138 @@
+{% comment %}
+** Map section - dynamic **
+- Draggable section
+{% endcomment %}
+
+{% comment %} Assign object as block or section {% endcomment %}
+{% if type == 'block' %}
+  {%- assign object = block -%}
+{% else %}
+  {%- assign object = section -%}
+{% endif %}
+
+{% comment %} Content settings {% endcomment %}
+{%- assign map_address = object.settings.map_address -%}
+{%- assign image = object.settings.image -%}
+{%- assign store_hours = object.settings.store_hours -%}
+{%- assign title = object.settings.title -%}
+{%- assign address_and_hours = object.settings.address_and_hours -%}
+{% comment %} End content settings {% endcomment %}
+
+<section
+  class="
+    section
+    enable-padding--{{ object.settings.enable_padding }}
+    {% if object.settings.wide_display == true %}
+      is-width-wide has-no-side-gutter
+    {% endif %}
+  "
+>
+  <div class="container">
+    <div class="one-whole column">
+      <div id="map-section-{{ object.id }}" class="map__container">
+        <div
+          class="
+            map__layout
+            map__layout--{{ object.settings.map_position }}
+            map__hours--{{ store_hours }}
+          "
+        >
+          <div class="map__display">
+            {% if map_address != blank and object.settings.api_key != blank %}
+              {% if object.settings.api_key != blank %}
+                <div
+                  class="
+                    map
+                    maps
+                    {% if object.settings.api_key %}
+                      js-api-map
+                    {% endif %}
+                  "
+                  id="map-{{ object.id }}"
+                  data-address="{{ map_address | strip_html }}"
+                  data-zoom="{{ object.settings.zoom_level }}"
+                  data-pin="{{ object.settings.show_pin }}"
+                  data-id="map-{{ object.id }}"
+                  data-style="{{ object.settings.map_style }}"
+                  data-api-key="{{ object.settings.api_key }}"
+                  data-directions-address="{{ map_address | strip_html | handleize | replace: '_', '+' | replace: ' ', '+'}}">
+                </div>
+              {% else %}
+                <div class="maps">
+                  <iframe
+                    width="100%"
+                    frameborder="0"
+                    scrolling="no"
+                    marginheight="0"
+                    marginwidth="0"
+                    src="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q={% if map_address != blank %}{{ map_address | strip_html | replace: ' ', '+' }}{% else %}{{ shop.address.street }}{% endif %}&amp;z={{ object.settings.zoom_level }}&amp;output=embed">
+                  </iframe>
+                </div>
+              {% endif %}
+            {% elsif map_address != blank and object.settings.api_key == blank %}
+              <div class="maps">
+                <iframe
+                  width="100%"
+                  frameborder="0"
+                  scrolling="no"
+                  marginheight="0"
+                  marginwidth="0"
+                  src="https://maps.google.com/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q={% if map_address != blank %}{{ map_address | strip_html | replace: ' ', '+' }}{% else %}{{ shop.address.street }}{% endif %}&amp;z={{ object.settings.zoom_level }}&amp;output=embed">
+                </iframe>
+              </div>
+            {% else %}
+              {% if image != blank %}
+                {%
+                  render 'image-element',
+                  image: image,
+                  alt: image.alt,
+                  stretch_width: true
+                %}
+              {% else %}
+                {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg placeholder-svg--banner' }}
+              {% endif %}
+            {% endif %}
+          </div>
+
+          {% if store_hours != blank %}
+            <div class="map__info" style="color: {{ object.settings.info_text_color }}; background-color: {{ object.settings.info_color }}">
+              <div class="info align_{{ object.settings.text_alignment }}">
+                  {% if title != blank %}
+                    <h2 class="title align_{{ object.settings.text_alignment }}" style="color: {{ object.settings.info_text_color }};">
+                      {{ title }}
+                    </h2>
+                  {% endif %}
+                  {% if address_and_hours != blank %}
+                    <div class="map__address text-align-{{ object.settings.text_alignment }}">
+                      {{ address_and_hours }}
+                    </div>
+                  {% endif %}
+                {% if object.settings.button_label != blank %}
+                  <a
+                    class="
+                      js-map-link
+                      action_button
+                      map__directions
+                    "
+                    href="">
+                    {{ object.settings.button_label }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #map-section-{{ object.id }} .maps,
+  #map-section-{{ object.id }} .maps.js-api-map,
+  #map-section-{{ object.id }} .maps iframe,
+  #map-section-{{ object.id }} .map__placeholder img,
+  #map-section-{{ object.id }} .maps .placeholder-svg {
+    height: 400px;
+  }
+</style>

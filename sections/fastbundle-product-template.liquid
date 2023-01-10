@@ -1,0 +1,376 @@
+{%- comment -%}
+This file has been modified by the Yoast SEO for Shopify app.
+You can learn more about this (and learn how to cleanly revert these changes) at https://yoa.st/removing-theme-changes.
+{%- endcomment -%}
+{%- liquid
+	assign disabled_by_yoast_seo = true
+	if content_for_header contains 'yoast-active-script'
+		assign disabled_by_yoast_seo = false
+	endif
+-%}
+<script>
+  var  main_percentage_discount=1;
+  var main_is_sale=false;
+  var script_running= false;
+  var  discount_enabled = '{{ settings.enable_discount }}';
+
+</script>
+{% assign is_sale = false %}
+{% comment %}
+{%- include 'bold-product' with product, hide_action: 'break', output: 'none' -%}
+{% endcomment %}
+{% if section.settings.product_breadcrumb %}
+  <div class="sixteen columns">
+    <div class="breadcrumb breadcrumb_text product_breadcrumb" {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/BreadcrumbList"{% endif %}>
+      <span {% if disabled_by_yoast_seo %}itemprop="itemListElement"{% endif %} {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/ListItem"{% endif %}><a href="{{ shop.url }}" title="{{ shop.name | escape }}" {% if disabled_by_yoast_seo %}itemprop="item"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="name"{% endif %}>{{ 'general.breadcrumbs.home' | t }}</span></a></span>
+      <span class="icon-right-arrow"></span>
+      <span {% if disabled_by_yoast_seo %}itemprop="itemListElement"{% endif %} {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/ListItem"{% endif %}>
+        {% if collection %}
+          <a href="{{ collection.url }}" title="{{ collection.title | escape }}" {% if disabled_by_yoast_seo %}itemprop="item"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="name"{% endif %}>{{ collection.title }}</span></a>
+        {% else %}
+          <a href="/collections/all" title="{{ collections.all.title }}">{{ collections.all.title }}</a>
+        {% endif %}
+      </span>
+      <span class="icon-right-arrow"></span>
+      {{ product.title }}
+     
+    </div>
+  </div>
+{% endif %}
+
+{% comment %}Check to see if sidebar should be enabled{% endcomment %}
+{% if section.blocks.size > 0 %}
+  {% assign sidebar = true %}
+{% else %}
+  {% assign sidebar = false %}
+{% endif %}
+
+{% if sidebar %}
+  {% include 'sidebar' %}
+  <div class="twelve columns">
+    <div class="product-{{ product.id }}">
+{% else %}
+  <div class="sixteen columns">
+    <div class="product-{{ product.id }}">
+{% endif %}
+
+   <div class="section product_section clearfix {% if product.images.size > 1 %} thumbnail_position--{{settings.thumbnail_position}} {% endif %} product_slideshow_animation--{{settings.product_slideshow_animation}}"
+        data-thumbnail="{{settings.thumbnail_position}}"
+        data-slideshow-animation="{{settings.product_slideshow_animation}}"
+        data-slideshow-speed="{{settings.slideshow_speed}}"
+        {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/Product"{% endif %}>
+     
+     <div class="flexslider-container {% if sidebar %}six{% else %}eight{% endif %} columns {% if product-images == blank %}{% if section.settings.product_images_position == 'left' %}alpha{% else %}omega{% endif %}{% endif %} {% if section.settings.product_images_position == 'right' %}mobile_only{% endif %}">
+       {% include 'product-images' %}
+     </div>
+     <div class="eight columns {% if section.settings.product_images_position == 'left' %}omega{% else %}alpha{% endif %}">
+      {% assign collection_handles = product.collections | map: 'handle' %}
+      {% assign variant = product.selected_or_first_available_variant %}
+      
+      {% comment %}
+      <div class="originalTitle mobile_hide"> 
+      <h1 class="product_name" {% if disabled_by_yoast_seo %}itemprop="name"{% endif %}>{{ product.title }}</h1>
+	  {% render 'okendo-reviews-product-rating-summary', product: product %}
+      </div>
+      {% endcomment %}
+       
+       <div class="product_name">
+       <h1 class="product_name" {% if disabled_by_yoast_seo %}itemprop="name"{% endif %}>{{ product.title }}{% render 'okendo-reviews-product-rating-summary', product: product %}</h1>
+       </div>
+      
+       {% comment %}
+      {% if settings.enable_shopify_product_badges %}
+        <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+      {% endif %}
+	  {% endcomment %}
+       
+      {% if section.settings.display_vendor %}
+        <p class="vendor">
+          <span {% if disabled_by_yoast_seo %}itemprop="brand"{% endif %}>{{ product.vendor | link_to_vendor }}</span>
+        </p>
+      {% endif %}
+
+      {% if variant.sku != blank and section.settings.display_sku %}
+        <p class="sku">
+          <span {% if disabled_by_yoast_seo %}itemprop="sku"{% endif %}>{{ variant.sku }}</span>
+        </p>
+      {% endif %}
+
+      {% include 'size-chart-popup' %}
+
+      {% unless collection_handles contains 'coming-soon' %}
+       <div  class="price_afterpay">
+<p class="modal_price" {% if disabled_by_yoast_seo %}itemprop="offers"{% endif %} {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/Offer"{% endif %}>
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<meta {% if disabled_by_yoast_seo %}itemprop="priceCurrency"{% endif %} content="{{ shop.currency }}" />
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<meta {% if disabled_by_yoast_seo %}itemprop="seller"{% endif %} content="{{ shop.name | escape }}" />
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<link {% if disabled_by_yoast_seo %}itemprop="availability"{% endif %} href="http://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}">
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<meta {% if disabled_by_yoast_seo %}itemprop="itemCondition"{% endif %} content="New" />
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+
+          <span class="sold_out">{% if variant.available == false %}{{ 'products.product.sold_out' | t }}{% endif %}</span>
+
+          {% for tag in product.tags %}
+            {% assign loopTag = tag | downcase  %}
+            {% if loopTag == 'additional_discount' %}
+              <script>
+                is_sale = true;
+              </script>
+              {% assign is_sale = true %}
+            {% endif %}
+          {% endfor %}
+
+          {% assign percentDiscount =1 %}
+          {% if scripts.cart_calculate_line_items and settings.enable_discount and is_sale  %}
+            {% assign percentDiscount = settings.sitewide_discount | divided_by: 100.0  %}
+            {% assign percentDiscount = 1 | minus: percentDiscount  | round: 2  %}
+          {% endif %}
+          <script>
+            main_percentage_discount = '{{ percentDiscount }}';
+          </script>
+          <span {% if disabled_by_yoast_seo %}itemprop="price"{% endif %} content="{{ variant.price | money_without_currency | remove: "," }}" class="current_price {% if percentDiscount != 1 %}saleDiscount{% endif %} {% if variant.compare_at_price > variant.price %}sale{% endif %}">
+            <span class=" {% if product.available == false %}hidden{% endif %}">
+              {% if variant.price > 0 %}
+              	
+                <span class="money">{{ variant.price | times: percentDiscount | money  }}</span>
+              {% else %}
+                {{ settings.free_price_text }}
+              {% endif %}
+            </span>
+            </span>
+          </span>
+     
+     {% comment %}
+
+<!-- Yotpo Star Rating on Product Pages > Sections > product-template.liquid -->
+					<div class="yotpo bottomLine"
+						data-product-id="{{ product.id }}">
+					 {%- assign yotpo_offload_content = shop.metafields.yotpo.yotpo_offload_content %}
+					 {%- assign time_now = 'now' | date: '%s' %}
+					 {%- assign yotpo_live_time = shop.metafields.yotpo.yotpo_live | date: '%s' %}
+					 {%- assign diff_seconds_from_live = time_now | minus: yotpo_live_time %}
+					 {%- assign yotpo_bottomline_last_updated = product.metafields.yotpo.bottomline_update_time | date: '%s' %}
+					 {%- assign diff_seconds_from_last_bottomline_update = time_now | minus: yotpo_bottomline_last_updated %}
+					 {%- if yotpo_live_time and diff_seconds_from_live < 86400 or yotpo_bottomline_last_updated and diff_seconds_from_last_bottomline_update < 86400 -%}
+						 {%- assign yotpo_bottomline_obsolete = false %}
+					 {%- else %}
+						 {%- assign yotpo_bottomline_obsolete = true %}
+					 {%- endif %}
+					 {%- if yotpo_offload_content == 'yes' and yotpo_bottomline_obsolete != true -%}
+						 {{ product.metafields.yotpo.bottomline }}
+					 {%- endif %}
+					</div>
+							<style>
+							.yotpo .text-m {
+									padding-left: 5px;
+							}
+							.yotpo .standalone-bottomline.star-clickable, .yotpo .standalone-bottomline .star-clickable {
+									padding-bottom: 10px;
+							}                
+							</style>    
+			<!-- End of Yotpo Star Rating -->
+     {% endcomment %}
+          {% if scripts.cart_calculate_line_items and settings.enable_discount and is_sale %}
+            <span class="sale money {{ settings.enable_discount }}" >{{ variant.price | money }}</span>
+          {% endif %}
+          <span class="was_price">
+            {% if variant.price < variant.compare_at_price and variant.available %}
+              <span class="money">{{ variant.compare_at_price | money }}</span>
+            {% endif %}
+          </span>
+        </p>
+
+        
+        {% include 'product-notify-me' %}
+     </div>
+      {% endunless %}
+       
+      {% if section.settings.product_description_position == "top" %}
+        {% if product.description != blank %}
+         <div class="description" {% if disabled_by_yoast_seo %}itemprop="description"{% endif %}>
+           {% if product.description contains '<!-- split -->' %}{{ product.description | split: '<!-- split -->' | first  }}{% else %}{% include 'product-description-tabs' %}{% endif %}
+         </div>
+        {% endif %}
+      {% endif %}
+       
+      {% unless collection_handles contains 'coming-soon' %}
+        {% include 'product-form' with 'product' %}
+      {% endunless %}
+       
+      {% if settings.enable_shopify_review_comments and settings.review_position == "top" %}
+        <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+      {% endif %}
+
+     {% if section.settings.product_description_position == "bottom" %}
+        {% if product.description != blank %}
+         <div class="description" {% if disabled_by_yoast_seo %}itemprop="description"{% endif %}>
+           {% if product.description contains '<!-- split -->' %}{{ product.description | split: '<!-- split -->' | first  }}{% else %}{% include 'product-description-tabs' %}{% endif %}
+         </div>
+        {% endif %}
+      {% endif %}
+
+      {% if section.settings.display_collections or section.settings.display_tags or section.settings.display_type %}
+      {% endif %}
+
+      <div class="meta">
+        {% if section.settings.display_collections %}
+          <p>
+            <span class="label">{{ 'products.product.collections' | t }}:</span>
+            <span>
+             {% for col in product.collections %}
+               <a href="{{ col.url }}" title="{{ 'collections.general.link_title' | t: title: col.title }}">{{ col.title }}</a>{% unless forloop.last %},{% endunless %}
+             {% endfor %}
+           </span>
+         </p>
+        {% endif %}
+
+        {% if section.settings.display_tags %}
+           <p>
+             {% for tag in product.tags %}
+               {% if forloop.first %}
+                 <span class="label">{{ 'products.product.tags' | t }}:</span>
+               {% endif %}
+
+               {% unless tag contains 'meta-' %}
+                 <span>
+                   <a href="/collections/{% if collection %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handle }}" title="{{ 'products.product.products_tagged' | t: tag: tag }}">{{ tag }}</a>{% unless forloop.last %},{% endunless %}
+                 </span>
+               {% endunless %}
+             {% endfor %}
+           </p>
+        {% endif %}
+
+        {% if section.settings.display_type %}
+           <p>
+             <span class="label">{{ 'products.product.product_types' | t }}:</span> <span {% if disabled_by_yoast_seo %}itemprop="category"{% endif %}>{{ product.type | link_to_type }}</span>
+           </p>
+        {% endif %}
+      </div>
+	 
+      	{% include "social-buttons" with "product" %}
+	 
+      {% comment %}
+      <div class="productVariation" style="display: none">
+        <div class="static_review">
+        	<div class="left_static">
+              <div class="left_letter_icon">
+          		<span class="left_static_user_letter">J</span> 
+              	<span class="left_static_yotpo_icon"></span>
+              </div>
+          	</div>
+        	<div class="right_static">
+          		<div class="right_name_verified">
+                  <span class="right_static_name">Janie A.</span>
+                  <span class="right_static_verified">Verified Buyer</span>
+              	</div>
+              	<div class="right_review_content">
+                  <h1>My absolute favorite clothing company!</h1>
+                  <p>The moment I found this clothing company I knew this was all I wanted to wear! The quality is great, the clothing is comfortable, everything works together, it's cute and stylish and fits perfect every time! I'm slowly replacing my wardrobe with only Grace and Lace.</p>
+                </div>
+          	</div>
+        </div>
+      </div>
+      {% if collection %}
+         <hr class= "remove_line"/>
+         <p class="meta links_meta">
+           {% if collection.next_product %}
+             {% capture next_url %}{{ collection.next_product }}{% endcapture %}
+             <span class="right">
+               {{ 'products.general.next_product_html' | t | link_to: next_url }}
+             </span>
+           {% endif %}
+
+           {% if collection.previous_product %}
+             {% capture prev_url %}{{ collection.previous_product }}{% endcapture %}
+             <span class="left">
+               {{ 'products.general.previous_product_html' | t | link_to: prev_url }}
+             </span>
+           {% endif %}
+         </p>
+      {% endif %}
+      {% endcomment %}
+
+    </div>
+
+    {% if section.settings.product_images_position == 'right' %}
+      <div class="flexslider-container {% if sidebar %}six{% else %}ten{% endif %} columns {% if product-images == blank %}{% if section.settings.product_images_position == 'left' %}alpha{% else %}omega{% endif %}{% endif %} mobile_hidden">
+        {% include 'product-images' %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if product.description contains "<!-- split -->"  %}
+  <br class="clear" />
+  <div class="section clearfix">
+    <div class="description">
+      {% capture desctabs %}{{ product.description | split: '<!-- split -->' | last  }}{% endcapture %}{% include 'product-description-tabs' with desctabs %}
+    </div>
+  </div>
+{% endif %}
+
+<div class="{% if sidebar %}twelve{% else %}sixteen{% endif %} columns">
+  {% render 'okendo-reviews-widget', product: product %}
+  {% comment %}
+  {% if settings.enable_shopify_review_comments and settings.review_position == "bottom" %}
+    <div id="shopify-product-reviews" data-id="{{product.id}}">{{ product.metafields.spr.reviews }}</div>
+  {% endif %}
+  {% endcomment %}
+</div>
+
+{% if section.settings.display_related_products %}
+  {% capture limit %}{{ section.settings.products_per_row | plus: 1 }}{% endcapture %}
+
+  {% if collection and collection.all_products_count > 1 %}
+    {% assign col = collection.handle %}
+  {% else %}
+    {% assign col = product.collections.last.handle %}
+  {% endif %}
+
+  {% for tag in product.tags %}
+    {% if tag contains 'meta-related-collection-' %}
+      {% assign related_collection_handle = tag | remove: 'meta-related-collection-' %}
+      {% if collections[related_collection_handle].all_products_count > 0 %}
+        {% assign col = related_collection_handle %}
+        {% assign collection = collections[col] %}
+        {% capture limit %}{{ collection.products_count | plus: 1 }}{% endcapture %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  {% if col and collections[col].all_products_count > 0 %}
+    {% if collections[col].all_products_count != 1 or collections[col].products.first.id != product.id %}
+
+      <div class="{% if sidebar %}twelve{% else %}sixteen{% endif %} columns">
+        <div class="section clearfix">
+          <h2>{{ 'products.product.related_items' | t }}</h2>
+        </div>
+      </div>
+
+
+      {% assign skip_product = product %}
+      {% assign products = collections[col].products %}
+      {% assign products_per_row = section.settings.products_per_row %}
+       <div class="{% if sidebar %}twelve{% else %}sixteen{% endif %} columns">
+          {% include 'product-loop', sidebar: sidebar %}
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endif %}
+</div>
+{% schema %}{"name": "Product", "class": "product-template-section", "settings": [{"type": "checkbox", "id": "product_breadcrumb", "label": "Show breadcrumb links", "default": true}, {"type": "checkbox", "id": "display_tags", "label": "Show tags"}, {"type": "checkbox", "id": "display_type", "label": "Show type"}, {"type": "checkbox", "id": "display_vendor", "label": "Show vendor"}, {"type": "checkbox", "id": "display_collections", "label": "Show collections"}, {"type": "checkbox", "id": "display_sku", "label": "Show SKU"}, {"type": "checkbox", "id": "display_related_products", "label": "Show related products ([?](https://help.outofthesandbox.com/hc/en-us/articles/115006909487-Related-Products))", "default": true}, {"type": "range", "id": "products_per_row", "label": "Related products per row", "min": 2, "max": 4, "step": 1, "default": 3}, {"type": "radio", "id": "product_description_position", "label": "Description position", "options": [{"value": "top", "label": "Above 'add to cart'"}, {"value": "bottom", "label": "Below 'add to cart'"}]}, {"type": "radio", "id": "product_images_position", "label": "Images position", "options": [{"value": "left", "label": "Left"}, {"value": "right", "label": "Right"}]}, {"type": "header", "content": "Sidebar"}, {"type": "paragraph", "content": "Create a sidebar by adding content blocks."}, {"type": "checkbox", "id": "toggle", "label": "Toggle sidebar content", "default": false}], "blocks": [{"type": "filter_by_tag", "name": "Tag list", "limit": 1}, {"type": "filter_by_collection", "name": "Collection list", "limit": 1}, {"type": "filter_by_type", "name": "Type list", "limit": 1}, {"type": "filter_by_vendor", "name": "Vendor list", "limit": 1}, {"type": "menu", "name": "Menu", "settings": [{"type": "link_list", "id": "custom_menu_linklist", "label": "Menu"}]}, {"type": "text", "name": "Text", "settings": [{"type": "text", "id": "title", "label": "Heading", "default": "Heading"}, {"type": "richtext", "id": "text", "label": "Text", "default": "<p>Text area can be used for special announcements or general information.</p>"}]}, {"type": "page", "name": "Page", "settings": [{"type": "page", "id": "content_page", "label": "Page"}]}]}{% endschema %}

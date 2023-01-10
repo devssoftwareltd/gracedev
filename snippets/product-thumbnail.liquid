@@ -1,0 +1,286 @@
+{%- comment -%}
+This file has been modified by the Yoast SEO for Shopify app.
+You can learn more about this (and learn how to cleanly revert these changes) at https://yoa.st/removing-theme-changes.
+{%- endcomment -%}
+{%- liquid
+	assign disabled_by_yoast_seo = true
+	if content_for_header contains 'yoast-active-script'
+		assign disabled_by_yoast_seo = false
+	endif
+-%}
+{% assign sca_product = product %}{% assign sca_product_id_text = "," | append : sca_product.id | append : "," %}{% assign sca_price = sca_product.price %}{% assign sca_price_min = sca_product.price_min %}{% assign sca_price_max = sca_product.price_max %}{% assign sca_compare_at_price = sca_product.compare_at_price %}{% assign sca_compare_at_price_min = sca_product.compare_at_price_min %}{% assign sca_compare_at_price_max = sca_product.compare_at_price_max %}{% assign sca_product_available = sca_product.available %}{% assign sca_product_variantCount = sca_product.variants.size %}{% assign sca_compare_at_price_varies = sca_product.compare_at_price_varies %}{% assign sca_price_varies = sca_product.price_varies %}{% assign sca_has_only_default_variant = false %}{% capture sca_product_variants_json %}{{sca_product.variants | json }}{% endcapture %} {% capture sca_product_json %}{ {% if sca_all_gift_products_ids == null or sca_all_gift_products_ids contains sca_product_id_text %}{% assign sca_product_available = false %}{% assign sca_product_variantCount = 0 %}{% assign sca_has_only_default_variant = true %}{% assign sca_is_first_variant = true %}{% capture sca_variants_json %} [{% for variant in sca_product.variants %}{% unless variant.metafields.secomapp.freegifts %}{% unless variant.title contains '(Freegifts)' %}{% unless variant.title contains '% Off' %}{% unless variant.metafields.shappify_qb.qb_hide == "1" %}{% unless variant.metafields.shappify_bundle.is_bundle == "true" %}{% unless variant.metafields.brodev_scn.hide == "true" %}{% unless variant.metafields.wholesaler2.wholesale %}{% unless variant.metafields.Wholesaler.level %}{% unless variant.title contains '(Wholesale' %}{% if sca_is_first_variant%} {{ variant | json }}{% assign sca_price = variant.price %} {% assign sca_price_min = variant.price %} {% assign sca_price_max = variant.price %} {% assign sca_compare_at_price = variant.compare_at_price %} {% assign sca_compare_at_price_min = variant.compare_at_price %} {% assign sca_compare_at_price_max = variant.compare_at_price %} {% assign sca_product_available = variant.available %} {% assign sca_product_variantCount = 1 %} {% assign sca_is_first_variant = false%}{% else %},{{variant | json }} {% if sca_price_min >= variant.price %} {% assign sca_price_min = variant.price %} {% assign sca_price = variant.price %}{% endif %} {% if sca_price_max <= variant.price %} {% assign sca_price_max = variant.price %} {% endif %} {% if variant.compare_at_price %} {% if sca_compare_at_price_min==null or sca_compare_at_price_min >= variant.compare_at_price %} {% assign sca_compare_at_price_min = variant.compare_at_price %} {% assign sca_compare_at_price = variant.compare_at_price %} {% endif %} {% if sca_compare_at_price_max==null or sca_compare_at_price_max < variant.compare_at_price %} {% assign sca_compare_at_price_max = variant.compare_at_price %} {% endif %} {% endif %} {% if variant.available == true %} {% assign sca_product_available = true %} {% endif %} {% assign sca_product_variantCount = sca_product_variantCount | plus: 1 %}{% endif %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{%endfor%} ]{% endcapture %}{% if sca_price_min < sca_price_max %}{% assign sca_price_varies = true %}{% else %}{% assign sca_price_varies = false %}{% endif %}{% if sca_compare_at_price_min < sca_compare_at_price_max %}{% assign sca_compare_at_price_varies = true %}{% else %}{% assign sca_compare_at_price_varies = false %}{% endif %}{% if sca_product_variantCount > 1 %}{% assign sca_has_only_default_variant = false %}{% endif %}{% if sca_product_variantCount == sca_product.variants.size %} "variants":{{ sca_product.variants }},{% else %}{%assign sca_product_variants_json = sca_variants_json %} "variants":{{ sca_variants_json }},{% endif %}{% else %} "variants":{{ sca_product_variants_json }},{% endif %} "id": {{sca_product.id}}, "title": {{sca_product.title | json}}, "handle": {{sca_product.handle | json}}, "description": {{sca_product.description | json}}, "published_at": "{{sca_product.published_at | date: "%Y-%m-%dT%H-%M-%S%:z" }}", "created_at": "{{sca_product.created_at | date: "%Y-%m-%dT%H-%M-%S%:z" }}", "vendor": {{sca_product.vendor | json}}, "type": {{sca_product.type | json}}, "tags": {{sca_product.tags | json}}, "price": {{sca_price}}, "price_min": {{sca_price_min}}, "price_max": {{sca_price_max}}, "available": {{sca_product.available}}, "price_varies": {{sca_price_varies}}, "compare_at_price": {{sca_compare_at_price}}, "compare_at_price_min": {{sca_compare_at_price_min}}, "compare_at_price_max": {{sca_compare_at_price_max}}, "compare_at_price_varies": {{sca_compare_at_price_varies}}, "images": {{sca_product.images | json}}, "featured_image": {{sca_product.featured_image | json }}, "options": {{sca_product.options | json}}, "media": {{sca_product.media | json }}, "content": {{sca_product.content | json }}} {% endcapture sca_product_json %}
+
+<script>
+  var  percentage_discount=1;
+  var is_sale=false;
+  var script_running= false;
+  var  discount_enabled = '{{ settings.enable_discount }}';
+</script>
+{% assign is_sale = false %}
+{% if product.available %}
+            {% for tag in product.tags %}
+              {% assign loopTag = tag | downcase  %}
+              {% if loopTag == 'additional_discount' %}
+
+                {% assign is_sale = true %}
+                <script>
+                  is_sale = true;
+                </script>
+              {% endif %}
+            {% endfor %}
+{% endif %}
+{% assign percentDiscount =1 %}
+          {% if scripts.cart_calculate_line_items and settings.enable_discount   %}
+{% if is_sale %}
+            {% assign percentDiscount = settings.sitewide_discount | divided_by: 100.0  %}
+            {% assign percentDiscount = 1 | minus: percentDiscount  | round: 2  %}
+{% endif %}
+          {% endif %}
+{% if scripts.cart_calculate_line_items %}
+  <script>
+    script_running=true;
+  </script>
+{% endif %}
+
+<script>
+   percentage_discount = '{{ percentDiscount }}';
+  // prod_discount['{{ product.id }}'] = '{{ percentDiscount }}';
+</script>
+{% if sidebar %}
+  <div class="{% if products_per_row == 2 %}six columns {% cycle collection_group_thumb: 'alpha', 'omega' %}{% elsif products_per_row == 3 %}four columns {% cycle collection_group_thumb: 'alpha', '', 'omega' %}{% else %}three columns {% cycle collection_group_thumb: 'alpha', '', '', 'omega' %}{% endif %} thumbnail {% cycle collection_group_mobile: 'even', 'odd' %}" {% if disabled_by_yoast_seo %}itemprop="itemListElement"{% endif %} {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/Product"{% endif %}>
+{% else %}
+  <div class="{% if products_per_row == 2 %}eight columns {% cycle collection_group_thumb: 'alpha', 'omega' %}{% elsif products_per_row == 3 %}one-third column {% cycle collection_group_thumb: 'alpha', '', 'omega' %}{% else %}four columns {% cycle collection_group_thumb: 'alpha', '', '', 'omega' %}{% endif %} thumbnail {% cycle collection_group_mobile: 'even', 'odd' %}" {% if disabled_by_yoast_seo %}itemprop="itemListElement"{% endif %} {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/Product"{% endif %}>
+{% endif %}
+
+  {% assign collection_handles = product.collections | map: 'handle' %}
+  {% if product.featured_image.alt contains 'youtube' or image.alt contains 'vimeo' %}
+    {% assign alt_text = product.title %}
+  {% else %}
+    {% assign alt_text = product.featured_image.alt %}
+  {% endif %}
+
+  {% if settings.align_height %}
+    {% assign collection_height = settings.collection_height | plus: 0 %}
+    {% assign product_aspect_ratio = product.featured_image.aspect_ratio | plus: 0 %}
+    {% assign product_set_width = product_aspect_ratio | times: collection_height %}
+
+    {% if product.featured_image.width >= product.featured_image.height %}
+      {% assign align_height_value = 'width: 100%; height: auto;' %}
+    {% else %}
+      {% assign align_height_value = 'width: 100%;' %}
+    {% endif %}
+
+  {% endif %}
+
+  <a href="{{ product.url | within: collection }}" {% if disabled_by_yoast_seo %}itemprop="url"{% endif %} class="sc-pb-element chk">
+    <div class="relative product_image">
+      <div class="product_container swap-{{ settings.collection_secondary_image }}">
+        <div class="image__container" style="{% if settings.align_height %} max-width: {{ product_set_width }}px; {% else %} max-width: {{- product.featured_image.width -}}px; {% endif %}">
+          <img  src="{{ product.featured_image | product_img_url: '300x' }}"
+                alt="{{ alt_text | escape }}"
+                class="primary lazyload lazyload--fade-in"
+                style="{{ align_height_value }} max-width: {{- product.featured_image.width -}}px;"
+                data-sizes="auto"
+                data-src="{{ product.featured_image | product_img_url: '2048x' }}"
+                data-srcset=" {{ product.featured_image | product_img_url: '2048x' }} 2048w,
+                              {{ product.featured_image | product_img_url: '1600x' }} 1600w,
+                              {{ product.featured_image | product_img_url: '1200x' }} 1200w,
+                              {{ product.featured_image | product_img_url: '1000x' }} 1000w,
+                              {{ product.featured_image | product_img_url: '800x' }} 800w,
+                              {{ product.featured_image | product_img_url: '600x' }} 600w,
+                              {{ product.featured_image | product_img_url: '400x' }} 400w"
+              />
+          {% if settings.collection_secondary_image != blank %}
+            <div class="image__container" style="max-width: {% if product.images[1] != blank %}{{- product.images[1].width -}}px{% else %}{{- product.featured_image.width -}}px{% endif %}; ">
+              <img src="{% if product.images[1] != blank %}{{ product.images[1] | product_img_url: '900x' }}{% else %}{{ product.featured_image | product_img_url: '900x' }}{% endif %}"
+              class="secondary lazyload"
+              alt="{{ alt_text | escape }}"
+              />
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+   <div class="info">
+      <span class="title" {% if disabled_by_yoast_seo %}itemprop="name"{% endif %}>{{ product.title }}</span>
+      {% if settings.enable_shopify_collection_badges %}
+        <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+      {% endif %}
+
+      {% if settings.display_vendor_collection %}
+        <div class="vendor">
+          <span {% if disabled_by_yoast_seo %}itemprop="brand"{% endif %}>{{ product.vendor }}</span>
+        </div>
+      {% endif %}
+
+      {% unless collection_handles contains 'coming-soon' %}
+          <span class="price {% if sca_compare_at_price > sca_price %}sale{% endif %}" {% if disabled_by_yoast_seo %}itemprop="offers"{% endif %} {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://schema.org/Offer"{% endif %}>
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<meta {% if disabled_by_yoast_seo %}itemprop="price"{% endif %} content="{{ sca_price_min | money_without_currency | remove: "," }}" />
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<meta {% if disabled_by_yoast_seo %}itemprop="priceCurrency"{% endif %} content="{{ shop.currency }}" />
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<meta {% if disabled_by_yoast_seo %}itemprop="seller"{% endif %} content="{{ shop.name | escape }}" />
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<link {% if disabled_by_yoast_seo %}itemprop="availability"{% endif %} href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+          {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+{%- if disabled_by_yoast_seo -%}
+<meta {% if disabled_by_yoast_seo %}itemprop="itemCondition"{% endif %} content="New" />
+{%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+{%- endif -%}
+
+
+
+
+          {% if product.available %}
+
+            {% if sca_price_varies and sca_price_min > 0 %}
+              <small><em>{{ 'products.general.from' | t }}</em></small>
+            {% endif %}
+            {% if sca_price_min > 0 %}
+            <span class="money">{{ sca_price_min | times: percentDiscount | money  }}</span>
+            {% else %}
+              {{ settings.free_price_text }}
+            {% endif %}
+            {% if sca_compare_at_price > sca_price %}
+              {% if scripts.cart_calculate_line_items and settings.enable_discount and is_sale %}
+                <span class="sale money chk " >{{ sca_price | money }}</span>
+              {% endif %}
+              <span class="was_price">
+                <span class="money">{{ sca_compare_at_price | money }}</span>
+              </span>
+            {% endif %}
+          {% else %}
+            <span class="sold_out">{{ 'products.product.sold_out' | t }}</span>
+          {% endif %}
+        </span>
+      {% endunless %}
+    </div>
+    <div class="banner_holder">
+      {% if settings.sale_banner_enabled and sca_compare_at_price > sca_price %}
+        <div class="sale_banner">{{ 'collections.general.sale' | t }}</div>
+      {% endif %}
+      {% if collection_handles contains 'new' %}
+        <div class="new_banner">{{ 'collections.general.new' | t }}</div>
+      {% endif %}
+      {% if collection_handles contains 'coming-soon' %}
+        <div class="new_banner">{{ 'collections.general.coming_soon' | t }}</div>
+      {% endif %}
+      {% if collection_handles contains 'pre-order' %}
+        <div class="new_banner">{{ 'collections.general.pre_order' | t }}</div>
+      {% endif %}
+    </div>
+  </a>
+  {% if settings.quick_shop_enabled %}
+    <div data-fancybox-href="#product-{{ product.id }}" class="quick_shop action_button" data-gallery="product-{{ product.id }}-gallery">
+      {{ 'collections.general.quick_shop' | t }}
+    </div>
+  {% endif %}
+  {% include 'collection-swatch' %}
+</div>
+
+{% if settings.quick_shop_enabled %}
+  {% if product.description contains "#tab1" %}
+    {% assign tabs = true %}
+  {% else %}
+    {% assign tabs = false %}
+  {% endif %}
+
+  <div id="product-{{ product.id }}" class="modal product-{{ product.id }}">
+    <div class="container section" style="width: inherit">
+      <div class="eight columns modal_image flex-active-slide">
+        {% assign featured_image = product.selected_or_first_available_variant.featured_image | default: product.featured_image %}
+        <img  src="{{ featured_image | product_img_url: '580x', scale: 2 }}"
+              class="lazyload lazyload--fade-in"
+              alt="{{ alt_text | escape }}" />
+      </div>
+      <div class="six columns">
+        <h3>{{ product.title }}</h3>
+        {% if settings.enable_shopify_product_badges %}
+          <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+        {% endif %}
+        {% if settings.display_vendor_collection %}
+          <p class="vendor">
+            <span {% if disabled_by_yoast_seo %}itemprop="brand"{% endif %}>{{ product.vendor | link_to_vendor }}</span>
+          </p>
+        {% endif %}
+
+        {% include 'size-chart-popup' %}
+
+        {% assign variant = product.selected_or_first_available_variant %}
+
+        {% unless collection_handles contains 'coming-soon' %}
+          <p class="modal_price">
+            <span class="sold_out">{% if variant.available == false %}{{ 'products.product.sold_out' | t }}{% endif %}</span>
+            <span class="{% if variant.compare_at_price > variant.price %}sale{% endif %}">
+              <span class="current_price {% if product.available == false %}hidden{% endif %}">
+                {% if variant.price > 0 %}
+                  <span class="money">{{ variant.price | money }}</span>
+                {% else %}
+                  {{ settings.free_price_text }}
+                {% endif %}
+              </span>
+            </span>
+            <span class="was_price">
+              {% if variant.price < variant.compare_at_price and variant.available %}
+                <span class="money">{{ variant.compare_at_price | money }}</span>
+              {% endif %}
+            </span>
+          </p>
+
+          {% include 'product-notify-me' %}
+        {% endunless %}
+
+        {% if settings.product_description_position == "top" %}
+          {% if settings.description_words == "none" %}
+            {{ product.description | split: '<!-- split -->' | first }}
+          {% else %}
+            {% if tabs %}
+              {{ product.description | split: '<!-- split -->' | first }}
+            {% else %}
+              <p>{{ product.description | strip_html | truncatewords: settings.description_words }}</p>
+            {% endif %}
+          {% endif %}
+          <p>
+            <a href="{{ product.url | within: collection }}" class="view_product_info" title="{{ product.title | escape }}">{{ 'collections.general.view_product_details_html' | t }}</a>
+          </p>
+          <hr />
+        {% endif %}
+
+        {% unless collection_handles contains 'coming-soon' %}
+          {% include 'product-form' %}
+        {% endunless %}
+
+        {% if settings.product_description_position == "bottom" %}
+          <hr />
+          {% if settings.description_words == "none" %}
+            {{ product.description | split: '<!-- split -->' | first }}
+          {% else %}
+            {% if tabs %}
+              {{ product.description | split: '<!-- split -->' | first }}
+            {% else %}
+              <p>{{ product.description | strip_html | truncatewords: settings.description_words }}</p>
+            {% endif %}
+          {% endif %}
+          <p>
+            <a href="{{ product.url | within: collection }}" class="view_product_info" title="{{ product.title | escape }}">{{ 'collections.general.view_product_details_html' | t }}</a>
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endif %}

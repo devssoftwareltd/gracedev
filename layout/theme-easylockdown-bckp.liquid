@@ -1,0 +1,759 @@
+{%- comment -%}
+This file has been modified by the Yoast SEO for Shopify app.
+You can learn more about this (and learn how to cleanly revert these changes) at https://yoa.st/removing-theme-changes.
+{%- endcomment -%}
+{%- liquid
+assign disabled_by_yoast_seo = true
+if content_for_header contains 'yoast-active-script'
+assign disabled_by_yoast_seo = false
+endif
+-%}
+<!DOCTYPE html>
+<html lang="{{ shop.locale }}">
+
+<head>
+{% include 'easylockdown_head' %}
+    
+
+    
+
+
+
+    <!-- Google Tag Manager -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-PZMJ4J4');</script>
+    <!-- End Google Tag Manager -->
+
+    {% include 'kiwiSizing' %}
+
+    <!-- << Preload assets -->
+    <link rel="preconnect dns-prefetch" href="//cdn.shopify.com">
+    <link rel="preconnect dns-prefetch" href="//ajax.googleapis.com">
+    {% comment %}
+    <link rel="preconnect dns-prefetch" href="//a.klaviyo.com"> {% endcomment %}
+    <link rel="preconnect dns-prefetch" href="//monorail-edge.shopifysvc.com">
+    <link rel="preconnect dns-prefetch" href="//facebook.com">
+    <link rel="preconnect dns-prefetch" href="//connect.facebook.net">
+    <link rel="preconnect dns-prefetch" href="//s3.amazonaws.com">
+
+    <link rel="preload" href="{{ 'styles.scss.css' | asset_url }}" as="style">
+
+    <!-- >> Preload assets -->
+
+    {% comment %}
+    <script async type="text/javascript" src="https://cdn-3.convertexperiments.com/js/10022472-10025113.js"></script>
+    {% endcomment %}
+    <meta name="facebook-domain-verification" content="26kg119luj15jge5fkdjb2hj1ffut8" />
+    <meta name="facebook-domain-verification" content="upu5rmnvp0lh1jh6afbeiv63l3rm1u" />
+    <meta charset="utf-8">
+    <meta http-equiv="cleartype" content="on">
+    {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+    {%- if disabled_by_yoast_seo -%}
+    <meta name="robots" content="index,follow">
+    {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+    {%- endif -%}
+
+    <!-- Mobile Specific Metas -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.shop_bg_color }}">
+
+    {% if template contains 'index' %}
+    {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+    {%- if disabled_by_yoast_seo -%}
+    <meta name="description"
+        content="Shop the latest fashion in Women&#39;s clothing, accessories and more. Online store from Grace and Lace as seen on SHARK TANK. Our styles help you step out with confidence." />
+    {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+    {%- endif -%}
+    <!-- Avada Size Chart Script -->
+    {% include 'avada-sc-setting' %}
+    <!-- /Avada Size Chart Script -->
+
+    {%- comment -%}Auto-disabled. Yoast plugin is taking care of SEO output.{%- endcomment -%}
+    {%- if disabled_by_yoast_seo -%}
+    <title>Women&#39;s Clothing & Accessories Online Boutique | Grace and Lace - As Seen on SHARK TANK</title>
+    {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+    {%- endif -%}
+    {% endif %}
+
+    <!-- Icons -->
+    {% if settings.favicon != nil %}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ settings.favicon | img_url: '32x32' }}">
+    {% else %}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ 'favicon.png' | asset_url }}">
+    {% endif %}
+    {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+    {%- if disabled_by_yoast_seo -%}
+    <link rel="canonical" href="{{ canonical_url }}" />
+    {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+    {%- endif -%}
+
+    {% if page_description %}
+    {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+    {%- if disabled_by_yoast_seo -%}
+    <meta name="description"
+        content="{{ page_description | escape }}{% if current_tags %} {{ 'general.meta.tagged_html' | t: tags: meta_tags | escape }}.{% endif %}{% if current_page != 1 %} {{ 'general.meta.page' | t: page_number: current_page }}.{% endif %}" />
+    {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+    {%- endif -%}
+    {% endif %}
+
+    {% include 'social-meta-info' %}
+
+    {% if current_tags %}{% assign meta_tags = current_tags | join: ', ' %}{% endif %}
+    {%- comment -%}Auto-disabled. Yoast plugin is taking care of SEO output.{%- endcomment -%}
+    {%- if disabled_by_yoast_seo -%}
+    <title>{% if template contains "index" %}{{ page_title }}{% else %}{{ page_title }}{% if current_tags %} {{
+        'general.meta.tagged_html' | t: tags: meta_tags }}{% endif %}{% if current_page != 1 %} {{ 'general.meta.page' |
+        t:
+        page_number: current_page }}{% endif %}{% unless page_title contains shop.name %} - {{ shop.name }}{% endunless
+        %}{%
+        endif %}</title>
+    {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+    {%- endif -%}
+    
+    {% if template contains 'product' %}
+     <title>{{ product.title }}</title>
+    {%- endif -%}
+
+    <!-- Custom Fonts -->
+    {% if settings.logo_font contains 'Google' or settings.headline_font contains 'Google' or settings.nav_font contains
+    'Google' or settings.slideshow_subtitle_font contains 'Google' or settings.regular_font contains 'Google' or
+    settings.top_bar_font contains 'Google' %}
+    <link
+        href="//fonts.googleapis.com/css?family=.|{% if settings.logo_font contains 'Google' %}{{ settings.logo_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.headline_font contains 'Google' %}{{ settings.headline_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.nav_font contains 'Google' %}{{ settings.nav_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.slideshow_subtitle_font contains 'Google' %}{{ settings.slideshow_subtitle_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.top_bar_font contains 'Google' %}{{ settings.top_bar_font | replace: 'Google_', '' }}:light,normal,bold|{% endif %}{% if settings.regular_font contains 'Google' %}{{ settings.regular_font | replace: 'Google_', ''  }}:light,normal,bold{% endif %}&font-display=swap"
+        rel="stylesheet" type="text/css" />
+    {% endif %}
+
+    {% if collection.previous_product %}
+    {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+    {%- if disabled_by_yoast_seo -%}
+    <link rel="prev" href="{{ collection.previous_product }}">
+    {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+    {%- endif -%}
+    {% endif %}
+    {% if collection.next_product %}
+    {%- comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+    {%- if disabled_by_yoast_seo -%}
+    <link rel="next" href="{{ collection.next_product }}">
+    {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+    {%- endif -%}
+    {% endif %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"
+        integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"
+        integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Stylesheets for Responsive 6.4.0 -->
+    {{ 'styles.scss.css' | asset_url | stylesheet_tag }}
+
+    {% if template contains 'customer' %}
+    {{ "shopify_common.js" | shopify_asset_url | script_tag }}
+    {{ "customer_area.js" | shopify_asset_url | script_tag }}
+    {% endif %}
+
+    {{ 'app.js' | asset_url | script_tag }}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js"
+        integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    {% capture contentHeader %}
+    {{ content_for_header | replace:
+    ',"https:\/\/assets.smartwishlist.webmarked.net\/static\/v6\/smartwishlist.js?shop=grace-and-lace-inc.myshopify.com"',
+    '' | replace:
+    ',"https:\/\/static.klaviyo.com\/onsite\/js\/klaviyo.js?company_id=MGYjN2\u0026shop=grace-and-lace-inc.myshopify.com"',
+    '' | replace:
+    ',"https:\/\/shopify-in-space.sfo2.digitaloceanspaces.com\/hidepaypal\/shops\/grace-and-lace-inc.myshopify.com\/scripts\/main.js?shop=grace-and-lace-inc.myshopify.com"',
+    '' | replace: ',"https:\/\/cdn.hextom.com\/js\/quickannouncementbar.js?shop=grace-and-lace-inc.myshopify.com"', ''
+    }}
+    {% endcapture %}
+    {% assign content_for_header = contentHeader %}
+    {{ content_for_header }}
+
+    {% comment %}
+    {%- include 'bold-product' with product, hide_action: 'header' -%}
+    {% endcomment %}
+
+    <noscript>
+        <style>
+            .slides>li:first-child {
+                display: block;
+            }
+
+            .image__fallback {
+                width: 100vw;
+                display: block !important;
+                max-width: 100vw !important;
+                margin-bottom: 0;
+            }
+
+            .no-js-only {
+                display: inherit !important;
+            }
+
+            .icon-cart.cart-button {
+                display: none;
+            }
+
+            .lazyload {
+                opacity: 1;
+                -webkit-filter: blur(0);
+                filter: blur(0);
+            }
+
+            .animate_right,
+            .animate_left,
+            .animate_up,
+            .animate_down {
+                opacity: 1;
+            }
+
+            .flexslider .slides>li {
+                display: block;
+            }
+
+            .product_section .product_form {
+                opacity: 1;
+            }
+
+            .multi_select,
+            form .select {
+                display: block !important;
+            }
+
+            .swatch_options {
+                display: none;
+            }
+        </style>
+    </noscript>
+
+    {% include 'scm-product-label-head' %}
+
+    <!--begin-bc-sf-filter-css-->
+    {% render 'boost-pfs-style' %}
+    <!--end-bc-sf-filter-css-->
+
+    {% comment %}
+    <!-- << Yotpo snippet -->
+    {% unless template contains 'index' %}
+    {%- assign yotpo_offload_content = shop.metafields.yotpo.yotpo_offload_content %}
+    {%- assign time_now = 'now' | date: '%s' %}
+    {%- assign yotpo_live_time = shop.metafields.yotpo.yotpo_live | date: '%s' %}
+    {%- assign diffSeconds = time_now | minus: yotpo_live_time %}
+    {%- if yotpo_offload_content == 'yes' and diffSeconds < 86400 -%} {{ 'yotpo-full-css.css' | asset_url |
+        stylesheet_tag }} {%- endif -%} <!-- Yotpo JavaScript -->
+        <script type="text/javascript">
+            (function e() { var e = document.createElement("script"); e.type = "text/javascript", e.defer = true, e.src = "//staticw2.yotpo.com/dHRmqrA2dj0wrYDalOALXVzX2BacHCSJlWthkIQ1/widget.js"; var t = document.getElementsByTagName("script")[0]; t.parentNode.insertBefore(e, t) })();
+        </script>
+        <!-- End of Yotpo JavaScript -->
+        {% endunless %}
+
+        <!-- already coming from app
+              <script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/FOUsYawUt24zmz5czZz90g" async></script> -->
+        <!-- >> Yotpo snippet -->
+        {% endcomment %}
+
+
+        <!-- Microsoft Tracking -->
+        <script>
+            (function (w, d, t, r, u) {
+                var f, n, i;
+                w[u] = w[u] || [], f = function () {
+                    var o = {
+                        ti: "52005230"
+                    };
+                    o.q = w[u], w[u] = new UET(o), w[u].push("pageLoad")
+                }, n = d.createElement(t), n.src = r, n.async = 1, n.onload = n.onreadystatechange = function () {
+                    var s = this.readyState;
+                    s && s !== "loaded" && s !== "complete" || (f(), n.onload = n.onreadystatechange = null)
+                }, i = d.getElementsByTagName(t)[0], i.parentNode.insertBefore(n, i)
+            })(window, document, "script", "//bat.bing.com/bat.js", "uetq");
+        </script>
+
+        {% include "loyaltylion" %}
+
+        <!-- Temporary Stylesheet. To be moved to Okendo Admin/Settings/Widgets/Advanced -->
+        {{ 'okendo-reviews-widget-plus.css' | asset_url | stylesheet_tag }}
+
+        {% if template == 'page.okendo-reviews' %}
+        {{ 'okendo-dedicated-reviews.js' | asset_url | script_tag }}
+        {% endif %}
+
+        <!-- PickyStory code, do not modify. Safe to remove after the app is uninstalled -->
+        {% if content_for_header contains 'pickystory' %}
+        {% render 'pickystory-combos-prefetch' %}
+        {% endif %}
+        <!-- PickyStory code end -->
+
+        {% comment -%}Auto-disabled. Yoast plugin is taking care of Meta Tags output.{%- endcomment -%}
+        {%- assign yoast_seo_settings = shop.metafields.yoast_seo.settings.value | default:
+        shop.metafields.yoast_seo.settings -%}
+        {%- if disabled_by_yoast_seo or yoast_seo_settings.integrations.webmasterVerification.pinterest == blank or
+        yoast_seo_settings.integrations.webmasterVerification.pinterest == null -%}
+        <meta name="p:domain_verify" content="68884bf78682bded705a97504488a18e" />
+        {%- comment -%} End Yoast auto-disable. {%- endcomment -%}
+        {%- endif -%}
+        <script>
+            !function (w, d, t) {
+                w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"], ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++)ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++)ttq.setAndDefer(e, ttq.methods[n]); return e }, ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {}; var o = document.createElement("script"); o.type = "text/javascript", o.async = !0, o.src = i + "?sdkid=" + e + "&lib=" + t; var a = document.getElementsByTagName("script")[0]; a.parentNode.insertBefore(o, a) };
+
+                ttq.load('C7TCKHFV9S6QTNQP6K5G');
+                ttq.page();
+            }(window, document, 'ttq');
+        </script>
+
+        {% render 'shogun-head' %}
+        {% include 'sca.freegifts' %}
+
+        <meta name=tapcart-banner:appIcon
+            content=https://storage.googleapis.com/tapcart-150607.appspot.com/a28f8278865261f775f72dae7ff1934c_i.png>
+
+
+        <!-- Global Site Tag (gtag.js) - Google AdWords: AW-977092048 -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=AW-977092048"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', 'AW-977092048', { 'send_page_view': false });
+        </script>
+
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=AULbOIfTh5H3MzagMVwqruFLcMY995fVOBfV3U8zB8PH1Bg7yxxUjvL9N-JzfIcs6pzUIkHEeZxTfiku&components=messages"
+    data-namespace="PayPalSDK">
+</script>
+
+</head>
+
+<body class="{{ template | replace: '.', ' ' | handle }}">
+    <!-- <script async>(function(s,u,m,o,j,v){j=u.createElement(m);v=u.getElementsByTagName(m)[0];j.async=1;j.src=o;j.dataset.sumoSiteId='c05b6839a67cd4cea633634889b7b093645b544c26fdb6c70a52172ce5f6a827';v.parentNode.insertBefore(j,v)})(window,document,'script','//load.sumo.com/');</script> -->
+
+    {% section 'announcement-bar' %}
+    {% section 'header' %}
+
+    <div {% unless template contains "index" or template contains "article" or template contains "banner" or template
+        contains "page.details" or template contains 'contact' %}class="container" {% endunless %}>
+        {% comment %}{{ content_for_layout }}{% endcomment %}{% include 'easylockdown_body' %}
+        {% include 'cart-shipping-calculator' %}
+    </div>
+
+    {% section 'footer' %}
+
+    {% if settings.size_chart != blank %}
+    <div id="size-chart" class="size_chart_content">
+        <h5 class="center">{{ pages[settings.size_chart].title }}</h5>
+        {{ pages[settings.size_chart].content }}
+    </div>
+    {% endif %}
+
+    {% include 'newsletter-popup' %}
+    {% include 'currencies' %}
+
+    {% if settings.disqus_enabled %}
+    {% if template contains "blog" or template contains "article" or template contains "index" %}
+    <script id="dsq-count-scr" src="//{{ settings.disqus_shortname }}.disqus.com/count.js" async></script>
+    {% endif %}
+    {% endif %}
+
+    {% comment %}
+    {% include 'Klaviyo-WebTracking' %}
+    {% include 'livechat_chat_window' %}
+    {% endcomment %}
+
+    {% if template == 'product' %}
+    {% render 'measurement-guide' %}
+    {% include 'disable-sold-out' %}
+    <!-- Klaviyo Back in Stock script -->
+    <script src="https://a.klaviyo.com/media/js/onsite/onsite.js"></script>
+
+    <script>
+        var klaviyo = klaviyo || [];
+        klaviyo.init({
+            account: "MGYjN2",
+            platform: "shopify",
+            include_on_tags: 'restock',
+        });
+
+        klaviyo.enable("backinstock", {
+            trigger: {
+                product_page_text: "Sold Out - Notify Me When Available",
+                product_page_class: "action_button",
+                product_page_text_align: "center",
+                product_page_margin: "0px",
+                replace_anchor: true,
+
+
+            },
+            modal: {
+                subscribe_checked: false,
+                headline: "{product_name}",
+                body_content: "Register to receive a notification when this product comes back in stock.",
+                email_field_label: "Email",
+                button_label: "Add me to the list",
+                subscription_success_label: "You're in! We'll let you know when it's back.",
+                footer_content: '',
+                additional_styles: "@import url('https://fonts.googleapis.com/css?family=Helvetica+Neue');",
+                drop_background_color: "#000",
+                background_color: "#fff",
+                text_color: "#222",
+                button_text_color: "#fff",
+                button_background_color: "#f49587",
+                close_button_color: "#ccc",
+                error_background_color: "#fcd6d7",
+                error_text_color: "#C72E2F",
+                success_background_color: "#d3efcd",
+                success_text_color: "#1B9500"
+            }
+        });
+    </script>
+
+    <!-- Start of Afterpay assets -->
+    <!-- Begin Shopify-Afterpay JavaScript Snippet (v1.0.4) -->
+    <script type="text/javascript">
+        // Editable fields:
+        var afterpay_min = 35.00;            // As per your Afterpay contract.
+        var afterpay_max = 1000.00;         // As per your Afterpay contract.
+        var afterpay_logo_theme = 'colour'; // Can be 'colour', 'black' or 'white'.
+
+        // Overrides:
+        // var afterpay_product_selector = '#product-price-selector';
+        var afterpay_cart_static_selector = '.saso-cart-original-total';
+        var afterpay_show_currency_code = false;
+        var afterpay_modal_responsive = true;
+        var afterpay_modal_open_icon = true;
+        // var afterpay_hide_range_decimals = true;
+        // var afterpay_hide_lower_limit = false;
+        // var afterpay_hide_upper_limit = true;
+
+        // Non-editable fields:
+        var afterpay_shop_currency = {{ shop.currency | json }};
+        var afterpay_shop_money_format = {{ shop.money_format | json }};
+        var afterpay_shop_permanent_domain = {{ shop.permanent_domain | json }};
+        var afterpay_theme_name = {{ theme.name | json }};
+        var afterpay_product = {{ product | json }};
+        var afterpay_current_variant = {{ product.selected_or_first_available_variant | json }};
+        var afterpay_cart_total_price = {{ cart.total_price | json }};
+        var afterpay_js_snippet_version = '1.0.4';
+    </script>
+    <script type="text/javascript" src="https://static.afterpay.com/shopify-afterpay-javascript.js"></script>
+    <!-- End Shopify-Afterpay JavaScript Snippet (v1.0.4) -->
+
+    <style type="text/css">
+        .afterpay-paragraph {
+            font-family: sans-serif;
+            text-transform: lowercase;
+            font-size: 0.8em;
+        }
+
+        .afterpay-link-inner {
+            color: black;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        #afterpay-modal-content * {
+            border: none !important;
+        }
+    </style>
+    <!-- End of Afterpay assets -->
+    {% endif %}
+
+    {% include 'special-offers' %}
+    {% unless template contains "index" %}
+    {% include 'sc-pb-25052016'%}
+    {% endunless %}
+
+    <!--begin-bc-sf-filter-js-->
+    {% render 'boost-pfs' %}
+    <!--end-bc-sf-filter-js-->
+    {% include 'available-only' %}
+
+    {% comment %}
+    <script type="text/javascript" defer
+        src="https://s3.amazonaws.com/lastsecondcoupon/js/quickannouncementbar.js?shop=grace-and-lace-inc.myshopify.com"></script>
+    {% endcomment %}
+
+    <!-- **BEGIN** Hextom QAB Integration // Main Include - DO NOT MODIFY -->
+    {% render 'hextom_qab_main', product: product, customer: customer %}
+    <!-- **END** Hextom QAB Integration // Main Include - DO NOT MODIFY -->
+
+    {% comment %}
+    <script async src="https://cdn.attn.tv/graceandlace/dtag.js"></script> {% endcomment %}
+
+    <script>
+        window.GiftWizard = {}, window.GiftWizard.customer = {}, window.GiftWizard.customer.name = "{{ customer.name }}", window.GiftWizard.customer.email = "{{ customer.email }}", window.GiftWizard.customer.id = "{{ customer.id }}";
+    </script>
+
+    {% render 'pagespeed-script' %}
+
+    {% if template == 'product' %}
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            (function ($) {
+
+                /*setTimeout(function(){
+                $('.selector-wrapper').each(function(){
+                  if($(this).find('label').text() == 'Size'){
+                    $(this).addClass('show_variant');
+                    $(this).show();
+                  }
+                });
+                },1000);*/
+
+                $(document).on('change', '.quantity_box .quantity', function () {
+
+                    var prod_elements = [];
+                    var current_qty = $(this).val();
+                    if (current_qty > 10) {
+                        $(this).val('10');
+                    }
+                    //if(current_qty >= 1 && current_qty <= 10){
+                    //var current_price = $(".modal_price .current_price .money").text();
+                    // current_price = parseFloat(current_price.substring(1, current_price.length)); //remove $ and convert into math format
+                    //calculation - qty & update in qty box
+                    //current_qty++;
+                    //prod_elements['current_qty'] = current_qty;
+                    //calculation - price & update on ATC button
+                    //var new_price = (current_price * current_qty).toFixed(2);
+                    //prod_elements['new_price'] = new_price;
+
+                    //calculation - items & update on ATC button
+                    //prod_elements['no_of_items_label'] = current_qty == 1 ? current_qty + " ITEM" : current_qty + " ITEMS";
+                    //$("#shopify-section-product-template button.add_to_cart .content_price").text("$"+prod_elements['new_price']);
+                    //$("#shopify-section-product-template button.add_to_cart .item_count_data").text("(" + prod_elements['no_of_items_label'] + ")");
+                    //}
+                });
+
+                $(document).on('click', '.quantity_box .product_quant', function () {
+                    $(this).hasClass("plus") ? manage_qty_calculation($(this), "plus") : manage_qty_calculation($(this), "minus");
+                });
+
+                // update Qty
+                function manage_qty_calculation($this, operation) {
+                    var prod_elements = [];
+                    //get current qty
+                    var get_qty = $('.quantity_box .quantity').val();
+
+                    var current_qty;
+                    if (operation == 'plus') {
+                        current_qty = ++get_qty;
+                    } else {
+                        current_qty = --get_qty;
+                    }
+
+                    current_qty = parseInt(current_qty);
+                    if (get_qty >= 1 && get_qty <= 10) {
+                        $('.quantity_box .quantity').val(current_qty);
+                        //get current price
+                        //var current_price = $(".modal_price .current_price .money").text();
+                        //current_price = parseFloat(current_price.substring(1, current_price.length)); //remove $ and convert into math format
+                        //calculation - qty & update in qty box
+                        //current_qty++;
+                        //prod_elements['current_qty'] = current_qty;
+                        //calculation - price & update on ATC button
+                        //var new_price = (current_price * current_qty).toFixed(2);
+                        //prod_elements['new_price'] = new_price;
+
+                        //calculation - items & update on ATC button
+                        //prod_elements['no_of_items_label'] = current_qty == 1 ? current_qty + " ITEM" : current_qty + " ITEMS";
+                        //$("#shopify-section-product-template button.add_to_cart .content_price").text("$"+prod_elements['new_price']);
+                        //$("#shopify-section-product-template button.add_to_cart .item_count_data").text("(" + prod_elements['no_of_items_label'] + ")");
+                    }
+                }
+
+                // your code
+                var modal = document.getElementById("myModal");
+                var btn = document.getElementById("myBtn");
+                var span = document.getElementsByClassName("close")[0];
+                //$('.table_section_add').html(get_table);
+                btn.onclick = function () {
+                    modal.style.display = "block";
+                };
+                span.onclick = function () {
+                    modal.style.display = "none";
+                };
+
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                };
+
+                $('#productSizeChartVariation .table_section_add .modal_right .measurements_get span.select_sizes').on('click', function () {
+                    var get_name = $(this).data('id');
+                    $('#productSizeChartVariation .table_section_add .modal_left img').hide();
+                    $('#productSizeChartVariation .table_section_add .modal_left img[data-id=' + get_name + ']').show();
+                });
+
+            })(jQuery);
+        });
+    </script>
+    {% endif %}
+
+    <script>
+        {% if customer %}
+        if (getCookie('user_logged_in') != "true") {
+            setCookie('user_logged_in', "true", 1)
+        }
+        {% endif %}
+    </script>
+
+    {% comment %} Sumo replacement popup {% endcomment %}
+    {% include 'privacy-popup' %}
+
+    {% comment %} Express checkout hider app replacement styles {% endcomment %}
+    <style>
+        /*.shopify-payment-button__button, .shopify-payment-button__more-options { display: none !important; }*/
+        .additional-checkout-buttons {
+            display: none !important;
+        }
+    </style>
+
+    {% render 'ajax-cart-new' %}
+
+    <!-- Loyality Lion Referral -->
+    {% if template == 'index' %}
+    <script>
+        (function ($) {
+            $(document).ready(function (e) {
+                var url = new URL(location.href);
+                var params = new URLSearchParams(url.search);
+                var show_top_flag = params.get('ll_ref_id');
+                $('#loyaltylion .lion-referral-modal--incentive--message span[data-i18n-key="ui.referree_notification.voucher_discount_text_min_spend"]').hide();
+                if (show_top_flag != null) {
+                    setTimeout(function () {
+                        $('#loyaltylion .lion-referral-modal--incentive--message span[data-i18n-key="ui.referree_notification.voucher_discount_text_min_spend"]').html('Thank you for visiting Grace & Lace! Take $10 off your first purchase of $75 or more with this code!');
+                        $('#loyaltylion .lion-referral-modal--incentive--message span[data-i18n-key="ui.referree_notification.voucher_discount_text_min_spend"]').show();
+                    }, 2000);
+                }
+            });
+        })(jQuery);
+    </script>
+
+    <style>
+        .lion-referral-modal--incentive--code,
+        #loyaltylion .lion-reward-code__code {
+            background-color: #6AC8BF !important;
+            border-color: #6AC8BF !important;
+        }
+
+        #loyaltylion .lion-referral-modal--incentive--message span[data-i18n-key="ui.referree_notification.voucher_discount_text_min_spend"] {
+            display: none;
+        }
+    </style>
+    {% endif %}
+
+    <!-- Loyality Lion Referral -->
+    {% if content_for_header contains 'fastbundle.co' %}
+    {% render 'fast_bundle_service' %}
+    {% endif %}
+    <!-- PickyStory code, do not modify. Safe to remove after the app is uninstalled -->
+    {% if content_for_header contains 'pickystory' %}
+    {% render 'pickystory-combos-prerender' %}
+    {% endif %}
+    <!-- PickyStory code end -->
+    <!-- PickyStory snippet "main_widget_script", do not modify. Safe to remove after the app is uninstalled -->
+    {% if content_for_header contains 'pickystory' %}
+    <script defer src="https://cdn.pickystory.com/widget/dist/latest/pickystory-widget.min.js"></script>
+    {% endif %}
+    <!-- PickyStory end snippet "main_widget_script" -->
+
+    {% include 'revy-bundle-script' %}
+    {% render 'mbc-bundles' %}
+
+    <script>document.write("<script type='text/javascript' src='https://widebundle.com/scripttagTest.php?shop=grace-and-lace-inc.myshopify.com&v=" + Date.now() + "'><\/script>");</script>
+
+    {% if template == 'cart' %}{% include 'hidepaypal' %}{% endif %}
+    <!-- Begin Shopify-Afterpay JavaScript Snippet (v1.0.1) -->
+    <script type="text/javascript">
+        // Liquid variables:
+        var afterpay_product = {{ product | json }};
+        var afterpay_product_variant = {{ product.selected_or_first_available_variant | json }};
+        var afterpay_cart_total_price = {{ cart.total_price | json }};
+    </script>
+    <!-- End Shopify-Afterpay JavaScript Snippet (v1.0.1) -->
+
+    <!--=========================================Footer=========================================-->
+    <!-- Dynamic Remarketing Tag --> 
+    <!-- google dynamic remarketing tag for theme.liquid -->
+{% if template contains 'product' %}
+<script type="text/javascript">
+  var json_product = {{ product | json }};
+</script>
+<script>
+  var ecomm_prodid=[];
+  for(var i=0;i<json_product.variants.length;i++)
+    ecomm_prodid.push('shopify_US_{{product.id}}_'+json_product.variants[i].id);
+</script>
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_prodid: ecomm_prodid,
+    ecomm_pagetype: 'product',
+    ecomm_totalvalue: parseFloat('{{ product.price | money_without_currency | remove: ","}}')
+  };
+</script>
+{% elsif template contains 'collection' %}
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_pagetype: 'category'
+  };
+</script>
+{% elsif template contains 'cart' %}
+<script type="text/javascript">
+  var id = new Array();
+  {% for item in cart.items %}
+  id.push('shopify_US_{{item.product.id}}_{{item.variant.id}}');
+   {% endfor %}
+
+   var google_tag_params = {
+     ecomm_prodid: id,
+     ecomm_pagetype: 'cart',
+     ecomm_totalvalue: parseFloat('{{ cart.total_price | money_without_currency | remove: ","}}')
+   };
+</script>
+{% elsif template contains 'search' %}
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_pagetype: 'searchresults'
+  };
+</script>
+{% elsif template contains 'index' %}
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_pagetype: 'home'
+  };
+</script>
+{% else %}
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_pagetype: 'other'
+  };
+</script>
+{% endif %}
+<script>
+  gtag('event', 'page_view', {'send_to': 'AW-977092048',
+                              'ecomm_prodid':window.google_tag_params.ecomm_prodid,
+                              'ecomm_pagetype': window.google_tag_params.ecomm_pagetype,
+                              'ecomm_totalvalue':window.google_tag_params.ecomm_totalvalue
+                             });
+</script>
+
+
+    <!--==================End google dynamic remarketing tag=========================-->
+{% render 'oneclickupsellapp-theme', oneclickupsellapp: oneclickupsellapp %}
+{% assign oneclickupsellapp = true %}
+</body>
+
+</html>

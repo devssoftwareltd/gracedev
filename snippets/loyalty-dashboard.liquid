@@ -1,0 +1,44 @@
+{{ 'loyalty-dashboard.css' | asset_url | stylesheet_tag }}
+
+
+{% if customer %}
+	
+	<div class="loyalty-dashboard">
+		<h1>hi, {{ customer.first_name }}! you have <span class="swell-point-balance">0</span> points.</h1>
+			<div class="loyalty-dashboard-btn-container">
+		<a  class="loyalty-button" href="/cart">redeem now</a>
+		<a class="swell-history-link loyalty-button" href="javascript:void(0)">rewards history</a> 
+        <a class="loyalty-button" href="/pages/rewards#loyalty-campaigns-grid">start earning</a>
+	</div>
+	</div>
+
+{% else %}
+	
+<div class="loyalty-hiw-container">
+	<h1>how it works</h1>
+<div class="loyalty-hiw-steps-container">
+	<div class="loyalty-hiw-step">
+		<div class="loyalty-hiw-step-num">1</div>
+		<div class="loyalty-hiw-step-title">Join</div>
+		<div class="loyalty-hiw-step-text">Create an account and start earning.</div>
+	</div>
+
+		<div class="loyalty-hiw-step">
+		<div class="loyalty-hiw-step-num">2</div>
+		<div class="loyalty-hiw-step-title">Earn</div>
+		<div class="loyalty-hiw-step-text">Earn points every time you shop.</div>
+	</div>
+
+		<div class="loyalty-hiw-step">
+		<div class="loyalty-hiw-step-num">3</div>
+		<div class="loyalty-hiw-step-title">Redeem</div>
+		<div class="loyalty-hiw-step-text">Redeem points for exclusive discounts.</div>
+	</div>
+
+</div>
+<hr>
+</div>
+
+
+
+{% endif %}

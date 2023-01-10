@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+    <meta name="referrer" content="origin">
+
+    <title>{{ shop.name }} - {{ page_title }}</title>
+
+    {{ content_for_header }}
+
+    {{ checkout_stylesheets }}
+    {{ checkout_scripts }}
+    {% comment %}
+     <!-- Loyalty -->
+      <script src="https://cdn-loyalty.yotpo.com/loader/FOUsYawUt24zmz5czZz90g.js" ype="text/javascript"></script>
+<script src="https://cdn-widgetsrepository.yotpo.com/v1/loader/FOUsYawUt24zmz5czZz90g" async></script>
+    <!-- End Loyalty -->
+	{% endcomment %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script> window.GiftWizard={},window.GiftWizard.customer={},window.GiftWizard.customer.name="{{ customer.name }}",window.GiftWizard.customer.email="{{ customer.email }}",window.GiftWizard.customer.id="{{ customer.id }}";
+  </script>
+
+   <!-- begin Convert Experiences code-->
+    <script type="text/javascript" src="https://cdn-3.convertexperiments.com/js/10022472-10025113.js"></script>
+    <!-- end Convert Experiences code -->
+
+    <!-- Insert in head tag -->
+    <script src="https://cdn.attn.tv/checkout/checkout.js" defer></script>
+    <script src="https://cdn.attn.tv/graceandlace/dtag.js"></script>
+    <style type="text/css">
+    .section__content.section__content__attentive {
+    border-radius: 4px;
+    background-color: #fafafa;
+    border: solid 1px #e6e6e6;
+    padding: 12px;
+    }
+    .section__content.section__content__attentive .input-checkbox {
+    background: #fff;
+    }
+    .section__footer__attentive {
+    font-size: 9px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: left;
+    color: #000000;
+    padding-top: 4px;
+    }
+    .section__footer__attentive a {
+    color: #000000;
+    text-decoration: underline;
+    }
+    .section__footer__attentive b {
+    font-weight: bold;
+    }
+    .checkbox__label.checkbox__label__attentive {
+    cursor: auto;
+    margin-left: 0.75em;
+    }
+    .checkbox__label__attentive__header {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    }
+    .checkbox__label__attentive__subheader {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    text-align: left;
+    color: #737373;
+    padding-top: 4px;
+    }
+    .checkbox-wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: baseline;
+    }
+    </style>
+        <!-- Insert in head tag -->
+    <style type="text/css">
+    .section__content.section__content__attentive {
+    border-radius: 4px;
+    background-color: #fafafa;
+    border: solid 1px #e6e6e6;
+    padding: 12px;
+    }
+    .section__content.section__content__attentive .input-checkbox {
+    background: #fff;
+    }
+    .section__footer__attentive{
+      font-size: 9px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.25;
+    letter-spacing: normal;
+    text-align: left;
+    color: #000000;
+    padding-top: 4px;
+    }
+    .section__footer__attentive a {
+    color: #000000;
+    text-decoration: underline;
+    }
+    .section__footer__attentive b {
+    font-weight: bold;
+    }
+    .checkbox__label.checkbox__label__attentive {
+    cursor: auto;
+    margin-left: 0.75em;
+    }
+    .checkbox__label__attentive__header {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    }
+    .checkbox__label__attentive__subheader {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.17;
+    letter-spacing: normal;
+    text-align: left;
+    color: #737373;
+    padding-top: 4px;
+    }
+    .checkbox-wrapper {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: baseline;
+      }
+    </style>
+
+
+    <style>
+      @media only screen and (min-width: 1000px){
+      	.main__footer {
+            width: 49%;
+            position: relative;
+            left: 45%;
+        }
+      }
+      @media only screen and (max-width: 999px){
+      	.main__footer {
+            width: 90%;
+            margin: 0 5%;
+        }
+      }
+
+    </style>
+    {% include "loyaltylion" %}
+<script>lion.configure({ checkout: true })</script>
+
+  {% render 'shogun-head' %}
+  {%assign foundFreeGift=false%}
+    {% for item in checkout.line_items %}           
+      {% if item.variant.metafields.secomapp.freegifts or item.variant.title contains "(100% off)" %}
+      {% assign foundFreeGift=true%}
+      {% break %}
+      {% endif%}
+    {%comment%}
+      {% unless item.discount_applications %}     
+        {% if item.final_price != item.variant.price %}
+          {% assign foundFreeGift=true%}
+          {% break %}
+      {%endif%}
+      {% endunless %}      
+    {%endcomment%}
+    {% endfor %}
+{% comment %}
+    {%if foundFreeGift%}
+    <style>
+      .order-summary__section--discount {
+        display: none !important;
+      }
+      .lion-checkout-redemption {
+        display: none !important;
+      }
+    </style>
+    {%endif%} 
+{% endcomment %}
+</head>
+  <body>
+    <div class="banner" data-header>
+      <div class="wrap">
+        {{ content_for_logo }}
+      </div>
+    </div>
+
+    {{ order_summary_toggle }}
+
+    <div class="content" data-content>
+      <div class="wrap">
+        <div class="sidebar" role="complementary">
+          <div class="sidebar__header">
+          </div>
+          <div class="sidebar__content">
+            {{ content_for_order_summary }}
+          </div>
+        </div>
+        <div class="main" role="main">
+          <div class="main__header">
+            <div class="logo__header" style="display: none;">
+            {{ content_for_logo }}
+            </div>
+            {{ breadcrumb }}
+            <div class="payments__header" style="display: none;">
+            {{ alternative_payment_methods }}
+            </div>
+
+          </div>
+          <div class="main__content">
+            {{ content_for_layout }}
+
+            <!-- insert HTML in body main__content section -->
+            <div id="attentiveOptIn" class="fieldset-description" data-buyer-accepts-marketing-attentive=""
+            aria-label="Phone Sign Up">
+            <div class="section__content section__content__attentive">
+            <div class="checkbox-wrapper">
+            <div class="checkbox__input">
+            <input name="attributes[buyer_accepts_marketing_attentive]" type="hidden" value="0">
+            <input class="input-checkbox" data-backup="buyer_accepts_marketing" type="checkbox"
+            value="1" name="attributes[buyer_accepts_marketing_attentive]"
+            id="checkout_buyer_accepts_marketing_attentive" aria-labelledby="headers" tabindex="0"
+            focusable="true">
+            </div>
+            <div class="checkbox__label checkbox__label__attentive">
+            <span id="headers" tabindex="0" focusable="true">
+            <div class="checkbox__label__attentive__header">Get Text Updates!</div>
+            <div class="checkbox__label__attentive__subheader">Sign Up To Receive Alerts About New Releases, Promotions, Exclusive Offers & More!</div>
+            </span>
+            <div class="section__footer__attentive">By checking this box, you agree to receive
+            recurring automated promotional and personalized marketing text messages <b>(e.g. cart
+            reminders)</b> from Grace & Lace at the cell number used when signing up. Consent is not a
+            condition of any purchase. <b>Reply HELP for help and STOP to cancel.</b> Msg frequency varies.
+            Msg & data rates may apply. View <a href="http://attn.tv/graceandlace/terms.html"
+            target="_blank" rel="noopener noreferrer" aria-label="Grace & Lace Terms Link" >Terms</a>
+            &amp; <a href="https://attnl.tv/p/AgR" target="_blank" rel="noopener noreferrer" aria-label="Grace
+            & Lace Privacy Link">Privacy</a>.</div>
+            </div>
+            </div>
+            </div>
+            </div>
+
+            <!-- insert HTML in body main__content section -->
+            <div id="attentiveTransactionalOptIn" class="fieldset-description"
+            data-buyer-accepts-transactional-attentive="" aria-label="Phone Sign Up">
+            <div class="section__content section__content__attentive">
+            <div class="checkbox-wrapper">
+            <div class="checkbox__input">
+            <input name="attributes[buyer_accepts_transactional_attentive]" type="hidden"
+            value="0">
+            <input class="input-checkbox" data-backup="buyer_accepts_transactional"
+            type="checkbox" value="1" name="attributes[buyer_accepts_transactional_attentive]"
+            id="checkout_buyer_accepts_transactional_attentive" aria-labelledby="headers" tabindex="0"
+            focusable="true" checked>
+            </div>
+            <div class="checkbox__label checkbox__label__attentive">
+            <span id="headers" tabindex="0" focusable="true">
+            <div class="checkbox__label__attentive__header">Get text message alerts about your order</div>
+
+            <div class="checkbox__label__attentive__subheader">Stay up to date on your purchase
+
+            with order confirmation and shipping confirmation messages</div>
+            </span>
+            </div>
+            </div>
+            </div>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </div>
+    <div class="main__footer">
+       {{ content_for_footer }}
+    </div>
+    <script>
+      if (window.location.href.indexOf("checkouts") > -1) {
+        $('div#attentiveTransactionalOptIn').remove();
+      }
+      if (window.location.href.indexOf("orders") > -1) {
+        $('div#attentiveTransactionalOptIn').remove();
+        $('div#attentiveOptIn').remove();
+      }
+    </script>
+    
+    {% render 'promo_free_gift_checkout' %}    
+    
+
+    {% if settings.app_coupon_enable %}
+
+    {% assign codes = settings.app_coupon_code %}
+    {% if codes contains ',' %}
+      {% assign codes = settings.app_coupon_code | replace: ' ', '' | split: "," %}
+    {% else %}
+      {% assign codes = settings.app_coupon_code %}
+    {% endif %}
+
+    <script>
+    (function($) {
+      $(document).on('page:load page:change', function() {
+
+        $(document).on('click', '.edit_checkout .field__input-btn', function(e) {
+          var dcode = $('#checkout_reduction_code').val();
+          {% for code in codes %}
+          var errortext = "<p class='field__message field__message--error' id='error-for-reduction_code' style='font-size:11.9px'>{{ code }} - {{ settings.app_coupon_message }}";
+          if (dcode === '{{ code }}') {
+            $('#error-for-reduction_code').remove();
+            $('.order-summary__section--discount .field.field--show-floating-label').addClass('field--error');
+            $('.order-summary__section--discount .field.field--show-floating-label').append(errortext);
+            $('#checkout_reduction_code').val('');
+            e.preventDefault();
+            return false;
+          }
+          {% endfor %}
+        });
+
+      });
+
+    })(Checkout.$);
+
+    $(document).on('click', '.edit_checkout .field__input-btn', function(e) {
+      var dcode = $('#checkout_reduction_code').val();
+      if (dcode === '{{ settings.app_coupon_code }}') {
+        $('.order-summary__section--discount .field.field--show-floating-label').addClass('field--error');
+        $('.order-summary__section--discount .field.field--show-floating-label').append(errortext);
+        $('#checkout_reduction_code').val('');
+        e.preventDefault();
+        return false;
+      }
+    });
+    </script>
+    {% endif %}
+
+    {% comment %}
+    <!-- Loyalty -->
+    {% include 'loyalty-checkout' %}
+<!--END Loyalty -->
+    {% endcomment %}
+    {{ tracking_code }}
+  </body>
+</html>

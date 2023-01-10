@@ -1,0 +1,30 @@
+{% paginate collections.all.products by 2000 %}
+
+  {% for product2 in collections.all.products %}
+    {% if product2.tags contains group_prod_tag %}
+
+      {% assign prod_title = product2.title %}
+      {% assign prod_url = product2.url %}
+      {% assign prod_available = product2.available %}
+
+      {% for product_option in product2.options_with_values %}
+        {% if product_option.name == 'Color' %}
+          {% for value in product_option.values %}
+          {% unless value contains '% off)' %}
+            <div class="swatch" style="position: relative; display: inline-block;">
+              <a class="swatch-element" href="{{ prod_url }}" style="border: 0; margin: 0; padding: 6px; border: 1px solid {% if prod_title == product.title %}#666{% else %}#e2e2e2{% endif %}; border-radius: 50%;">
+                <div class="tooltip">{{ value }}</div>
+                <img src="{{ value | handleize | append: '.png' | asset_img_url: '60x'}}" style="height: 32px; width: 32px; border-radius: 50%; margin: 0; display: block; {% unless prod_available %}opacity: 0.6;{% endunless %}" />
+                {% unless prod_available %}
+                <img class="crossed-out" src="{{ 'soldout.png' | asset_url }}" alt="Sold Out" style="height: 100%; z-index: 10; display: block;">
+                {% endunless %}
+              </a>
+            </div>
+            {% endunless %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+    {% endif %}
+  {% endfor %}
+{% endpaginate %}

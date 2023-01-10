@@ -1,0 +1,50 @@
+{% comment %}
+** Rich text - dynamic **
+- Draggable section
+{% endcomment %}
+
+{% comment %} Assign object as block or section {% endcomment %}
+{% if type == 'block' %}
+  {%- assign object = block -%}
+{% else %}
+  {%- assign object = section -%}
+{% endif %}
+
+{% comment %} Content settings {% endcomment %}
+{%- assign title = object.settings.title -%}
+{%- assign content = object.settings.content -%}
+{%- assign image = object.settings.image -%}
+{%- assign button_label = object.settings.button_label -%}
+{%- assign button_link = object.settings.button_link -%}
+{% comment %} End content settings {% endcomment %}
+
+<section class="section">
+  <div class="container">
+    <div class="one-whole column text-align-{{ object.settings.text_alignment }}">
+      {% if image != blank %}
+        {% render 'image-element',
+                image: image.src,
+                alt: image.alt
+        %}
+      {% endif %}
+
+      {% if title != blank %}
+        <h2 class="section-header home">
+          {{ title }}
+        </h2>
+      {% endif %}
+
+      <div class="{{ object.settings.text_size }} trim-last-paragraph">
+        {% if content != blank %}
+          {{ content }}
+        {% endif %}
+
+        {% if button_label != blank and button_link != blank %}
+          <a href="{{ button_link }}" class="action_button">
+            {{ button_label }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

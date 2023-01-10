@@ -1,0 +1,144 @@
+{% if type == 'mega' %}
+  <li
+    class="
+      megaMenu-dropdown
+      sub-menu
+      js-megaMenu-dropdown
+      {% if link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' or link.url == '#' %}
+        parent-link--false
+      {% else %}
+        parent-link--true
+      {% endif %}
+    "
+    tabindex="0"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <a class="sub-menu--link {% if link.active or link.child_active %}active{% endif %}" {% unless link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' or link.url == '#' %}href="{{ link.url }}"{% endunless %}>
+      {{ link.title }}
+      <span
+        class="
+          icon-down-arrow
+          arrow
+          menu-icon
+        "
+      >
+      </span>
+    </a>
+    <span
+      class="
+        icon-right-arrow
+        arrow
+        mega-mobile-arrow
+        menu-icon
+      "
+    >
+    </span>
+  </li>
+
+  {%
+    render 'mega-menu'
+    mega_menu: mega_menu,
+    mega_text: mega_text,
+    mega_text_url: mega_text_url,
+    mega_id: mega_id,
+    column_position: column_position,
+    column_title: column_title,
+    column_text: column_text,
+    column_link: column_link,
+    column_image: column_image
+   %}
+{% else %}
+  {% if link.links == blank %}
+    <li>
+      <a
+        {% if link.active %}
+          class="active"
+        {% endif %}
+        href="{{ link.url }}"
+        tabindex="0"
+      >
+        {{ link.title }}
+      </a>
+    </li>
+  {% else %}
+    <li
+      class="
+        dropdown
+        sub-menu
+      "
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      <a
+        class="
+          sub-menu--link
+          {% if link.active or link.child_active %}
+            active
+          {% endif %}
+          {% if link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' or link.url == '#' %}
+            slicknav_item
+          {% endif %}
+        "
+        {% unless link.url == '#' %}
+          href="{{ link.url }}"
+        {% endunless %}
+        tabindex="0"
+      >
+        {{ link.title }}&nbsp;
+        <span
+          class="
+            icon-down-arrow
+            arrow
+            menu-icon
+          "
+        >
+        </span>
+      </a>
+      <ul class="submenu_list">
+        {% for sub_link in link.links %}
+          {% if sub_link.links == blank %}
+            <li>
+              <a tabindex="0" href="{{ sub_link.url }}">
+                {{ sub_link.title }}
+              </a>
+            </li>
+          {% else %}
+            <li
+              class="sub-menu"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <a
+                {% if sub_link.url == 'http://' or sub_link.url == '' or sub_link.url == '/' or sub_link.url == 'https://' or sub_link.url == '#' %}
+                  class="slicknav_item sub-sub-menu--link {% if sub_link.active or sub_link.child_active %}active{% endif %}"
+                {% else %}
+                  class="sub-sub-menu--link {% if sub_link.active or sub_link.child_active %}active{% endif %}" href="{{ sub_link.url }}"
+                {% endif %}
+              >
+                {{ sub_link.title }}&nbsp;
+                <span
+                  class="
+                    icon-right-arrow
+                    arrow
+                    menu-icon
+                  "
+                >
+                </span>
+              </a>
+              <ul class="sub_submenu_list">
+                {% for sub_sub_link in sub_link.links %}
+                  <li>
+                    <a tabindex="0" href="{{ sub_sub_link.url }}">
+                      {{ sub_sub_link.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+{% endif %}

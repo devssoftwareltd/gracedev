@@ -1,0 +1,131 @@
+{% comment %}
+  Set the extension of your color files below. Use 'png', 'jpeg', 'jpg' or 'gif'.
+{% endcomment %}
+
+{% if group_prod_tag != '' and option == 'Color' %}
+
+  {% include 'product-swatch-urls' %}
+
+{% else %}
+
+  {% assign file_extension = 'png' %}
+
+  {% assign swatch = product-swatch %}
+  {% assign found_option = false %}
+  {% assign is_color = false %}
+  {% assign option_index = 0 %}
+
+  {% for option in product.options %}
+    {% if option == swatch %}
+      {% assign found_option = true %}
+      {% assign option_index = forloop.index0 %}
+      {% assign downcased_option = swatch | downcase %}
+      {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+          {% assign is_color = true %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+  <div class="swatch clearfix {{ swatch }}" data-option-index="{{ option_index }}">
+    <div class="option_title hg">{{ swatch }}</div>
+    <div class="option_data">
+    {% assign values = '' %}
+    {% for variant in product.variants %}
+{% unless variant.metafields.secomapp.freegifts %}
+{% unless variant.title contains '(Freegifts)' %}
+
+      {% assign value = variant.options[option_index] | remove: csp_flag_string %}
+      {% unless values contains value %}
+        {% assign values = values | join: ',' %}
+        {% assign values = values | append: ',' | append: value %}
+        {% assign values = values | split: ',' %}
+        <input id="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}{{ section.id }}{{ block.id }}" type="radio" name="option-{{ option_index }}" value="{{ value | escape }}"{% if forloop.first %} checked{% endif %} />
+        <div data-value="{{ value | escape }}" class="swatch-element {% if is_color %}color {% endif %}{{ value | handle }}-swatch {% if variant.available %}available{% else %}soldout{% endif %}">
+          {% if is_color %}
+            <div class="tooltip">{{ value }}</div>
+          {% endif %}
+          {% if is_color %}
+            <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}{{ section.id }}{{ block.id }}" style="background-image: url({{ value | handle | append: '.' | append: file_extension | asset_img_url: '50x' }}); background-color: {{ value | split: ' ' | last | handle }};">
+              <img class="crossed-out" src="{{ 'soldout.png' | asset_url }}" alt="" />
+            </label>
+          {% else %}
+            <label for="swatch-{{ option_index }}-{{ value | handle }}-{{ product.id }}{{ section.id }}{{ block.id }}">
+              {{ value }}
+              <img class="crossed-out" src="{{ 'soldout.png' | asset_url }}" />
+            </label>
+          {% endif %}
+        </div>
+      {% endunless %}
+      {% if variant.available %}
+        <script type="text/javascript">
+          $('.swatch[data-option-index="{{ option_index }}"] .{{ value | handle }}-swatch', '#product-form-{{ product.id }}{{ section.id }}{{ block.id }}').removeClass('soldout').addClass('available').find(':radio');
+        </script>
+      {% endif %}
+
+{%endunless%}
+{%endunless%}
+    {% endfor %}
+    </div>
+  </div>
+  {% if swatch == 'Size' or swatch == 'size' or swatch == 'SIZE' %}
+  {% comment %}
+  <div class="size_chart_section" id="productSizeChartVariation" style="display: none;">
+    <span id="myBtn">Click Here to See Size Guide</span>
+    <div id="myModal" class="modal">
+		<div class="modal-body">
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<p class="table_section_add"></p>
+			</div>
+		</div>
+    </div>
+  </div>
+
+
+  <div class="size_chart_section" id="productSizeChartVariation">
+    <span id="myBtn">Click Here to See Size Guide</span>
+    <div id="myModal" class="modal">
+		<div class="modal-body">
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<div class="table_section_add">
+                  <div class="modal_left">
+                  	<img class="main_image" data-id="main" src="https://cdn.shopify.com/s/files/1/3047/6286/files/Croqui-for-website_34c28bf6-8dbf-4525-b498-5f78eab13b28.png?v=1586272357" alt="" width="400" height="500">
+                  	<img class="main_image" data-id="first" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-MichelleL.png?v=1598037234" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="second" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Morgan.png?v=1598037264" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="third" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Holly.jpg?v=1617901936" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="fourth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Katie.png?v=1598037121" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="fifth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Sophia.jpg?v=1598644084" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="sixth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Lexi.png?v=1582827069" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="seventh" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Melissa.png?v=1598037169" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="eighth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Ashley.jpg?v=1582740296" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="nineth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Natalie.jpg?v=1616523849" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="tenth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Amanda.png?v=1598036830" alt="" width="400" height="500" style="display: none;"/>
+                    <img class="main_image" data-id="eleventh" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-MichelleH.png?v=1598037199" alt="" width="400" height="500" style="display: none;"/>
+                  </div>
+                  <div class="modal_right">
+                    <p>Check out sizing and measurements.</p>
+                    <div class="measurements_get">
+                      <span class="select_sizes" data-id="main">View Measurement Taking Guide</span>
+                      <span class="select_sizes" data-id="first">View Michelle L. (XS)</span>
+                      <span class="select_sizes" data-id="second">View Morgan (XS-S)</span>
+                      <span class="select_sizes" data-id="third">View Holly (XS-S)</span>
+                      <span class="select_sizes" data-id="fourth">View Katie (XS-S)</span>
+                      <span class="select_sizes" data-id="fifth">View Sophia (S)</span>
+                      <span class="select_sizes" data-id="sixth">View Lexi (S)</span>
+                      <span class="select_sizes" data-id="seventh">View Melissa (S-M)</span>
+                      <span class="select_sizes" data-id="eighth">View Ashley (S-M)</span>
+                      <span class="select_sizes" data-id="nineth">View Natalie (L)</span>
+                      <span class="select_sizes" data-id="tenth">View Amanda (XL)</span>
+                      <span class="select_sizes" data-id="eleventh">View Michelle H. (XL-XXL)</span>
+                    </div>
+                  </div>
+              	</div>
+			</div>
+		</div>
+    </div>
+  </div>
+  {% endcomment %}
+  {% endif %}
+
+{% endif %}

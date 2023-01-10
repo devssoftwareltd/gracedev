@@ -1,0 +1,230 @@
+
+{% if section.blocks.size > 0 %}
+
+  <section {% if section.settings.image_stretch == false %}class="container" {% endif %}>
+    <div  class="flexslider homepage_slider {% if section.settings.image_stretch == false %}one-whole columns{% endif %}"
+          data-slider-id="homepage_slider-{{section.id}}"
+          data-slideshow-animation="{{section.settings.slideshow_animation}}"
+          data-slideshow-speed="{{section.settings.slideshow_speed}}"
+          >
+      <ul class="slides">
+        {% for block in section.blocks %}
+
+          <li {{ block.shopify_attributes }} data-block-id="{{block.id}}">
+            <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %}>
+            {% if block.settings.image %}
+              <img  src="{{ block.settings.image | img_url: '300x' }}"  
+                    alt="{{ block.settings.image.alt | escape }}"
+                    data-src="{{ block.settings.image | img_url: '1200x' }}"
+                    class="{% if block.settings.image_m %}desktop_only{% endif %}"
+                    sizes="100vw"
+                    srcset="  {{ block.settings.image | img_url: '2400x' }} 2400w,
+                              {{ block.settings.image | img_url: '2000x' }} 2000w,
+                              {{ block.settings.image | img_url: '1600x' }} 1600w,
+                              {{ block.settings.image | img_url: '1200x' }} 1200w,
+                              {{ block.settings.image | img_url: '1000x' }} 1000w,
+                              {{ block.settings.image | img_url: '800x' }} 800w,
+                              {{ block.settings.image | img_url: '600x' }} 600w,
+                              {{ block.settings.image | img_url: '400x' }} 400w"
+                     />
+              {% if block.settings.image_m %}
+             <img  src="{{ block.settings.image_m | img_url: '300x' }}" 
+                   alt="{{ block.settings.image_m.alt | escape }}"
+                   data-src="{{ block.settings.image_m | img_url: '800x' }}"
+                   class="mobile_only"
+                   sizes="100vw"
+                   srcset="  {{ block.settings.image_m | img_url: '800x' }} 800w,
+                             {{ block.settings.image_m | img_url: '600x' }} 600w,
+                             {{ block.settings.image_m | img_url: '400x' }} 400w"
+                    />
+              {% endif %}
+            {% else %}
+              {% capture i %}{% cycle "1", "2" %}{% endcapture %}
+              {{ 'lifestyle-' | append: i | placeholder_svg_tag: 'placeholder-svg placeholder-svg--slideshow' }}
+            {% endif %}
+            </a>
+            {% if block.settings.title != blank or block.settings.subtext != blank or block.settings.button_label != blank %}
+              <div class="flex-caption homepage_slider__flex-caption">
+                <div class="container">
+                  <div class="columns {% if block.settings.text_position == 'left' %} eight offset-by-one {% elsif block.settings.text_position == 'right' %} seven offset-by-eight {% else %} ten offset-by-three {% endif %} align_{{ block.settings.text_align }}">
+                    {% if forloop.first == true and block.settings.title != blank %}
+                      <h1 class="headline">
+                        {{ block.settings.title | escape }}
+                      </h1>
+                    {% elsif block.settings.title != blank %}
+                      <p class="headline">
+                        {{ block.settings.title | escape }}
+                      </p>
+                    {% endif %}
+                    {% if block.settings.subtext != blank %}
+                      <div class="subtitle">
+                        {{ block.settings.subtext }}
+                      </div>
+                    {% endif %}
+                    {% if block.settings.button_label != blank %}
+                      <a href="{{ block.settings.link }}" class="action_button">
+                        {{ block.settings.button_label | escape }}
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "class": "slideshow-section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "select",
+      "id": "slideshow_animation",
+      "label": "Animation",
+      "options": [
+        {
+          "value": "fade",
+          "label": "Fade"
+        },
+        {
+          "value": "slide",
+          "label": "Slide"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "slideshow_speed",
+      "label": "Change slides every",
+      "min": 4,
+      "max": 12,
+      "step": 1,
+      "default": 6,
+      "unit": "sec"
+    },
+    {
+      "type": "checkbox",
+      "id": "image_stretch",
+      "label": "Wide display",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (Desktop)",
+          "info": "1600 x 600px recommended"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_m",
+          "label": "Image (Mobile)",
+          "info": "800 x 800px recommended"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "subtext",
+          "label": "Subheading"
+        },
+        {
+          "type": "select",
+          "id": "text_position",
+          "label": "Text position",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "select",
+          "id": "text_align",
+          "label": "Text alignment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "center"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Slide link"
+        }
+      ]
+    }
+  ],
+  "presets": [{
+    "name": "Slideshow",
+    "category": "Image",
+    "settings": {
+      "slideshow_animation": "fade"
+    },
+    "blocks": [
+      {
+        "type": "image",
+        "settings": {
+          "image": "",
+          "title": "The Responsive Shopify Theme",
+          "text_position": "center",
+          "text_align": "center",
+          "button_label": "",
+          "link": ""
+        }
+      },
+      {
+        "type": "image",
+          "settings": {
+          "image": "",
+          "title": "",
+          "text_position": "center",
+          "text_align": "center",
+          "button_label": "",
+          "link": ""
+        }
+      }
+    ]
+  }]
+}
+{% endschema %}

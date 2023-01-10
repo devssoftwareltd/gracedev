@@ -1,0 +1,179 @@
+<script>
+{% if customer %}
+  jQuery(document).ready(function(){
+    $('.reference-section a.refer_button').on('click', function(){
+    //e.preventDefault();
+    //$('#loyaltylion .lion-rule-item[data-rule-id="141623"] button.lion-action-button').trigger('click');
+      setTimeout(function(){
+        $('.lion-referral-widget-main__intro span[data-i18n-key="ui.referral_popup.intro_with_offer"]').html('Give a friend $10 off their first purchase and earn $10 for yourself.');
+      },500);
+    });
+    
+    $(document).on('click', '.lion-rule-item[data-rule-id="141623"] button.lion-action-button.lion-action-button--tile' , function(){
+      setTimeout(function(){
+        $('.lion-referral-widget-main__intro span[data-i18n-key="ui.referral_popup.intro_with_offer"]').html('Give a friend $10 off their first purchase and earn $10 for yourself.');
+      },500);
+    });
+    
+    $('div#loyalty-rewards #loyaltylion .lion-header__nav a.lion-header__nav-link').on('click', function(){
+      if($(this).hasClass('lion-header__nav-link--earn')){
+      	$('html, body').animate({
+        	scrollTop: $(".earn-point-section").offset().top
+    	}, 2000);
+      }else if($(this).hasClass('lion-header__nav-link--redeem')){
+      	$('html, body').animate({
+        	scrollTop: $("div#loyalty-campaigns-grid.redeem-section").offset().top
+    	}, 2000);
+      }else if($(this).hasClass('lion-header__nav-link--account-history')){
+      	$('html, body').animate({
+        	scrollTop: $(".history-section").offset().top
+    	}, 2000);
+      }else{
+      
+      }
+    });
+    
+    //loyaltylion.init({
+    
+    //});
+  });
+  
+  $(window).on('load', function(){
+    setTimeout(function(){
+     $('span[data-i18n-key="ui.dashboard.earn_points.points_per"]').html('<span class="value">5+</span> <span class="text">points per <span class="lion-currency"><span class="lion-currency__value">$1</span></span></span>'); 
+     $('.lion-rule-item[data-rule-id="141623"] button.lion-action-button.lion-action-button--tile:not(.lion-action-button--disabled)').html('refer now');
+     $('.lion-rule-item[data-rule-id="141640"] span[data-i18n-key="ui.general.points_count"]').html('<span class="text">Receive a Special discount</span>');
+     $('.lion-rule-item[data-rule-id="143491"] button.lion-action-button.lion-action-button--tile:not(.lion-action-button--disabled), .lion-rule-item[data-rule-id="143622"] button.lion-action-button.lion-action-button--tile:not(.lion-action-button--disabled)').html('sign up');
+     $('.lion-rule-item[data-rule-id="143488"] button.lion-action-button.lion-action-button--tile:not(.lion-action-button--disabled)').html('join now');
+     $('.lion-rule-item[data-rule-id="141636"] button.lion-action-button.lion-action-button--tile:not(.lion-action-button--disabled), .lion-rule-item[data-rule-id="141638"] button.lion-action-button.lion-action-button--tile:not(.lion-action-button--disabled), .lion-rule-item[data-rule-id="143487"] button.lion-action-button.lion-action-button--tile:not(.lion-action-button--disabled), .lion-rule-item[data-rule-id="143489"] button.lion-action-button.lion-action-button--tile:not(.lion-action-button--disabled)').html('follow us');
+      
+     $('.lion-rule-item.lion-rule-item--custom button.lion-action-button.lion-action-button--tile').each(function(){
+       if($(this).hasClass('lion-action-button--disabled')){
+       	$(this).html('<span class="lion-rule-item__completed">Completed</span>');
+       }
+     });
+      
+     if($('.lion-rule-item.lion-rule-item--signup .lion-rule-item__actions').is(':empty')){
+     	$('.lion-rule-item.lion-rule-item--signup .lion-rule-item__actions').html('<button class="lion-action-button lion-action-button--tile lion-action-button--disabled lion-action-button--completed" data-testid="rule-item-button"><span class="lion-rule-item__completed" data-i18n-key="ui.general.completed">Completed</span></button>');
+     }
+      
+    }, 2000);	
+  //});
+  
+  
+    //$(window).on('load', function(){
+      setTimeout(function(){
+        var value = $('div#loyaltylion.loyalty-dashboard [data-lion-points="lifetime"]').text();
+        value = value.replace(',','');
+        var new_value;
+        if(value <= 6749){
+          new_value = 6750-value;
+        }else if(value > 6750 && value <= 17749){
+          new_value = 17750-value;
+          
+          if($('.gold-bar li:nth-child(1)').hasClass('current-status')){
+          
+            $('.gold-bar .inner-data').removeClass('active');
+            $('.gold-bar>li:nth-child(1)').removeClass('current-status');
+            $('.gold-bar>li:nth-child(1)').text('');
+            $('.gold-bar>li:nth-child(2)').removeClass('earn-active');
+            $('.gold-bar>li:nth-child(2)').text('');
+			
+            $('.platinum-bar .inner-data').addClass('active');
+            $('.platinum-bar>li:nth-child(1)').addClass('current-status');
+            $('.platinum-bar>li:nth-child(1)').text('Current Status');
+            $('.platinum-bar>li:nth-child(2)').addClass('earn-active');
+            $('.platinum-bar>li:nth-child(2)').text('Earn '+new_value+' more points to earn Diamond');
+            
+          }
+        }else{
+
+        }
+        $('#loyalty-campaigns-grid .earn-active .remaining_points').text(new_value);
+      }, 3000);
+
+      $(document).on('click', '.lion-modal a.follow_button', function(){
+        var email = "{{customer.email}}";
+        var id = "{{customer.id}}";
+        var trigger;
+        
+        if($(this).data('src') == 'pinterest_follow'){
+          trigger = "pinterest";
+        }else if($(this).data('src') == 'tiktok_follow'){
+          trigger = "tiktok";
+        }else if($(this).data('src') == 'fb_vip_follow'){
+		  trigger = "facebook_vip";
+        }else if($(this).data('src') == 'sms_follow'){
+		  trigger = "sms";
+        }else{
+        
+        }
+        setTimeout(function(){
+          $.ajax({
+            method: "GET",
+            data: { email: email, trigger: trigger, id: id },
+            url: "http://api.graceandlace.com/bgsdev/ajax.php",
+            dataType: 'jsonp', // Notice! JSONP <-- P (lowercase)
+            success:function(json){
+               // do stuff with json (in this case an array)
+              console.log(json);
+              //alert("Success");
+              location.reload();
+            },
+            error:function(){
+              alert("Error. Please try again later.");
+            }      
+          });
+        }, 3000);
+      });
+	  
+      
+      $(document).on('click', '.browser_notification', function(){
+        _aimtellForcePrompt();
+      });
+      $(document).on('click', '._aimtellPromptApprove', function(){
+        var email = "{{customer.email}}";
+        var id = "{{customer.id}}";
+        var trigger = 'pushnotifications';
+        setTimeout(function(){
+          $.ajax({
+            method: "GET",
+            data: { email: email, trigger: trigger, id: id },
+            url: "http://api.graceandlace.com/bgsdev/ajax.php",
+            dataType: 'jsonp', // Notice! JSONP <-- P (lowercase)
+            success:function(json){
+               // do stuff with json (in this case an array)
+              console.log(json);
+              //alert("Success");
+              location.reload();
+            },
+            error:function(){
+              alert("Error. Please try again later.");
+            }      
+          });
+        }, 2000);
+      });
+    
+     setTimeout(function(){
+       $(document).on('click', '.lion-in-cart-rewards-widget .lion-in-cart-rewards-widget-item__picture img', function(){
+         var get_title = $(this).attr('alt');
+         get_title= get_title.replace('Photo of ','');
+         get_title= get_title.replace(/ /g,"-");
+         get_title= get_title.replace('&',"-");
+         get_title = get_title.toLowerCase(); 
+         //alert(get_title);
+         window.location.href = '/products/'+get_title;
+       });
+      }, 2500);
+    });
+{% endif %}
+  	 
+      
+  $(window).on('load', function(){
+    setTimeout(function(){  
+       $('.lion-rule-item[data-rule-id="141640"] span[data-i18n-key="ui.general.points_count"]').html('<span class="text">Receive a Special discount</span>');
+      }, 2500);
+  });
+   
+  
+</script>

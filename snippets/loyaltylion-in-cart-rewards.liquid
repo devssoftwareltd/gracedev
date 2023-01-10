@@ -1,0 +1,154 @@
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>   
+{% if customer %}
+     {% assign get_tag = false %}
+     {% for tag in customer.tags %}
+       {% if tag contains 'tier: Diamond' %}
+       	{% assign get_tag = true %}
+       {% endif %}
+       {% if tag contains 'tier: Platinum' %}
+       	{% assign get_tag = true %}
+       {% endif %}
+     {% endfor %}
+     <div id="loyalty-campaigns-grid" class="rewards-marketplace">
+       <h1>Rewards Marketplace</h1>
+       {% if get_tag == true %}
+         <p class="loyalty-redemption-tagline">Apply your points to get any of these products for a steal! <br> For Platinum &amp; Diamond VIPs exclusively.</p>
+       	 <p class="points_section">You have <span data-lion-points="cart"></span> points</p>
+         <div data-lion-seamless-product-reward-widget></div>
+       	 <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+          <script>
+            setTimeout(function(){
+              $('.lion-in-cart-rewards-widget__rewards-slider').slick({
+                dots: false,
+                infinite: true,
+                speed: 300,
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                adaptiveHeight: true,
+                prevArrow: '<button class="slide-arrow prev-arrow">❮</button>',
+                nextArrow: '<button class="slide-arrow next-arrow">❯</button>',
+                responsive: [
+                  {
+                    breakpoint: 1024,
+                    settings: {
+                      slidesToShow: 3,
+                      slidesToScroll: 3
+                    }
+                  },
+                  {
+                    breakpoint: 641,
+                    settings: {
+                      slidesToShow: 2,
+                      slidesToScroll: 2
+                    }
+                  },
+                  {
+                    breakpoint: 480,
+                    settings: {
+                      slidesToShow: 1,
+                      slidesToScroll: 1
+                    }
+                  }
+                 ]
+              });
+              $(document).on('click', '.lion-in-cart-rewards-widget .lion-in-cart-rewards-widget-item__picture img', function(){
+                 var get_title = $(this).attr('alt');
+                 get_title= get_title.replace('Photo of ','');
+                 get_title= get_title.replace(/ /g,"-");
+                 get_title= get_title.replace('&',"-");
+                 get_title = get_title.toLowerCase(); 
+                 //alert(get_title);
+                 window.location.href = '/products/'+get_title;
+              });
+            },2000);
+          </script>
+       {% else %}
+		 <p class="loyalty-redemption-tagline">Redeem your points for exclusive merchandise when you become a Platinum or Diamond member.</p>
+	   {% endif %}
+     </div>
+   {% endif %}
+<style>
+  div#loyalty-campaigns-grid {
+    margin-top: 20px;
+  }
+  div#loyalty-campaigns-grid h1{
+  	text-align: center;
+  }
+  div#loyalty-campaigns-grid p{
+  	text-align: center;
+  }
+  #loyaltylion .lion-in-cart-rewards-widget-item__picture img {
+    height: auto;
+    vertical-align: top;
+    width: 100%;
+  }
+  #loyaltylion .lion-in-cart-rewards-widget-item__name {
+    text-align: center;
+    font-weight: normal;
+    margin-top: 12px;
+  }
+  #loyaltylion .lion-in-cart-rewards-widget-item__button {
+    text-align: center;
+  }
+  [data-lion-seamless-product-reward-widget] #loyaltylion .lion-in-cart-rewards-widget-item .lion-action-button {
+    border: 1px solid #58595b;
+    background: transparent;
+    border-radius: 0;
+    color: #58595b;
+    width: auto;
+  }
+  #loyaltylion .lion-in-cart-rewards-widget__rewards-slider{
+  	-webkit-flex-flow: row wrap;
+    -moz-flex-flow: row wrap;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+  }
+  #loyaltylion .lion-in-cart-rewards-widget__rewards-slider button.slide-arrow {
+    position: absolute;
+    width: auto;
+    left: auto;
+    right: 102%;
+    top: calc(50% - 20px);
+    color: #4d4d4d;
+    background: transparent;
+    border: none;
+    font-size: 30px;
+    padding: 0;
+  }
+  #loyaltylion .lion-in-cart-rewards-widget__rewards-slider button.slide-arrow.next-arrow {
+    left: 102%;
+  }
+  [data-lion-seamless-product-reward-widget] #loyaltylion .lion-in-cart-rewards-widget__navigator {
+    //top: auto;
+    display: none;
+  }
+  .rewards-marketplace p.loyalty-redemption-tagline, .rewards-marketplace p{
+    color: rgb(64, 65, 55);
+    font-size: 20px;
+    font-family: Roboto Slab;
+    font-style: normal;
+    text-align: center;
+  }
+  .rewards-marketplace p.points_section{
+    color: rgb(77, 77, 77);
+    font-size: 30px;
+    font-weight: 400;
+    font-style: normal;
+  }
+  .rewards-marketplace p.points_section [data-lion-points]{
+  	color: rgb(243, 119, 98);
+  }
+  @media screen and (max-width: 1027px)	{
+    #loyaltylion .lion-in-cart-rewards-widget__rewards-slider{
+      padding: 0 25px;
+    }
+    #loyaltylion .lion-in-cart-rewards-widget__rewards-slider button.slide-arrow{
+      left: 0;
+      right: auto;
+    }
+    #loyaltylion .lion-in-cart-rewards-widget__rewards-slider button.slide-arrow.next-arrow{
+      right: 0;
+      left: auto;
+    }
+  }
+</style>

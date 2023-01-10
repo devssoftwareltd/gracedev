@@ -1,0 +1,607 @@
+{%- comment -%}
+This file has been modified by the Yoast SEO for Shopify app.
+You can learn more about this (and learn how to cleanly revert these changes) at https://yoa.st/removing-theme-changes.
+{%- endcomment -%}
+{%- liquid
+	assign disabled_by_yoast_seo = true
+	if content_for_header contains 'yoast-active-script'
+		assign disabled_by_yoast_seo = false
+	endif
+-%}
+{% paginate pages.products by section.settings.pagination_limit %}
+
+  <div class="sixteen columns">
+    <div class="section clearfix">
+      {% comment %}
+      <h1><a href="{{ pages.url }}" title="{{ pages.title | escape }}" id="bc-sf-filter-collection-header">{{ pages.title }}</a></h1>
+	  {% endcomment %}
+      <h1>{{ pages.title }}</h1>
+      <div class="breadcrumb eight columns alpha">
+        {% if section.settings.collection_breadcrumb %}
+          <span {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://data-vocabulary.org/Breadcrumb"{% endif %}><a href="{{ shop.url }}" title="{{ shop.name | escape }}" {% if disabled_by_yoast_seo %}itemprop="url"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="title"{% endif %}>{{ 'general.breadcrumbs.home' | t }}</span></a></span>
+          <span class="icon-right-arrow"></span>
+          <span {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://data-vocabulary.org/Breadcrumb"{% endif %}><a href="{{ pages.url }}" title="{{ pages.title | escape }}" {% if disabled_by_yoast_seo %}itemprop="url"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="title"{% endif %}>{{ pages.title }}</span></a></span>
+
+          {% if current_tags %}
+            {% for tag in current_tags %}{% include 'easylockdown_filter_collection' with tag %}
+              <span class="icon-right-arrow"></span>
+              <span {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://data-vocabulary.org/Breadcrumb"{% endif %}><a href="/collections/{% if collection.handle != blank %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handleize }}" title="{{ tag | escape }}" {% if disabled_by_yoast_seo %}itemprop="url"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="title"{% endif %}>{{ tag }}</span></a></span>
+            {% endfor %}
+          {% endif %}
+
+          <span id="bc-sf-filter-top-pagination">{% include 'bc-sf-filter-skeleton', width: 2 %}</span>
+        {% else %}
+          &nbsp;
+        {% endif %}
+      </div>
+
+      {% if section.settings.collection_sort %}
+        <div id="bc-sf-filter-top-sorting" class="eight columns section_select omega {% unless section.settings.collection_tags %}offset-by-four{% endunless %}">{% include 'bc-sf-filter-skeleton', width: 3 %}</div>
+      {% endif %}
+    </div>
+  </div>
+
+{% comment %}
+** Details page - custom view **
+- Page template
+- Uses blocks
+{% endcomment %}
+
+{% if section.blocks.size > 0 %}
+  {% for block in section.blocks %}
+
+    <div {{ block.shopify_attributes }}>
+
+      {% if block.type == 'image_with_text_overlay' %}
+
+        <section {% if block.settings.image_stretch == false %}class="container"{% endif %}>
+          <div class="slider flexslider {% if block.settings.image_stretch == false %}sixteen columns{% endif %}">
+            <ul class="slides">
+              <li>
+                {% if block.settings.link != blank %}
+                  <a href="{{ block.settings.link }}">
+                {% endif %}
+                {% if block.settings.image != nil %}
+                  <img  src="{{ block.settings.image | img_url: '300x' }}"
+                        alt="{{ block.settings.image.alt | escape }}"
+                        class="lazyload lazyload--fade-in"
+                        sizes="100vw"
+                        srcset="  {{ block.settings.image | img_url: '2048x' }} 2048w,
+                                  {{ block.settings.image | img_url: '1600x' }} 1600w,
+                                  {{ block.settings.image | img_url: '1200x' }} 1200w,
+                                  {{ block.settings.image | img_url: '1000x' }} 1000w,
+                                  {{ block.settings.image | img_url: '800x' }} 800w,
+                                  {{ block.settings.image | img_url: '600x' }} 600w,
+                                  {{ block.settings.image | img_url: '400x' }} 400w"
+                         />
+                {% else %}
+                  {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg placeholder-svg--banner' }}
+                {% endif %}
+
+                {% if block.settings.link != blank %}
+                  </a>
+                {% endif %}
+                {% if block.settings.image != blank or block.settings.title != blank or block.settings.subtext != blank or block.settings.button_label != blank %}
+                  <div class="flex-caption">
+                    <div class="container">
+                      <div class="columns {% if block.settings.text_position == 'left' %} eight offset-by-one {% elsif block.settings.text_position == 'right' %} eight offset-by-eight {% else %} ten offset-by-three {% endif %} align_{{ block.settings.text_align }}">
+                        {% if block.settings.title != blank %}
+                          <h1 class="headline">
+                            {{ block.settings.title | escape }}
+                          </h1>
+                        {% endif %}
+                        {% if block.settings.subtext != blank %}
+                          <div class="subtitle">
+                            {{ block.settings.subtext }}
+                          </div>
+                        {% endif %}
+                        {% if block.settings.button_label != blank %}
+                          <a href="{{ block.settings.link }}" class="action_button">
+                            {{ block.settings.button_label | escape }}
+                          </a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      {% elsif block.type == 'map' %}
+
+        {% include 'map-layout', type: 'block' %}
+
+      {% elsif block.type == 'rich_text_and_image' %}
+
+        <div class="container">
+          <div class="sixteen columns">
+            <div class="homepage_content section {{ block.settings.text_alignment }} clearfix">
+              {% if block.settings.image %}
+                {{ block.settings.image | img_url: '1180x', scale: 2 | img_tag: block.settings.image.alt, 'lazyload lazyload--fade-in' }}
+              {% endif %}
+
+              {% if block.settings.title != blank %}
+                <h2 class="section-header home" style="text-align: inherit">
+                  {{ block.settings.title | escape }}
+                </h2>
+              {% endif %}
+
+              <div class="{{ block.settings.text_size }}">
+                {% if block.settings.content != blank %}
+                  {{ block.settings.content }}
+                {% endif %}
+
+                {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                  <a href="{{ block.settings.button_link }}" class="action_button">
+                    {{ block.settings.button_label | escape }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      {% elsif block.type == 'featured_collection' %}
+
+        {% assign collection = collections[block.settings.frontpage_collection] %}
+        {% assign products = collection.products %}
+        {% assign products_per_row = block.settings.frontpage_products_per_row %}
+
+        <div class="container">
+          <div class="sixteen columns">
+            <div class="section clearfix">
+              {% if block.settings.title != blank %}
+                <h2 class="section-header home">
+                  <a href="{{ collections[block.settings.frontpage_collection].url }}">
+                    {{ block.settings.title | escape }}
+                  </a>
+                </h2>
+              {% endif %}
+
+              {% if products.length > 0 %}
+                {% assign limit = block.settings.frontpage_products_limit %}
+                {% include 'product-loop', limit: limit %}
+              {% else %}
+                {% assign limit = block.settings.frontpage_products_limit %}
+                <div class="featured-collection--placeholder clearfix">
+                  {% for i in (1..limit) %}
+                    <div class="{% if products_per_row == 2 %} eight columns {% cycle 'alpha', 'omega' %}{% elsif products_per_row == 3 %} one-third column {% cycle 'alpha', '', 'omega' %}{% elsif products_per_row == 4 %} four columns {% cycle 'alpha', '', '', 'omega' %}{% endif %} thumbnail">
+                      <a href="#" {% if disabled_by_yoast_seo %}itemprop="url"{% endif %}>
+                        <div class="relative product_image">
+                          {% capture num %}{% cycle "1", "2", "3", "4", "5", "6" %}{% endcapture %}
+                          {{ 'collection-' | append: num | placeholder_svg_tag: 'placeholder-svg placeholder-svg--product' }}
+                        </div>
+                        <div class="info">
+                          <span class="title">{{ 'homepage.onboarding.product_title' | t }}</span>
+                            <span class="price">
+                            <span class="money">$49.60</span>
+                          </span>
+                        </div>
+                      </a>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      {% elsif block.type == 'blog_posts' %}
+
+        {%- assign blog_widget_select = block.settings.blog_widget_select -%}
+        {%- assign blog = blogs[blog_widget_select] -%}
+
+        <div class="container">
+          {% if blog != blank %}
+            <div class="section clearfix homepage_content">
+              {% if block.settings.title != blank %}
+                <div class="sixteen columns">
+                  <h2 class="section-header home">
+                    <a href="{{ blog.url }}">
+                      {{ block.settings.title | escape }}
+                    </a>
+                  </h2>
+                </div>
+              {% endif %}
+
+              {% for article in blog.articles limit: block.settings.home_page_articles %}
+                <div class="{% if block.settings.home_page_articles == 2 %}eight columns{% elsif block.settings.home_page_articles == 3 %}one-third column{% else %}four columns{% endif %} article">
+                  {% if article.image %}
+                    <a href="{{ article.url }}" title="{{ article.title | escape }}">
+                      <img  src="{{ article.image | img_url: '300x' }}"
+                            alt="{{ article.title | escape }}"
+                            class="lazyload lazyload--fade-in"
+                            data-sizes="auto"
+                            data-src="{{ article.image | img_url: '600x' }}"
+                            data-srcset="  {{ article.image | img_url: '2048x' }} 2048w,
+                                      {{ article.image | img_url: '1600x' }} 1600w,
+                                      {{ article.image | img_url: '1200x' }} 1200w,
+                                      {{ article.image | img_url: '1000x' }} 1000w,
+                                      {{ article.image | img_url: '800x' }} 800w,
+                                      {{ article.image | img_url: '600x' }} 600w,
+                                      {{ article.image | img_url: '400x' }} 400w"
+                             />
+                    </a>
+                  {% endif %}
+
+                  {% if block.settings.blog_tags %}
+                    <div class="blog_meta tags">
+                      {% for tag in article.tags %}
+                        <span><a href="{{ shop.url}}/blogs/{{ blogs[block.settings.blog_widget_select].handle }}/tagged/{{ tag | handleize }}" title="{{ blogs[block.settings.blog_widget_select].title | escape }} {{ 'blogs.general.tagged' | t }} {{ tag | escape }}">{{ tag }}</a></span>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+
+                  <h5 class="sub_title">
+                    <a href="{{ article.url }}" title="{{ article.title | escape }}">{{ article.title }}</a>
+                  </h5>
+                  <p class="blog_meta">
+                    {% if block.settings.blog_author %}
+                      <span>{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+                    {% endif %}
+
+                    {% if block.settings.blog_date %}
+                      <span>{{ article.published_at | date: format: "month_day_year" }}</span>
+                    {% endif %}
+
+                    {% if block.settings.blog_comment_count %}
+                      {% if settings.disqus_enabled %}
+                        <span>
+                          <a href="{{ article.url }}#disqus_thread" data-disqus-identifier="{{ article.id }}" class="disqus-comment-count">{{ 'blogs.counts.comments_with_count' | t: count: 0 }}</a>
+                        </span>
+                      {% elsif article.comments_enabled? and article.comments_count > 0 %}
+                        <span>
+                          <a href="{{ article.url }}#comments">{{ 'blogs.counts.comments_with_count' | t: count: article.comments_count }}</a>
+                        </span>
+                      {% endif %}
+                    {% endif %}
+                  </p>
+
+                  {% if article.excerpt != blank %}
+                    {{ article.excerpt }}
+                  {% endif %}
+                  {% if block.settings.read_more_link %}
+                    <p>
+                      <a href="{{ article.url }}" title="{{ article.title | escape }}">{{ 'blogs.general.continue_reading_html' | t }} <span class="icon-right-arrow"></span></a>
+                    </p>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="section clearfix homepage_content">
+              {% if block.settings.title != blank %}
+                <div class="sixteen columns">
+                  <h2 class="section-header home">
+                    <a href="{{ blog.url }}">
+                      {{ block.settings.title | escape }}
+                    </a>
+                  </h2>
+                </div>
+              {% endif %}
+
+              {% for i in (1..block.settings.home_page_articles) %}
+                <div class="{% if block.settings.home_page_articles == 2 %}eight columns{% elsif block.settings.home_page_articles == 3 %}one-third column{% else %}four columns{% endif %} article">
+                  {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+
+                  <h5 class="sub_title">
+                    <a href="#" title="{{ 'homepage.onboarding.blogpost_title' | escape }}">{{ 'homepage.onboarding.blogpost_title' | t }}</a>
+                  </h5>
+                  <p class="blog_meta">
+                    {% if block.settings.blog_author %}
+                      <span>{{ 'homepage.onboarding.blog_author' | t: author: article.author }}</span>
+                    {% endif %}
+
+                    {% if block.settings.blog_date %}
+                      <span>{{ 'now' | date: format: "month_day_year" }}</span>
+                    {% endif %}
+
+                    {% if block.settings.blog_comment_count %}
+                      {% if settings.disqus_enabled %}
+                        <span>
+                          <a href="{{ article.url }}#disqus_thread" data-disqus-identifier="{{ article.id }}" class="disqus-comment-count">{{ 'blogs.counts.comments_with_count' | t: count: 0 }}</a>
+                        </span>
+                      {% elsif article.comments_enabled? and article.comments_count > 0 %}
+                        <span>
+                          <a href="{{ article.url }}#comments">{{ 'blogs.counts.comments_with_count' | t: count: article.comments_count }}</a>
+                        </span>
+                      {% endif %}
+                    {% endif %}
+                  </p>
+
+                  {% if article.excerpt != blank %}
+                    {{ 'homepage.onboarding.blog_excerpt' | t }}
+                  {% endif %}
+                  {% if block.settings.read_more_link %}
+                    <p>
+                      <a href="{{ article.url }}" title="{{ article.title | escape }}">{{ 'blogs.general.continue_reading_html' | t }} <span class="icon-right-arrow"></span></a>
+                    </p>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif%}
+        </div>
+
+      {% elsif block.type == 'image_gallery' %}
+
+        <div class="container">
+          <div class="sixteen columns">
+           <div class="one-third column alpha thumbnail">
+              {% if block.settings.page_detail_image_1 %}
+                <a href="{{ block.settings.page_detail_image_1 | img_url: '1520x' }}" class="lightbox" rel="detail-gallery">
+                  <img  src="{{ block.settings.page_detail_image_1.src | img_url: '300x' }}"
+                        class="lazyload lazyload--fade-in"
+                        alt="{{ block.settings.page_detail_image_1.alt }}"
+                        style="max-width: {{- block.settings.page_detail_image_1.width -}}px;"
+                        data-sizes="auto"
+                        data-src="{{ block.settings.page_detail_image_1 | img_url: '2048x' }}"
+                        data-srcset=" {{ block.settings.page_detail_image_1 | img_url: '2048x' }} 2048w,
+                                      {{ block.settings.page_detail_image_1 | img_url: '1600x' }} 1600w,
+                                      {{ block.settings.page_detail_image_1 | img_url: '1200x' }} 1200w,
+                                      {{ block.settings.page_detail_image_1 | img_url: '1000x' }} 1000w,
+                                      {{ block.settings.page_detail_image_1 | img_url: '800x' }} 800w,
+                                      {{ block.settings.page_detail_image_1 | img_url: '600x' }} 600w,
+                                      {{ block.settings.page_detail_image_1 | img_url: '400x' }} 400w"
+                        />
+                </a>
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </div>
+            <div class="one-third column thumbnail">
+              {% if block.settings.page_detail_image_2 %}
+                <a href="{{ block.settings.page_detail_image_2 | img_url: '1520x' }}" class="lightbox" rel="detail-gallery">
+                  <img  src="{{ block.settings.page_detail_image_2.src | img_url: '300x' }}"
+                        class="lazyload lazyload--fade-in"
+                        alt="{{ block.settings.page_detail_image_2.alt }}"
+                        style="max-width: {{- block.settings.page_detail_image_2.width -}}px;"
+                        data-sizes="auto"
+                        data-src="{{ block.settings.page_detail_image_2 | img_url: '2048x' }}"
+                        data-srcset=" {{ block.settings.page_detail_image_2 | img_url: '2048x' }} 2048w,
+                                      {{ block.settings.page_detail_image_2 | img_url: '1600x' }} 1600w,
+                                      {{ block.settings.page_detail_image_2 | img_url: '1200x' }} 1200w,
+                                      {{ block.settings.page_detail_image_2 | img_url: '1000x' }} 1000w,
+                                      {{ block.settings.page_detail_image_2 | img_url: '800x' }} 800w,
+                                      {{ block.settings.page_detail_image_2 | img_url: '600x' }} 600w,
+                                      {{ block.settings.page_detail_image_2 | img_url: '400x' }} 400w"
+                        />
+                </a>
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </div>
+            <div class="one-third column omega thumbnail">
+              {% if block.settings.page_detail_image_3 %}
+                <a href="{{ block.settings.page_detail_image_3 | img_url: '1520x' }}" class="lightbox" rel="detail-gallery">
+                  <img  src="{{ block.settings.page_detail_image_3.src | img_url: '300x' }}"
+                        class="lazyload lazyload--fade-in"
+                        alt="{{ block.settings.page_detail_image_3.alt }}"
+                        style="max-width: {{- block.settings.page_detail_image_3.width -}}px;"
+                        data-sizes="auto"
+                        data-src="{{ block.settings.page_detail_image_3 | img_url: '2048x' }}"
+                        data-srcset=" {{ block.settings.page_detail_image_3 | img_url: '2048x' }} 2048w,
+                                      {{ block.settings.page_detail_image_3 | img_url: '1600x' }} 1600w,
+                                      {{ block.settings.page_detail_image_3 | img_url: '1200x' }} 1200w,
+                                      {{ block.settings.page_detail_image_3 | img_url: '1000x' }} 1000w,
+                                      {{ block.settings.page_detail_image_3 | img_url: '800x' }} 800w,
+                                      {{ block.settings.page_detail_image_3 | img_url: '600x' }} 600w,
+                                      {{ block.settings.page_detail_image_3 | img_url: '400x' }} 400w"
+                        />
+                </a>
+              {% else %}
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      {% elsif block.type == 'divider' %}
+
+        <div class="container" style="padding: 0; {% if block.settings.divider_mobile %}display: none;{% endif %}">
+          <div class="sixteen columns">
+            <hr class="page-divider {% if block.settings.divider_border %}active-divider{% endif %}" style="{% if block.settings.divider_spacing %}margin: {{ block.settings.divider_spacing }}px 0px;{% endif %}">
+          </div>
+        </div>
+
+      {% elsif block.type == 'featured_video' %}
+
+        <section  class="homepage-video darken-video-{{ block.settings.video_dark_overlay }}"
+              data-video-id="video-{{section.id}}"
+              data-autoplay="{{ block.settings.autoplay }}"
+              data-autoloop="{{ block.settings.autoloop }}"
+              data-video-text="{{ block.settings.display_text_over_video }}"
+              >
+          <div class="homepage-video--media"
+            data-video-src="{{ block.settings.video.id }}"
+            data-aspect-ratio="{{ block.settings.aspect_ratio }}"
+            data-provider="{{ block.settings.source }}"
+            data-video-mp4="{{ block.settings.mp4 }}"
+            data-video-ogv="{{ block.settings.ogv }}" >
+            {% if block.settings.image %}
+              <img  data-play-video
+                    src="{{ block.settings.image | img_url: '300x' }}"
+                    alt="{{ block.settings.title | escape }}"
+                    class="lazyload lazyload--fade-in homepage-video__image"
+                    sizes="100vw"
+                    srcset="  {{ block.settings.image | img_url: '2048x' }} 2048w,
+                              {{ block.settings.image | img_url: '1600x' }} 1600w,
+                              {{ block.settings.image | img_url: '1200x' }} 1200w,
+                              {{ block.settings.image | img_url: '1000x' }} 1000w,
+                              {{ block.settings.image | img_url: '800x' }} 800w,
+                              {{ block.settings.image | img_url: '600x' }} 600w,
+                              {{ block.settings.image | img_url: '400x' }} 400w"
+                     />
+            {% else %}
+              <div class="homepage-video__placeholder" data-play-video>
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg placeholder-svg--video' }}
+              </div>
+            {% endif %}
+
+            <div class="flex-caption flexslider caption js-caption">
+              <div class="container">
+                <div class="columns {% if block.settings.text_position == 'left' %} seven offset-by-one {% elsif block.settings.text_position == 'right' %} seven offset-by-eight  {% else %} eight offset-by-four {% endif %} align_{{ block.settings.text_align }} caption-content">
+                  {% if block.settings.title != blank %}
+                    <h1 class="headline">
+                      {{ block.settings.title | escape }}
+                    </h1>
+                  {% endif %}
+                  {% if block.settings.subtext != blank %}
+                    <div class="subtitle">
+                      {{ block.settings.subtext }}
+                    </div>
+                  {% endif %}
+                  {% if block.settings.button_label != blank %}
+                    <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="action_button" data-play-video>
+                      {{ block.settings.button_label | escape }}
+                    </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      {% elsif block.type == 'page' %}
+
+        <div class="container">
+          <div class="sixteen columns">
+            <div class="homepage_content section clearfix">
+              {% if block.settings.content_page != blank %}
+                {% include 'page-multi-column', content: pages[block.settings.content_page].content %}
+              {% else %}
+                {{ 'homepage.onboarding.no_content' | t }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      {% elsif block.type == "contact_form" %}
+
+        <div class="container">
+          {% if block.settings.contact_heading != blank %}
+            <h2 class="title center">{{ block.settings.contact_heading }}</h2>
+            <div class="feature_divider"></div>
+          {% endif %}
+
+          <div class="page-details_contact_form contact_form contact_text_position--{{ block.settings.contact_text_position }} contact_text_alignment--{{ block.settings.contact_text_alignment }}">
+            <div class="{% if block.settings.contact_text_position == 'center' %}eight {% else %} seven {% endif %} columns contact_content">
+              {% if block.settings.contact_subheading != blank %}
+                <h3>{{ block.settings.contact_subheading }}</h3>
+              {% endif %}
+              {% if block.settings.contact_content != blank %}
+                {{ block.settings.contact_content }}
+              {% endif %}
+            </div>
+            <div class="eight columns">
+              {% form 'contact' %}
+                {% if form.posted_successfully? %}
+                  <p class="quote">{{ 'contact.form.post_success' | t }}</p>
+                {% endif %}
+
+                {% if form.errors %}
+                  <p class="quote">{{ 'general.forms.post_error' | t }}</p>
+
+                 {% assign message = 'contact.form.message' | t %}
+                  <ul class="center">
+                    {% for field in form.errors %}
+                      {% if field == 'form' %}
+                        <li>
+                          {{ form.errors.messages[field] }}
+                        </li>
+                      {% else %}
+                        <li>
+                          {% assign field_name = field | replace: 'body', message %}
+                          {{ 'general.forms.post_field_error_html' | t: field: field_name, error: form.errors.messages[field] }}
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                   </ul>
+                {% endif %}
+
+                 <div class="four columns alpha">
+                  {% assign name_attr = 'contact.form.name' | handle %}
+                  <label for="contactFormName">{{ 'contact.form.name' | t }} <span class="red">*</span></label>
+                  <input type="text" id="contactFormName" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.name' | t }}" autocapitalize="words" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.name }}{% endif %}" required="required">
+                 </div>
+                 <div class="four columns omega">
+                  <label for="contactFormEmail">{{ 'contact.form.email' | t }} <span class="red">*</span></label>
+                  <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" required="required">
+                 </div>
+                 {% comment %}
+                  {% assign name_attr = 'contact.form.phone' | t | handle %}
+                  <label for="contactFormPhone" class="hidden-label">{{ 'contact.form.phone' | t }}</label>
+                  <input type="tel" id="contactFormPhone" name="contact[{{ name_attr }}]" placeholder="{{ 'contact.form.phone' | t }}" pattern="[0-9\-]*" value="{% if form[name_attr] %}{{ form[name_attr] }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+                  {% endcomment %}
+
+                <label for="contactFormMessage">{{ 'contact.form.message' | t }} <span class="red">*</span></label>
+                <textarea rows="5" id="contactFormMessage" name="contact[body]" placeholder="{{ 'contact.form.message' | t }}" required="required">{% if form.body %}{{ form.body }}{% endif %}</textarea>
+
+                <input type="submit" class="submit action_button" value="{{ 'contact.form.send' | t }}" />
+              {% endform %}
+            </div>
+          </div>
+        </div>
+
+      {% elsif block.type == 'quote' %}
+
+        <div class="container">
+          <div class="sixteen columns">
+            <div class="page-quote">
+              {{ block.settings.page_quote }}
+            </div>
+          </div>
+        </div>
+
+      {% elsif block.type == 'image_with_text' %}
+
+        <div class="container">
+          <div class="sixteen columns">
+            <div class="homepage_content section clearfix">
+              {% capture image_layout %}
+                <div class="six columns offset-by-one image_column {% if block.settings.layout == 'left' %}alpha{% else %}omega{% endif %}">
+                  {% if block.settings.image != blank %}
+                    {{ block.settings.image | img_url: '580x', scale: 2 | img_tag: block.settings.image.alt, 'lazyload lazyload--fade-in' }}
+                  {% else %}
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  {% endif %}
+                </div>
+              {% endcapture %}
+
+              {% if block.settings.layout == 'left' %}
+                {{ image_layout }}
+              {% endif %}
+
+              <div class="eight columns content_column {% if block.settings.layout == 'left' %}offset-by-one omega{% else %}alpha{% endif %} align_{{ block.settings.layout }}">
+                {% if block.settings.title != blank %}
+                  <h3 class="align_{{ block.settings.layout }}">
+                    {{ block.settings.title | escape }}
+                  </h3>
+                {% endif %}
+                {% if block.settings.text != blank %}
+                  {{ block.settings.text }}
+                {% endif %}
+                {% if block.settings.button_label != blank and block.settings.button_link != blank %}
+                  <a href="{{ block.settings.button_link }}" class="action_button">
+                    {{ block.settings.button_label | escape }}
+                  </a>
+                {% endif %}
+              </div>
+
+              {% if block.settings.layout == 'right' %}
+                {{ image_layout }}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+      {% endif %}
+
+    </div>
+
+  {% endfor %}
+{% endif %}
+
+{% endpaginate %}

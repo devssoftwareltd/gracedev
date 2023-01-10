@@ -1,0 +1,46 @@
+{%- comment -%}
+This file has been modified by the Yoast SEO for Shopify app.
+You can learn more about this (and learn how to cleanly revert these changes) at https://yoa.st/removing-theme-changes.
+{%- endcomment -%}
+{%- liquid
+	assign disabled_by_yoast_seo = true
+	if content_for_header contains 'yoast-active-script'
+		assign disabled_by_yoast_seo = false
+	endif
+-%}
+{% assign product_found = false %}
+{% assign skip = false %}
+{% assign collection_group = products | map: 'id' %}
+{% assign collection_group_thumb = collection_group | append : 'thumb' %}
+{% assign collection_group_mobile = collection_group | append : 'mobile' %}
+
+{% capture new_row %}
+    <br class="clear product_clear" />
+{% endcapture %}
+
+<div {% if disabled_by_yoast_seo %}itemtype="http://schema.org/ItemList"{% endif %} class="products">
+  {% for product in products limit: limit %}{% include 'easylockdown_filter_collection' with product %}
+  
+  {% comment %}
+	{%- include 'bold-product' with product, hide_action: 'skip' -%}
+  {% endcomment %}
+    {% if product.id == skip_product.id or skip == true %}
+      {% assign product_found = true %}
+    {% else %}
+      {% if forloop.rindex0 == 0 and product_found == false and forloop.length != products.count and template != 'search' and template != 'index' and template != 'page.details' %}
+        {% assign skip = true %}
+      {% else %}
+
+        {% include 'product-thumbnail', sidebar: sidebar %}
+
+        {% if products_per_row == 2 %}
+          {% cycle collection_group: '', new_row %}
+        {% elsif products_per_row == 3 %}
+          {% cycle collection_group: '', '', new_row %}
+        {% elsif products_per_row == 4 %}
+          {% cycle collection_group: '', '', '', new_row %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+</div>

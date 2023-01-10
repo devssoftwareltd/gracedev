@@ -1,0 +1,53 @@
+{{ 'loyalty-new-dashboard.css' | asset_url | stylesheet_tag }}
+
+{% if customer %}
+	
+	<div id= "loyaltylion" class="loyalty-dashboard">
+		<h1>hi, {{ customer.first_name }}! you have <span data-lion-points="approved"></span> <span style="display: none;" data-lion-points="lifetime"></span> points (<span data-lion-points="pending"></span> pending)</h1>
+		
+      	<div class="lion-header lion-integrated-page-section">
+          	<nav class="lion-header__nav">
+              <a class="lion-header__nav-link lion-header__nav-link--earn" data-i18n-key="sdk.integrated_page.earn.header">Earn points</a>
+              <a class="lion-header__nav-link lion-header__nav-link--redeem" data-i18n-key="sdk.integrated_page.redeem.header">Rewards</a>
+              <a class="lion-header__nav-link lion-header__nav-link--account-history" data-i18n-key="sdk.integrated_page.account_history.header">History</a>
+          	</nav>
+      	</div>
+      {% comment %}
+      <div class="loyalty-dashboard-btn-container">
+		<a  class="loyalty-button" href="/cart">redeem now</a>
+		<a class="swell-history-link loyalty-button" href="javascript:void(0)">rewards history</a> 
+        <a class="loyalty-button" href="/pages/rewards#loyalty-campaigns-grid">start earning</a>
+	  </div>
+      {% endcomment %}
+	</div>
+
+{% else %}
+	
+<div class="loyalty-hiw-container">
+	<h1>how it works</h1>
+<div class="loyalty-hiw-steps-container">
+	<div class="loyalty-hiw-step">
+		<div class="loyalty-hiw-step-num">1</div>
+		<div class="loyalty-hiw-step-title">Join</div>
+		<div class="loyalty-hiw-step-text">Create an account and start earning.</div>
+	</div>
+
+		<div class="loyalty-hiw-step">
+		<div class="loyalty-hiw-step-num">2</div>
+		<div class="loyalty-hiw-step-title">Earn</div>
+		<div class="loyalty-hiw-step-text">Earn points every time you shop.</div>
+	</div>
+
+		<div class="loyalty-hiw-step">
+		<div class="loyalty-hiw-step-num">3</div>
+		<div class="loyalty-hiw-step-title">Redeem</div>
+		<div class="loyalty-hiw-step-text">Redeem points for exclusive discounts.</div>
+	</div>
+
+</div>
+<hr>
+</div>
+
+
+
+{% endif %}

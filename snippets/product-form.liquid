@@ -1,0 +1,230 @@
+{% assign variant = product.selected_or_first_available_variant %}
+{% assign sca_product = product %}{% assign sca_product_id_text = "," | append : sca_product.id | append : "," %}{% assign sca_price = sca_product.price %}{% assign sca_price_min = sca_product.price_min %}{% assign sca_price_max = sca_product.price_max %}{% assign sca_compare_at_price = sca_product.compare_at_price %}{% assign sca_compare_at_price_min = sca_product.compare_at_price_min %}{% assign sca_compare_at_price_max = sca_product.compare_at_price_max %}{% assign sca_product_available = sca_product.available %}{% assign sca_product_variantCount = sca_product.variants.size %}{% assign sca_compare_at_price_varies = sca_product.compare_at_price_varies %}{% assign sca_price_varies = sca_product.price_varies %}{% assign sca_has_only_default_variant = false %}{% capture sca_product_variants_json %}{{sca_product.variants | json }}{% endcapture %} {% capture sca_product_json %}{ {% if sca_all_gift_products_ids == null or sca_all_gift_products_ids contains sca_product_id_text %}{% assign sca_product_available = false %}{% assign sca_product_variantCount = 0 %}{% assign sca_has_only_default_variant = true %}{% assign sca_is_first_variant = true %}{% capture sca_variants_json %} [{% for variant in sca_product.variants %}{% unless variant.metafields.secomapp.freegifts %}{% unless variant.title contains '(Freegifts)' %}{% unless variant.title contains '% Off' %}{% unless variant.metafields.shappify_qb.qb_hide == "1" %}{% unless variant.metafields.shappify_bundle.is_bundle == "true" %}{% unless variant.metafields.brodev_scn.hide == "true" %}{% unless variant.metafields.wholesaler2.wholesale %}{% unless variant.metafields.Wholesaler.level %}{% unless variant.title contains '(Wholesale' %}{% if sca_is_first_variant%} {{ variant | json }}{% assign sca_price = variant.price %} {% assign sca_price_min = variant.price %} {% assign sca_price_max = variant.price %} {% assign sca_compare_at_price = variant.compare_at_price %} {% assign sca_compare_at_price_min = variant.compare_at_price %} {% assign sca_compare_at_price_max = variant.compare_at_price %} {% assign sca_product_available = variant.available %} {% assign sca_product_variantCount = 1 %} {% assign sca_is_first_variant = false%}{% else %},{{variant | json }} {% if sca_price_min >= variant.price %} {% assign sca_price_min = variant.price %} {% assign sca_price = variant.price %}{% endif %} {% if sca_price_max <= variant.price %} {% assign sca_price_max = variant.price %} {% endif %} {% if variant.compare_at_price %} {% if sca_compare_at_price_min==null or sca_compare_at_price_min >= variant.compare_at_price %} {% assign sca_compare_at_price_min = variant.compare_at_price %} {% assign sca_compare_at_price = variant.compare_at_price %} {% endif %} {% if sca_compare_at_price_max==null or sca_compare_at_price_max < variant.compare_at_price %} {% assign sca_compare_at_price_max = variant.compare_at_price %} {% endif %} {% endif %} {% if variant.available == true %} {% assign sca_product_available = true %} {% endif %} {% assign sca_product_variantCount = sca_product_variantCount | plus: 1 %}{% endif %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{% endunless %}{%endfor%} ]{% endcapture %}{% if sca_price_min < sca_price_max %}{% assign sca_price_varies = true %}{% else %}{% assign sca_price_varies = false %}{% endif %}{% if sca_compare_at_price_min < sca_compare_at_price_max %}{% assign sca_compare_at_price_varies = true %}{% else %}{% assign sca_compare_at_price_varies = false %}{% endif %}{% if sca_product_variantCount > 1 %}{% assign sca_has_only_default_variant = false %}{% endif %}{% if sca_product_variantCount == sca_product.variants.size %} "variants":{{ sca_product.variants }},{% else %}{%assign sca_product_variants_json = sca_variants_json %} "variants":{{ sca_variants_json }},{% endif %}{% else %} "variants":{{ sca_product_variants_json }},{% endif %} "id": {{sca_product.id}}, "title": {{sca_product.title | json}}, "handle": {{sca_product.handle | json}}, "description": {{sca_product.description | json}}, "published_at": "{{sca_product.published_at | date: "%Y-%m-%dT%H-%M-%S%:z" }}", "created_at": "{{sca_product.created_at | date: "%Y-%m-%dT%H-%M-%S%:z" }}", "vendor": {{sca_product.vendor | json}}, "type": {{sca_product.type | json}}, "tags": {{sca_product.tags | json}}, "price": {{sca_price}}, "price_min": {{sca_price_min}}, "price_max": {{sca_price_max}}, "available": {{sca_product.available}}, "price_varies": {{sca_price_varies}}, "compare_at_price": {{sca_compare_at_price}}, "compare_at_price_min": {{sca_compare_at_price_min}}, "compare_at_price_max": {{sca_compare_at_price_max}}, "compare_at_price_varies": {{sca_compare_at_price_varies}}, "images": {{sca_product.images | json}}, "featured_image": {{sca_product.featured_image | json }}, "options": {{sca_product.options | json}}, "media": {{sca_product.media | json }}, "content": {{sca_product.content | json }}} {% endcapture sca_product_json %}
+	{% comment %}
+  <form action="/cart/add"
+        method="post"
+        class="clearfix product_form  sds old_product_form init {% if sca_product_variantCount > 1 or product.options.size > 1 %}product_form_options{% endif %} ajax_cart_form"
+        id="product-form-{{ product.id }}{{ section.id }}{{ block.id }}"
+        data-money-format="{{ shop.money_format }}"
+        data-shop-currency="{{ shop.currency }}"
+        data-select-id="product-select-{{ product.id }}{{ product-form }}{{ section.id }}{{ block.id }}"
+        data-enable-state="{% if template contains 'product' %}true{% else %}false{% endif %}"
+        data-product="{{ product | json | escape }}"
+        {% if settings.limit_quantity or settings.display_inventory_left %}
+          data-variant-inventory='[{%- for v in product.variants -%}
+
+{%- include 'bold-variant' with v, hide_action: 'skip' -%}{"id":{{v.id}},"inventory_quantity":{{v.inventory_quantity}},"inventory_management":"{{v.inventory_management}}","inventory_policy":"{{v.inventory_policy}}"}{% if forloop.last == false %},{% endif %}{%- endfor -%}]'
+        {% endif %}
+        data-product-id="{{ product.id }}">
+	{% endcomment %}
+
+
+    <form action="/cart/add"
+        method="post"
+        class="clearfix product_form sd init ajax_product_form old_product_form {% if sca_product_variantCount > 1 or product.options.size > 1 %}product_form_options{% endif %}"
+        id="product-form-{{ product.id }}{{ section.id }}{{ block.id }}"
+        data-money-format="{{ shop.money_format }}"
+        data-shop-currency="{{ shop.currency }}"
+        data-select-id="product-select-{{ product.id }}{{ product-form }}{{ section.id }}{{ block.id }}"
+        data-enable-state="{% if template contains 'product' %}true{% else %}false{% endif %}"
+        data-product="{{ product | json | escape }}"
+       	{% if settings.enable_promo  %}
+        {% assign free_gift_id= all_products[settings.promo_product].selected_or_first_available_variant.id %}
+        data-free-promo= "{{free_gift_id}}"
+        {% endif %}
+        data-product-id="{{ product.id }}"
+        data-cart = 'ajax'>
+
+    {% if settings.product_form_style == "swatches" and sca_product_variantCount > 1 or settings.product_form_style == "swatches" and product.options[0] != "Title" %}
+
+      {% comment %}
+      NEW PA CODE
+      {% endcomment %}
+      {% assign has_color_option = false %}
+      {% assign group_prod_tag = '' %}
+
+      {% for options in product.options %}
+        {% if options == 'Color' %}
+
+          {% assign has_color_option = true %}
+
+          {% for group_tag in product.tags %}
+            {% if group_tag contains 'color_group:' %}
+              {% assign group_prod_tag = group_tag %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+
+        {% endif %}
+      {% endfor %}
+      {% comment %}
+      END - NEW PA CODE
+      {% endcomment %}
+
+      <div class="swatch_options fg">
+        {% for option in product.options %}
+          {% include 'product-swatch' with option %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if product.options.size > 1 %}
+      <div class="select d">
+        <select id="product-select-{{ product.id }}{{ product-form }}{{ section.id }}{{ block.id }}" name="id" class="multi_select">
+          {% for v in product.variants %}
+            <option {% if v == variant %}selected="selected"{% endif %} value="{{ v.id }}" data-sku="{{ v.sku }}">{{ v.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% elsif product.options.size == 1 and sca_product_variantCount > 1 or product.options.size == 1 and product.options[0] != "Title" %}
+      <div class="select dfd">
+        <label style="display: none;">{{ product.options[0] }}</label>
+        <select id="product-select-{{ product.id }}{{ product-form }}{{ section.id }}{{ block.id }}" name="id">
+          {% for v in product.variants %}
+            <option {% if v == variant %}selected="selected"{% endif %} value="{{ v.id }}" data-sku="{{ v.sku }}">{{ v.title }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    {% else %}
+      <input type="hidden" name="id" value="{{ variant.id }}" />
+    {% endif %}
+
+     {% for option in product.options %}
+         {% if option == 'Size' %}
+          <div class="size_chart_section" id="productSizeChartVariation">
+            {% comment %}<span id="myBtn">Click Here to See Size Guide</span>{% endcomment %}
+            <div id="myModal" class="modal">
+                <div class="modal-body">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <div class="table_section_add">
+                          <div class="modal_left">
+                            <img class="main_image" data-id="main" src="https://cdn.shopify.com/s/files/1/3047/6286/files/Croqui-for-website_34c28bf6-8dbf-4525-b498-5f78eab13b28.png?v=1586272357" alt="" width="400" height="500">
+                            <img class="main_image" data-id="first" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-MichelleL.png?v=1598037234" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="second" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Morgan.png?v=1598037264" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="third" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Holly.jpg?v=1617901936" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="fourth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Katie.png?v=1598037121" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="fifth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Sophia.jpg?v=1598644084" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="sixth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Lexi.png?v=1582827069" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="seventh" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Melissa.png?v=1598037169" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="eighth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Ashley.jpg?v=1582740296" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="nineth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Natalie.jpg?v=1616523849" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="tenth" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-Amanda.png?v=1598036830" alt="" width="400" height="500" style="display: none;"/>
+                            <img class="main_image" data-id="eleventh" src="https://cdn.shopify.com/s/files/1/3047/6286/files/SizeChart-MichelleH.png?v=1598037199" alt="" width="400" height="500" style="display: none;"/>
+                          </div>
+                          <div class="modal_right">
+                            <p>Check out sizing and measurements.</p>
+                            <div class="measurements_get">
+                              <span class="select_sizes" data-id="main">View Measurement Taking Guide</span>
+                              <span class="select_sizes" data-id="first">View Michelle L. (XS)</span>
+                              <span class="select_sizes" data-id="second">View Morgan (XS-S)</span>
+                              <span class="select_sizes" data-id="third">View Holly (XS-S)</span>
+                              <span class="select_sizes" data-id="fourth">View Katie (XS-S)</span>
+                              <span class="select_sizes" data-id="fifth">View Sophia (S)</span>
+                              <span class="select_sizes" data-id="sixth">View Lexi (S)</span>
+                              <span class="select_sizes" data-id="seventh">View Melissa (S-M)</span>
+                              <span class="select_sizes" data-id="eighth">View Ashley (S-M)</span>
+                              <span class="select_sizes" data-id="nineth">View Natalie (L)</span>
+                              <span class="select_sizes" data-id="tenth">View Amanda (XL)</span>
+                              <span class="select_sizes" data-id="eleventh">View Michelle H. (XL-XXL)</span>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+    	 {% endif %}
+     {% endfor %}
+
+
+    {% if settings.display_inventory_left %}
+      <div class="items_left">
+        {% if variant.inventory_management != blank and variant.inventory_quantity > 0 %}
+          {% capture items_left_text %}
+            {% if variant.inventory_quantity == 1 %}
+              {{ 'products.product.items_left_count.one' | t }}
+            {% else %}
+              {{ 'products.product.items_left_count.other' | t }}
+            {% endif %}
+          {% endcapture %}
+
+          <p><em>{{ variant.inventory_quantity }} {{ items_left_text }}</em></p>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <a id="jump-size-chart" style="cursor: pointer;">View size chart</a>
+
+    {% comment %} Gift Card extras (Giftee app) {% endcomment %}
+    {% include 'giftee_al' %}
+    {% if product.type != 'FREEGIFT_HIDDEN' %}
+	<div class="atc_button">
+      {% if settings.display_product_quantity %}
+        <span class="not_in_stock" style="color:red; display: none;">Not enough in stock</span>
+        <div class="left qty-button">
+          {% comment %}<label for="quantity">{{ 'products.product.quantity' | t }}</label>{% endcomment %}
+            {% assign maxQty = 10 %}
+            {% if variant.inventory_quantity < 10 %}
+              {% assign maxQty = variant.inventory_quantity %}
+            {% endif %}
+            <select name="quantity" id="quantity"  class="prodPageQty" style="display:none;">
+                {% for i in (1..maxQty) %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+
+            <div class="quantity_box">
+            <span class="product_quant minus">-</span>
+              <input type="number"  class="quantity" name="quantity" id="quantity" value="1" {% if settings.limit_quantity and variant.inventory_management != blank and variant.inventory_policy == "deny" %} data-max="{{ variant.inventory_quantity }}"{% endif %} />
+            <span class="product_quant plus">+</span>
+            </div>
+            {% comment %}
+            <input type="number" min="1" size="2" class="quantity" name="quantity" id="quantity" value="1" {% if settings.limit_quantity and variant.inventory_management != blank and variant.inventory_policy == "deny" %} data-max="{{ variant.inventory_quantity }}"{% endif %} />
+            {% endcomment %}
+
+        </div>
+      {% endif %}
+        <div class="purchase clearfix {% if settings.display_product_quantity %}inline_purchase{% endif %}">
+        {% if settings.cart_action == 'reload_page' %}
+          <input type="hidden" name="return_to" value="back" />
+        {% elsif settings.cart_action == 'redirect_checkout' %}
+          <input type="hidden" name="return_to" value="/checkout" />
+        {% endif %}
+
+        {% capture add_to_cart_label %}{% if collection_handles contains 'pre-order' %}{{ 'collections.general.pre_order' | t }}{% else %}{{ 'products.product.add_to_cart' | t }}{% endif %}{% endcapture %}
+        {%comment%}
+        <button type="submit" name="add" id="product-add-to-cart" class="action_button add_to_cart" data-label={{ add_to_cart_label | json }}><span class="text">{{ add_to_cart_label }}</span></button>
+        <button type="submit" name="add" id="product-add-to-cart" class="action_button add_to_cart" data-label={{ add_to_cart_label | json }}><div class="content_price" style="display:none;">${{ variant.price | money_without_currency | remove: "," }}</div><div class="atc_hyphen" style="display:none;">-</div> <span class="text">{{ add_to_cart_label }}</span><div class="item_count_data" style="display:none;">(1 Item)</div></button>
+        {%endcomment%}
+        <button type="submit" name="add" id="product-add-to-cart" class="action_button add_to_cart" data-label={{ add_to_cart_label | json }}><span class="text">{{ add_to_cart_label }}</span></button>
+
+
+        {% for tag in product.tags %}
+
+              {% if tag == 'restock' %}
+
+                      <a class="action_button klaviyo-bis-trigger cstmKlaviyo " href="#">Notify Me When Available</a>
+
+              {% endif %}
+          {% endfor %}
+      </div>
+    </div>
+    {%endif%}  
+
+  </form>
+<span class="sca-fg-cat-list" style="display: none;" id="secomapp-fg-data-{{ product.id }}"> </span>
+
+<script>
+  $(document).ready(function () {
+    $('.action_button').click(function (e) {
+      if($('#quantity').val() > parseInt($('#quantity').attr('data-max'))){
+        e.preventDefault();
+        $('.not_in_stock').css('display','block');
+      }
+    });
+     product_tags = "{{ product.tags | join: ',' }}";
+    product_tags = product_tags.split(',');
+
+  });
+</script>

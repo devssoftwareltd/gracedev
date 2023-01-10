@@ -1,0 +1,24 @@
+{{ 'loyalty-referral-modal.css' | asset_url | stylesheet_tag }}
+
+<div class="loyalty-referral-modal-container loyalty-hide-modal">
+	<div class="loyalty-referral-modal-overlay">
+
+
+		<div class="loyalty-modal-actions-container">
+ 		<div class="loyalty-referral-modal-close">
+			{{ 'loyalty-x.svg' | asset_url | img_tag: 'close', 'loyalty-referral-modal-close-img' }}
+		</div>
+		<div class="loyalty-referral-modal-thanks">
+			thanks for shopping
+		</div>
+	</div>
+			<div class="loyalty-referral-modal-widget-container">
+		  {% include 'loyalty-referral' %}
+</div>
+
+	</div>
+	
+</div>
+
+
+{{ 'loyalty-referral-modal.js' | asset_url | script_tag }}

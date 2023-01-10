@@ -1,0 +1,40 @@
+<script type="text/javascript">
+/**
+ * Optimize rendering the combo products widget by the main PickyStory app.
+ * Rendered by layout/theme.liquid.
+ * If you choose to uninstall PickyStory, this snippet can be safely deleted.
+ * Get the app: https://go.pickystory.com/8nsjceym
+ * Contact us for any questions: hello@pickystory.com.
+ * Copyright (C) 2021 Picky Story Ltd. - All Rights Reserved
+ */
+(() => {
+  const workspace = window['pickystory'] || {}
+  const isPrefetching = workspace['combosIsPrefetching']
+  const productHandle = isPrefetching && workspace['combosProductHandle']
+  const productForms = productHandle && document.querySelectorAll('form[action="/cart/add"]')
+  const productForm = productForms && productForms.length === 1 && productForms.item(0)
+  if (productForm) {
+    const intervalDuration = 50
+    const maxIntervals = 20000 / intervalDuration // Stop trying after 20 seconds
+    let intervalCount = 0
+    productForm.style.visibility = 'hidden'
+    const interval = setInterval(() => {
+      intervalCount += 1
+      const abort = !workspace['combosIsPrefetching']
+      if (abort || intervalCount > maxIntervals) {
+        productForm.style.visibility = 'visible'
+        clearInterval(interval)
+      } else {
+        const combos = workspace['combosPrefetched']
+        if (combos) {
+          clearInterval(interval)
+          const compoundProducts = combos['compoundProducts'] || []
+          if (!compoundProducts.includes(productHandle)) {
+            productForm.style.visibility = 'visible'
+          }
+        }
+      }
+    }, intervalDuration)
+  }
+})()
+</script>

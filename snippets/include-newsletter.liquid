@@ -1,0 +1,85 @@
+{% comment %}
+** Newsletter - dynamic **
+- Draggable section
+{% endcomment %}
+
+{% comment %} Assign object as block or section {% endcomment %}
+{% if type == 'block' %}
+  {%- assign object = block -%}
+{% else %}
+  {%- assign object = section -%}
+{% endif %}
+
+{% comment %} Content settings {% endcomment %}
+{%- assign title = object.settings.title -%}
+{%- assign subheading = object.settings.newsletter_richtext -%}
+{% comment %} End content settings {% endcomment %}
+
+<section class="section is-width-wide">
+  <div class="container homepage-newsletter text-align-center">
+    <div class="one-whole column">
+      {% if title != blank %}
+        <h2>
+          {{ title }}
+        </h2>
+      {% endif %}
+
+      {% if subheading != blank %}
+        <div class="newsletter-text">
+          {{ subheading }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="one-whole column">
+      {% render 'newsletter',
+              display_first_name: object.settings.display_first_name,
+              display_last_name: object.settings.display_last_name
+      %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ object.id }} {
+    width: 100%;
+  }
+
+  #shopify-section-{{ object.id }} h2,
+  #shopify-section-{{ object.id }} .newsletter-text {
+    color: {{ object.settings.text_color }};
+  }
+
+  {% if object.settings.use_border == blank %}
+    #shopify-section-{{ object.id }} {
+      background-color: {{ object.settings.background_color }};
+    }
+  {% endif %}
+
+  {% if object.settings.use_border %}
+    #shopify-section-{{ object.id }} {
+      margin: 30px 0;
+    }
+    {% if object.settings.nav_border == 'double' %}
+      #shopify-section-{{ object.id }} .container {
+        border-top: double {{ settings.border_color }};
+        border-bottom: double {{ settings.border_color }};
+      }
+    {% elsif object.settings.nav_border == 'dashed' %}
+      #shopify-section-{{ object.id }} .container {
+        border-top: 1px dashed {{ settings.border_color }};
+        border-bottom: 1px dashed {{ settings.border_color }};
+      }
+    {% elsif object.settings.nav_border == 'dotted' %}
+      #shopify-section-{{ object.id }} .container {
+        border-top: 1px dotted {{ settings.border_color }};
+        border-bottom: 1px dotted {{ settings.border_color }};
+      }
+    {% elsif object.settings.nav_border == 'solid' %}
+      #shopify-section-{{ object.id }} .container {
+        border-top: 1px solid {{ settings.border_color }};
+        border-bottom: 1px solid {{ settings.border_color }};
+      }
+    {% endif %}
+  {% endif %}
+</style>

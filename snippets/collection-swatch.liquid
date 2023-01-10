@@ -1,0 +1,62 @@
+{% if settings.collection_swatches %}
+  {% assign file_extension = 'png' %}
+
+  {% assign has_color_option = false %}
+  {% assign group_prod_tag = '' %}
+
+  {% for option in product.options %}
+
+    {% if option == 'Color' %}
+
+      {% assign has_color_option = true %}
+
+      {% for group_tag in product.tags %}
+        {% if group_tag contains 'color_group:' %}
+          {% assign group_prod_tag = group_tag %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+    {% endif %}
+
+
+    {% if group_prod_tag != '' and option == 'Color' %}
+
+      {% include 'collection-swatch-urls' %}
+
+    {% else %}
+
+
+      {% assign downcased_option = option | downcase %}
+      {% if downcased_option contains 'color' or downcased_option contains 'colour' %}
+        {% assign option_index = forloop.index0 %}
+        {% assign values = '' %}
+        <div class="collection_swatches">
+
+          {% for variant in product.variants %}
+{% unless variant.metafields.secomapp.freegifts %}
+{% unless variant.title contains '(Freegifts)' %}
+
+  {%- include 'bold-variant' with variant, hide_action: 'skip' -%}
+            {% assign value = variant.options[option_index] | remove: csp_flag_string %}
+            {% unless values contains value %}
+              {% assign values = values | join: ',' %}
+              {% assign values = values | append: ',' | append: value %}
+              {% assign values = values | split: ',' %}
+
+              <a href="{{ variant.url | within: collection }}" class="swatch">
+                <span data-image="{{ variant.featured_image | product_img_url: '480x' }}" style="background-image: url({{ value | handle | append: '.' | append: file_extension | asset_img_url: '50x' }}); background-color: {{ value | split: ' ' | last | handle }};"></span>
+              </a>
+            {% endunless %}
+
+{%endunless%}
+{%endunless%}
+          {% endfor %}
+
+        </div>
+      {% endif %}
+
+    {% endif %}
+
+  {% endfor %}
+{% endif %}

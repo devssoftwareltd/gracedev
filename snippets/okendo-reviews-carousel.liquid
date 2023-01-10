@@ -1,0 +1,22 @@
+{% if shop.metafields.okendo.settings.isWidgetPlusEnabled == true %}
+    {% assign renderWidgetPlusScript = true %}
+{% elsif shop.metafields.okendo.settings.isWidgetPlusAdminEnabled == true and request.design_mode %}
+    {% assign renderWidgetPlusScript = true %}
+{% endif %}
+
+{% if product != blank %}
+    {% capture product_data_attribute %}data-oke-reviews-product-id="shopify-{{ product.id }}"{% endcapture %}
+{% endif %}
+asd
+
+{% if renderWidgetPlusScript == true %}
+    <div
+        data-oke-carousel
+        {{ product_data_attribute }}
+    ></div>
+    {% else %}
+    <div
+        data-oke-reviews-carousel
+        {{ product_data_attribute }}
+    ></div>
+{% endif %}

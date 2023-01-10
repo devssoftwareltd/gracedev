@@ -1,0 +1,36 @@
+{% comment %}
+<div class="newsletter {% if newsletter == 'center' %}center{% endif %}">
+  <p class="message"></p>
+  
+  {% form 'customer' %}
+    {% if form.posted_successfully? %}
+      <p><em>{{ 'general.newsletter_form.success_text' | t }}</em></p>
+    {% elsif form.errors %}
+      {% for field in form.errors %}
+        <p><em>{{ field }} - {{ form.errors.messages[field] }}</em></p>
+      {% endfor %}
+    {% endif %}
+
+    {% if template contains "password" %}
+     <input type="hidden" name="contact[tags]" value="prospect,password page"/>
+    {% else %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+    {% endif %}        
+    
+    {% if settings.display_first_name %}
+      <input class="newsletter-half first-name" type="text" name="contact[first_name]" placeholder="{{ 'general.newsletter_form.subscriber_first_name' | t }}" />
+    {% endif %}
+    {% if settings.display_last_name %}
+      <input class="newsletter-half last-name" type="text" name="contact[last_name]" placeholder="{{ 'general.newsletter_form.subscriber_last_name' | t }}" />
+    {% endif %}
+     
+    <input type="hidden" name="challenge" value="false">  
+    <input type="email" class="contact_email" name="contact[email]" required placeholder="{{ 'general.newsletter_form.placeholder' | t }}" autocorrect="off" autocapitalize="off" />
+    <input type='submit' name="commit" class="action_button sign_up" value="{{ 'general.newsletter_form.submit' | t }}" />
+  {% endform %}
+</div>
+{% endcomment %}
+<div class="klaviyo-form-YehaQB"><svg xmlns="http://www.w3.org/2000/svg" class="loader" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: rgb(255, 255, 255); display: block; shape-rendering: auto;" width="58px" height="58px" viewbox="0 0 100 100" preserveaspectratio="xMidYMid">
+<circle cx="50" cy="50" fill="none" stroke="#3a3c45" stroke-width="5" r="40" stroke-dasharray="188.49555921538757 64.83185307179586"> <animatetransform attributename="transform" type="rotate" repeatcount="indefinite" dur="1s" values="0 50 50;360 50 50" keytimes="0;1"></animatetransform>
+</circle>
+</svg></div>

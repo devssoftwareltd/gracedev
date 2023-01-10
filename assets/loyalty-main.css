@@ -1,0 +1,29 @@
+.loyalty-page-container {
+	    font-family: Queulat;
+}
+
+.loyalty-page-container h1 {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.loyalty-button {
+    background-color: #f49688;
+    border-radius: 3px;
+    min-width: 100px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 9px 23px;
+    width: 72px;
+    height: 14px;
+    text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.11);
+    font-family: "Roboto Slab";
+    font-size: 14px;
+    font-weight: 300;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: 1.12px;
+    color: #ffffff !important;
+height: auto;
+}
+

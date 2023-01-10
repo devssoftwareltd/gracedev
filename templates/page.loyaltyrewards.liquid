@@ -1,0 +1,37 @@
+{% comment %}
+<div class="sixteen columns">
+  <div class="section clearfix">
+    <h1>{{ page.title }}</h1>
+  </div>
+</div>
+{% endcomment %}
+<div class="sixteen columns">
+  <div class="section clearfix" id="loyalty-rewards">  
+    <div class="loyalty-banner-section">
+      {% render 'loyalty-new-banner' %}
+    </div>
+    {% if customer %}
+    	{% render 'loyalty-new-dashboard' %}
+    	{% render 'loyalty-new-rewards' %}
+		{% render 'loyalty-new-marketplace' %}
+    	{% render 'loyalty-new-campaigns' %}
+    	{% render 'loyalty-new-rules' %}
+    	{% render 'loyalty-new-histoy' %}
+    	{% render 'loyalty-reference' %}
+    {% else %}
+    
+    	{% render 'loyalty-new-dashboard' %}
+    	{% render 'loyalty-new-rewards' %}
+    	{% render 'loyalty-new-campaigns' %}
+    	{% render 'loyalty-new-rules' %}
+    	{% render 'loyalty-reference' %}
+    
+    {% endif %}
+    
+    {% comment %}{% include 'page-multi-column', content: page.content %}{% endcomment %}
+  </div>
+</div>
+
+
+{{ 'loyaltylion-main-css.css' | asset_url | stylesheet_tag }}
+{% render 'loyalty-main-js' %}

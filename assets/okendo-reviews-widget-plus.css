@@ -1,0 +1,67 @@
+.okeReviews li {
+  padding: 0;
+}
+
+.okeReviews-widget-customHeading {
+  border-top: none;
+  text-align: left;
+}
+
+.okeReviews .oke-button, .okeReviews .oke-button:hover {
+  text-transform: lowercase;
+  background-image: url(https://cdn.shopify.com/s/files/1/3047/6286/files/addtocart-background.jpg?1795277\2026);
+  background-repeat: repeat;
+  transition: all .2s linear;
+  -o-transition: all .2s linear;
+  -moz-transition: all .2s linear;
+  -webkit-transition: all .2s linear;
+
+}
+
+.okeReviews .oke-sortSelect .oke-sortSelect-label {
+  display: none;
+}
+
+.okeReviews .oke-sortSelect .oke-select {
+  background: url(//cdn.shopify.com/s/files/1/3047/6286/t/124/assets/select.png?v=1156868…) no-repeat right, white;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 3px;
+    border: 1px solid #d9dbdc;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    padding: 10px 30px 10px 10px;
+    text-indent: 0.01px;
+    text-overflow: '';
+}
+
+.okeReviews .oke-w-reviews-sort .oke-sortSelect-sort.oke-select {
+  margin-bottom: 0;
+}
+
+.okeReviews .oke-w-reviews-sort {
+  margin-left: 20px;
+}
+
+.okeReviews .oke-w-reviews .oke-w-reviews-controls {
+	justify-content: flex-end;
+	align-items: center;
+}
+
+.okeReviews .oke-reviewCarousel-header .oke-reviewCarousel-header-title {
+  margin-bottom: 24px;
+}
+
+body.product h2.okeReviews-widget-customHeading {
+  float: none;
+  display: block;
+  clear: both;
+}
+
+.orc-allReviewsCollections #questions-tab {
+  display: none;
+}

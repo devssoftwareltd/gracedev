@@ -1,0 +1,210 @@
+{% assign easylockdownON = false %} {% assign easylockdownHiddenPurchase = false %} {% assign easylockdownRedirectURL = '' %} {% assign easylockdownPage404Title = '' %} {% assign easylockdownPage404Message = '' %} {% assign easylockdownActiveID = 0 %} {% assign easylockdownActiveHash = '' %} {% assign easylockdownPasswordForm = false %} {% assign easylockdownPasswordNote = '' %} {% assign easylockdownPasswordPlaceholder = '' %} {% assign easylockdownHidePrice = false %} {% assign easylockdownLocaleRootUrl = '' %} {% for locale in shop.published_locales %} {% if shop.locale == locale.iso_code %} {% unless locale.primary %}{% assign easylockdownLocaleRootUrl = locale.root_url %}{% endunless %}{% break %} {% endif %} {% endfor %} <script type='text/javascript' src='{% unless request.design_mode %}//{{ shop.domain }}{% endunless %}/apps/easylockdown/easylockdown-1.0.5.min.js' data-no-instant></script> <script type='text/javascript'>if( typeof InstantClick == 'object' ) easylockdown.clearData();</script> <style type="text/css">#easylockdown-password-form{padding:30px 0;text-align:center}#easylockdown-wrapper,.easylockdown-form-holder{display:inline-block}#easylockdown-password{vertical-align:top;margin-bottom:16px;padding:8px 15px;line-height:1.2em;outline:0;box-shadow:none}#easylockdown-password-error{display:none;color:#fb8077;text-align:left}#easylockdown-password-error.easylockdown-error{border:1px solid #fb8077}#easylockdown-password-form-button:not(.easylockdown-native-styles){vertical-align:top;display:inline-block!important;height:auto!important;padding:8px 15px;background:#777;border-radius:3px;color:#fff!important;line-height:1.2em;text-decoration:none!important}.easylockdown-instantclick-fix,.easylockdown-item-selector{position:absolute;z-index:-999;display:none;height:0;width:0;font-size:0;line-height:0}.easylockdown-collection-item[data-eld-loc-can],.easylockdown-item-selector+*,.easylockdown-item[data-eld-loc-can]{display:none}.easylockdown404-content-container{padding:50px;text-align:center}.easylockdown404-title-holder .easylockdown-title-404{display:block;margin:0 0 1rem;font-size:2rem;line-height:2.5rem}</style> {% if easylockdownInstantClick %}<div class='easylockdown-instantclick-fix' style='display:none;'></div>{% endif %}
+{% assign easylockdownSuperPage = false %}{% assign proxyPageA = shop.url | append: '/a/' %}{% assign proxyPageApps = shop.url | append: '/apps/' %}{% assign proxyPageCommunity = shop.url | append: '/community/' %}{% assign proxyPageTools = shop.url | append: '/tools/' %}
+{% if template == blank or template == 'customers/login' or template == 'customers/activate_account' or template == 'customers/reset_password' %}{% assign easylockdownSuperPage = true %}{% endif %}
+{% if canonical_url contains proxyPageA or canonical_url contains proxyPageApps or canonical_url contains proxyPageCommunity or canonical_url contains proxyPageTools %}{% assign easylockdownSuperPage = false %}{% endif %}
+{% assign easylockdownNow = 'now' | date:'%s' | times: 1 %}{% assign easylockdownNowWeekDay = easylockdownNow | date:'%u' %}{% assign easylockdownNowMonthDay = easylockdownNow | date:'%d' %}{% assign easylockdownNowHM = easylockdownNow | date:'%H%M' | times: 1 %}{% if customer %}{% assign easylockdownPlacedOrder = customer.orders.first.created_at | date:'%s' %}{% assign easylockdownOldestPlacedOrder = customer.orders.last.created_at | date:'%s' %}{% assign easylockdownDateDifference = easylockdownNow | minus: easylockdownPlacedOrder %}{% endif %}
+{% for t in customer.tags %}
+{% assign tag = t | downcase %}
+{% if tag == 'freegifttest' %}{% assign elcTag1 = true %}{% endif %}
+{% if tag == 'employee' %}{% assign elcTag2 = true %}{% endif %}
+{% if tag == 'happyreturns' %}{% assign elcTag3 = true %}{% endif %}
+{% if tag == 'canusemaplocator' %}{% assign elcTag4 = true %}{% endif %}
+{% if tag == 'blocked - fraud' %}{% assign elcTag5 = true %}{% endif %}
+{% if tag == 'test' %}{% assign elcTag6 = true %}{% endif %}
+{% endfor %}
+{% for t in product.tags %}
+{% assign tag = t | downcase %}
+{% if tag == 'cm_fg_limited qty' %}{% assign elpTag1 = true %}{% endif %}
+{% endfor %}
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "product" and product %}{% if product.id == 757680996469 %}{% assign easylockdownLockedContent = true %}{% endif %}{% endif %}
+{% if easylockdownLockedContent %}
+{% unless customer %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% capture easylockdownRedirectURL %}https://www.graceandlace.com/{% endcapture %}
+{% else %}
+{% unless elcTag1 %}{% assign easylockdownON = true %}{% endunless %}
+{% if easylockdownON %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% capture easylockdownRedirectURL %}https://www.graceandlace.com/{% endcapture %}
+{% endif %}
+{% endunless %}
+{% endif %}
+{% endunless %}
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "collection" or template contains "product" %}
+{% if product.collections %}{% for c in product.collections %}{% if c.id == 169268707410 %}{% assign easylockdownLockedContent = true %}{% break %}{% endif %}{% endfor %}{% endif %}
+{% endif %}
+{% if easylockdownLockedContent %}
+{% unless customer %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% capture easylockdownRedirectURL %}login{% endcapture %}
+{% else %}
+{% unless elcTag2 or elcTag3 %}{% assign easylockdownON = true %}{% endunless %}
+{% if easylockdownON %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% endif %}
+{% endunless %}
+{% endif %}
+{% endunless %}
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "page" and page %}{% if page.id == 49191682130 %}{% assign easylockdownLockedContent = true %}{% endif %}{% endif %}
+{% if easylockdownLockedContent %}
+{% unless customer %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% capture easylockdownRedirectURL %}login{% endcapture %}
+{% else %}
+{% unless elcTag4 %}{% assign easylockdownON = true %}{% endunless %}
+{% if easylockdownON %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% endif %}
+{% endunless %}
+{% endif %}
+{% endunless %}
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% assign easylockdownLockedContent = true %}
+{% if easylockdownLockedContent %}
+{% if customer %}
+{% assign easylockdownON = true %}{% unless elcTag5 %}{% assign easylockdownON = false %}{% endunless %}
+{% if easylockdownON %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endunless %}
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "collection" or template contains "product" %}
+{% if product.collections %}{% for c in product.collections %}{% if c.id == 33218953333 %}{% assign easylockdownLockedContent = true %}{% break %}{% endif %}{% endfor %}{% endif %}
+{% endif %}
+{% if easylockdownLockedContent %}
+{% unless customer %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% capture easylockdownRedirectURL %}login{% endcapture %}
+{% else %}
+{% unless elcTag6 %}{% assign easylockdownON = true %}{% endunless %}
+{% if easylockdownON %}
+{% assign easylockdownON = true %}
+{% capture easylockdownPage404Title %}Page not found{% endcapture %}
+{% capture easylockdownPage404Message %}<p>Sorry, we couldn't find this page.</p>{% endcapture %}
+{% endif %}
+{% endunless %}
+{% endif %}
+{% endunless %}
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "product" and product %}{% if product.id == 7005741187264 %}{% assign easylockdownLockedContent = true %}{% endif %}{% endif %}
+{% if easylockdownLockedContent %}
+<script type='text/javascript'>easylockdown.routeListByLocation.can.push({loc: 'US', url: 'https://www.graceandlace.com/products/bambuneckwrapunfilled', title404: 'Page not found', message404: '<p>Sorry, we couldn&apos;t find this page.</p>'});</script>
+{% endif %}
+{% endunless %}
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "collection" or template contains "product" %}
+{% if product.collections %}{% for c in product.collections %}{% if c.id == 296744550592 %}{% assign easylockdownLockedContent = true %}{% break %}{% endif %}{% endfor %}{% endif %}
+{% if collection %}{% if collection.id == 296744550592 %}{% assign easylockdownLockedContent = true %}{% endif %}{% endif %}
+{% endif %}
+{% if template contains "product" and product %}{% if elpTag1 %}{% assign easylockdownLockedContent = true %}{% endif %}{% endif %}
+{% if easylockdownLockedContent %}
+{% assign easylockdownPasswordProtectedContent = true %}
+<script type='text/javascript'>easylockdown.routeListByAuth.can.push({aid: '59084', ah: '03b5244abbfbaf18272c81e6311d0d4bd6a8b700c53202dc0cc9add013461f8c', pn: '', pp: 'Password', lt: '315360000'});</script>
+{% endif %}
+{% endunless %}
+<script type='text/javascript'>easylockdown.hideLinksListByAuth.can['34bbf59084'] = '*[href$="/collections/cyber-monday-free-gift-limited-quantity"],*[data-eld-collection-handle="cyber-monday-free-gift-limited-quantity"]';</script>
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "collection" or template contains "product" %}
+{% if product.collections %}{% for c in product.collections %}{% if c.id == 296658075840 %}{% assign easylockdownLockedContent = true %}{% break %}{% endif %}{% endfor %}{% endif %}
+{% if collection %}{% if collection.id == 296658075840 %}{% assign easylockdownLockedContent = true %}{% endif %}{% endif %}
+{% endif %}
+{% if easylockdownLockedContent %}
+{% assign easylockdownPasswordProtectedContent = true %}
+<script type='text/javascript'>easylockdown.routeListByAuth.can.push({aid: '58824', ah: '3ef751ae61076278846df26b16a69eddf0b080317ab667e1c4dd718e7c2e3a09', pn: '', pp: 'Password', lt: '315360000'});</script>
+{% endif %}
+{% endunless %}
+<script type='text/javascript'>easylockdown.hideLinksListByAuth.can['e167258824'] = '*[href$="/collections/ocu-discount-products"],*[data-eld-collection-handle="ocu-discount-products"]';</script>
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "collection" or template contains "product" %}
+{% if product.collections %}{% for c in product.collections %}{% if c.id == 296324432064 %}{% assign easylockdownLockedContent = true %}{% break %}{% endif %}{% endfor %}{% endif %}
+{% if collection %}{% if collection.id == 296324432064 %}{% assign easylockdownLockedContent = true %}{% endif %}{% endif %}
+{% endif %}
+{% if template contains "product" and product %}{% if product.id == 7383227465920 or product.id == 7384855937216 or product.id == 7383231725760 or product.id == 7384855838912 or product.id == 7383229857984 or product.id == 7384856232128 %}{% assign easylockdownLockedContent = true %}{% endif %}{% endif %}
+{% if easylockdownLockedContent %}
+{% assign easylockdownPasswordProtectedContent = true %}
+<script type='text/javascript'>easylockdown.routeListByAuth.can.push({aid: '57750', ah: '0da91d06c23cfaf10d7cace7fa7bf5cd3c96390ffd67e4e9a5fc8fb91bdd373b', pn: '', pp: 'Password', lt: '315360000'});</script>
+{% endif %}
+{% endunless %}
+<script type='text/javascript'>easylockdown.hideLinksListByAuth.can['ddcca57750'] = '*[href$="/collections/anniversary-free-gift"],*[data-eld-collection-handle="anniversary-free-gift"],*[href$="/products/anniversary-free-mystery-gift-tier-1"],*[href*="/products/anniversary-free-mystery-gift-tier-1/"],*[href*="/products/anniversary-free-mystery-gift-tier-1?"],*[href*="/products/anniversary-free-mystery-gift-tier-1#"],*[data-eld-product-handle="anniversary-free-mystery-gift-tier-1"],*[href$="/products/anniversary-free-mystery-gift-tier-4"],*[href*="/products/anniversary-free-mystery-gift-tier-4/"],*[href*="/products/anniversary-free-mystery-gift-tier-4?"],*[href*="/products/anniversary-free-mystery-gift-tier-4#"],*[data-eld-product-handle="anniversary-free-mystery-gift-tier-4"],*[href$="/products/anniversary-free-mystery-gift-tier-2"],*[href*="/products/anniversary-free-mystery-gift-tier-2/"],*[href*="/products/anniversary-free-mystery-gift-tier-2?"],*[href*="/products/anniversary-free-mystery-gift-tier-2#"],*[data-eld-product-handle="anniversary-free-mystery-gift-tier-2"],*[href$="/products/anniversary-free-mystery-gift-tier-3"],*[href*="/products/anniversary-free-mystery-gift-tier-3/"],*[href*="/products/anniversary-free-mystery-gift-tier-3?"],*[href*="/products/anniversary-free-mystery-gift-tier-3#"],*[data-eld-product-handle="anniversary-free-mystery-gift-tier-3"],*[href$="/products/copy-of-anniversary-free-mystery-gift-tier-2"],*[href*="/products/copy-of-anniversary-free-mystery-gift-tier-2/"],*[href*="/products/copy-of-anniversary-free-mystery-gift-tier-2?"],*[href*="/products/copy-of-anniversary-free-mystery-gift-tier-2#"],*[data-eld-product-handle="copy-of-anniversary-free-mystery-gift-tier-2"],*[href$="/products/copy-of-anniversary-free-mystery-gift-tier-3"],*[href*="/products/copy-of-anniversary-free-mystery-gift-tier-3/"],*[href*="/products/copy-of-anniversary-free-mystery-gift-tier-3?"],*[href*="/products/copy-of-anniversary-free-mystery-gift-tier-3#"],*[data-eld-product-handle="copy-of-anniversary-free-mystery-gift-tier-3"]';</script>
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+
+{% if easylockdownLockedContent %}
+{% assign easylockdownPasswordProtectedContent = true %}
+<script type='text/javascript'>easylockdown.routeListByAuth.can.push({aid: '32342', ah: 'd6f774ae6cf752759fc8659dc8e6ac68245cc1851aed00395ce4450a48aa3bed', pn: '', pp: 'Password', lt: '315360000'});</script>
+{% endif %}
+{% endunless %}
+
+{% unless easylockdownON or easylockdownSuperPage or template == 'customers/register' %}
+{% assign easylockdownLockedContent = false %}
+{% assign easylockdownHiddenContent = false %}
+{% if template contains "collection" or template contains "product" %}
+{% if product.collections %}{% for c in product.collections %}{% if c.id == 167528628306 %}{% assign easylockdownLockedContent = true %}{% break %}{% endif %}{% endfor %}{% endif %}
+{% endif %}
+{% if easylockdownLockedContent %}
+{% assign easylockdownPasswordProtectedContent = true %}
+<script type='text/javascript'>easylockdown.routeListByAuth.can.push({aid: '27071', ah: 'a329dfc5808056b11bf4d40d4bb5dc1e2f463db4634a61ca2cb42adae21cb33a', pn: '', pp: 'Password', lt: '315360000'});</script>
+{% endif %}
+{% endunless %}
+
+{% if easylockdownON or easylockdownPasswordProtectedContent %}<meta name="robots" content="noindex,nofollow">{% endif %}
+
+<script type='text/javascript'>
+  if( typeof easylockdown == 'object' ) {
+    easylockdown.localeRootUrl = '{{ easylockdownLocaleRootUrl }}';
+    {% if easylockdownON %}easylockdown.router('{{ easylockdownRedirectURL }}'); {% else %}easylockdown.routerByLocation(); {% endif %}
+
+    easylockdown.onReady(function(e){
+      easylockdown.hideAllLinks();
+    });
+  }
+</script>

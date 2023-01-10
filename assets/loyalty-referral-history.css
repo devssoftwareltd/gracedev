@@ -1,0 +1,195 @@
+@font-face {
+  font-family: "Roboto Slab";
+  src: url(https://yotpo-stool.s3.amazonaws.com/images/fonts/RobotoSlab-VariableFont_wght.ttf);
+}
+
+.hide {
+	display:none;
+}
+.loyalty-referral-history-container {
+	background-image:url('//cdn.shopify.com/s/files/1/3047/6286/t/202/assets/loyalty-rectangle-5-copy.png?v=30562239212536800471672861337');
+	background-repeat: no-repeat;
+    background-size: contain;
+    padding: 4%;
+}
+
+.loyalty-referral-history-section-container {
+    display: flex;
+    flex-wrap: wrap;
+    
+    justify-content: space-between;
+}
+
+.loyalty-referral-history-container, .loyalty-referral-history-img-container {
+	width: 50%;
+	box-sizing: border-box;
+}
+
+img.loyalty-referral-history-img {
+	width:100%;
+	display: block;
+}
+.loyalty-referral-history-list {
+    max-height: 350px;
+    overflow: scroll;
+}
+
+.loyalty-referral-history-container .swell-history-link {
+    font-weight: 300;
+    letter-spacing: 0.27px;
+    color: #565656;
+    text-transform: capitalize;
+    font-size: 15px;
+    text-decoration: underline;
+    padding:0;
+    
+}
+
+.loyalty-referral-history-second-header {
+    font-family: Queulat;
+    font-size: 24px;
+    text-align: left;
+    color: #565656;
+}
+
+.loyalty-referral-history-list-header-container, .loyalty-referral-history-line {
+    display: flex;
+     font-family: "Roboto Slab";
+    padding: 10px 0px;
+    font-size: 14px;
+}
+
+.loyalty-referral-history-list-header, .loyalty-referral-history-email,  .loyalty-referral-history-status{
+    width: 50%;
+}
+
+.loyalty-referral-history-redeem-desc {
+    font-size: 15px;
+    letter-spacing: inherit;
+    color: #565656;
+    font-family: "Roboto Slab";
+}
+
+
+.loyalty-referral-history-redeem-title {
+    font-family: Queulat;
+    font-size: 24px;
+    letter-spacing: inherit;
+    color: #565656;
+}
+
+.loyalty-referral-history-button {
+    background-color: #f49688;
+    border-radius: 3px;
+    min-width: 100px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 9px 23px;
+    width: 72px;
+    height: 14px;
+    text-shadow: 0px 1px 0 rgba(0, 0, 0, 0.11);
+    font-family: "Roboto Slab";
+    font-size: 14px;
+    font-weight: 300;
+    font-stretch: normal;
+    font-style: normal;
+    letter-spacing: 1.12px;
+    color: #ffffff !important;
+    height: auto;
+}
+
+/* width */
+.loyalty-referral-history-list::-webkit-scrollbar {
+  width: 10px;
+  height: 0;
+}
+
+/* Track */
+.loyalty-referral-history-list::-webkit-scrollbar-track {
+  background-color:#fff;
+  border-radius: 10px;
+}
+ 
+/* Handle */
+.loyalty-referral-history-list::-webkit-scrollbar-thumb {
+  background: #f49688; 
+  border-radius: 10px;
+}
+
+
+@media only screen and (max-width: 1024px) {
+  
+ .loyalty-referral-history-list {
+    max-height: 200px;
+    overflow: scroll;
+} 
+}
+@media only screen and (max-width: 768px) {
+  .loyalty-referral-history-section-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    flex-direction: column-reverse;
+}
+.loyalty-referral-history-container, .loyalty-referral-history-img-container {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.loyalty-referral-history-container {
+    background-size: cover;
+    padding: 4%;
+}
+
+.loyalty-referral-history-list-header, .loyalty-referral-history-email, .loyalty-referral-history-status {
+    width: 50%;
+    word-break: break-word;
+    padding: 0 4px;
+}
+
+.loyalty-referral-history-list-header-container, .loyalty-referral-history-line {
+    display: flex;
+    font-family: "Roboto Slab";
+    padding: 5px 0px;
+    font-size: 14px;
+}
+
+.loyalty-referral-history-list {
+    max-height: 200px;
+    overflow: scroll;
+}
+
+.loyalty-referral-history-container .swell-history-link {
+    text-align: center;
+    display: block;
+}
+
+.loyalty-referral-history-second-header {
+    text-align: center;
+    color: #565656;
+    margin-bottom: 15px;
+}
+
+
+.loyalty-referral-history-redeem-title {
+    text-align: center;
+}
+
+.loyalty-referral-history-redeem-desc {
+
+    text-align: center;
+}
+
+  
+  
+  .loyalty-referral-history-button {
+    display: none;
+}
+  
+  
+  a.loyalty-rewards-link {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+}

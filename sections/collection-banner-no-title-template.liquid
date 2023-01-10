@@ -1,0 +1,273 @@
+{%- comment -%}
+This file has been modified by the Yoast SEO for Shopify app.
+You can learn more about this (and learn how to cleanly revert these changes) at https://yoa.st/removing-theme-changes.
+{%- endcomment -%}
+{%- liquid
+	assign disabled_by_yoast_seo = true
+	if content_for_header contains 'yoast-active-script'
+		assign disabled_by_yoast_seo = false
+	endif
+-%}
+{% paginate collection.products by section.settings.pagination_limit %}
+  <div class="container">
+    <div class="sixteen columns">
+      <div class="section clearfix">
+        
+
+        <div class="breadcrumb eight columns alpha">
+          {% if section.settings.collection_breadcrumb %}
+          <span {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://data-vocabulary.org/Breadcrumb"{% endif %}><a href="{{ shop.url }}" title="{{ shop.name | escape }}" {% if disabled_by_yoast_seo %}itemprop="url"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="title"{% endif %}>{{ 'general.breadcrumbs.home' | t }}</span></a></span>
+          <span class="icon-right-arrow"></span>
+          <span {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://data-vocabulary.org/Breadcrumb"{% endif %}><a href="{{ collection.url }}" title="{{ collection.title | escape }}" {% if disabled_by_yoast_seo %}itemprop="url"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="title"{% endif %}>{{ collection.title }}</span></a></span>
+
+          {% if current_tags %}
+          {% for tag in current_tags %}
+          <span class="icon-right-arrow"></span>
+          <span {% if disabled_by_yoast_seo %}itemscope{% endif %} {% if disabled_by_yoast_seo %}itemtype="http://data-vocabulary.org/Breadcrumb"{% endif %}><a href="/collections/{% if collection.handle != blank %}{{ collection.handle }}{% else %}all{% endif %}/{{ tag | handleize }}" title="{{ tag | escape }}" {% if disabled_by_yoast_seo %}itemprop="url"{% endif %}><span {% if disabled_by_yoast_seo %}itemprop="title"{% endif %}>{{ tag }}</span></a></span>
+          {% endfor %}
+          {% endif %}
+
+          <span class="boost-pfs-filter-top-pagination">{% include 'boost-pfs-filter-skeleton', width: 2 %}</span>
+          {% else %}
+          &nbsp;
+          {% endif %}
+        </div>
+
+        {% if section.settings.collection_sort %}
+         <div class="boost-pfs-filter-top-sorting eight columns section_select omega">{% include 'boost-pfs-filter-skeleton', width: 3 %}</div>
+      {% endif %}
+      </div>
+    </div>
+  </div>
+
+ <div class="container"> 
+  <div class="sixteen columns">
+    <div class="section clearfix">
+  {% if collection.image %}
+    <img  src="{{ collection.image | img_url: '300x' }}"
+          alt="{{ collection.image.alt }}"
+          data-src="{{ collection.image | img_url: '2048x' }}"
+          class="lazyload lazyload--fade-in full-width-image"
+          sizes="100vw"
+          srcset="  {{ collection.image | img_url: '2048x' }} 2048w,
+                    {{ collection.image | img_url: '1600x' }} 1600w,
+                    {{ collection.image | img_url: '1200x' }} 1200w,
+                    {{ collection.image | img_url: '1000x' }} 1000w,
+                    {{ collection.image | img_url: '800x' }} 800w,
+                    {{ collection.image | img_url: '600x' }} 600w,
+                    {{ collection.image | img_url: '400x' }} 400w"
+           />
+  {% endif %}
+</div>
+  </div>
+    </div>
+
+  <div class="container">
+    {% if collection.description != blank %}
+      <div class="sixteen columns">
+        <div class="section clearfix">
+          <div id="boost-pfs-filter-collection-description" class="feature_text">
+            {{ collection.description }}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  {% assign show_sidebar = true %}
+
+  <div class="container content">
+    <div class="sidebar four columns">
+    <div class="boost-pfs-filter-tree-mobile-button" >{% include 'boost-pfs-filter-skeleton', type: 'button' %}</div>
+    <div class="boost-pfs-filter-tree boost-pfs-filter-tree-v" >
+      {% comment %} Include placeholder template {% endcomment %}
+      {% include 'boost-pfs-filter-skeleton', type: 'filter-tree'  %}
+    </div>
+  </div>
+    <div class="boost-pfs-filter-top-sorting twelve columns section_select omega">{% include 'boost-pfs-filter-skeleton', width: 3 %}</div>
+
+
+
+    <div class="twelve columns">
+    <div {% if disabled_by_yoast_seo %}itemtype="http://schema.org/ItemList"{% endif %} class="boost-pfs-filter-products products"  data-bc-sort="{{ collection.default_sort_by }}">
+      {% assign products = collection.products %}
+      {% assign products_per_row = section.settings.products_per_row %}
+      {% include 'product-loop' with sidebar: show_sidebar %}
+    </div>
+  </div>
+
+    <div class="twelve columns">
+      <div class="section clearfix">
+        <div class="paginate boost-pfs-filter-bottom-pagination"></div>
+      	<div class="boost-pfs-filter-load-more"></div>
+      </div>
+  	</div>
+  </div>
+{% endpaginate %}
+
+<script>
+  // Declare boostPFSThemeConfig variable
+  var boostPFSThemeConfig = {
+    label: {
+      sorting: {% assign temp = 'collections.sorting.title' | t  %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Sorting" {% endunless %},
+      sorting_best_selling: {% assign temp = 'collections.sorting.best_selling' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Best Selling" {% endunless %},
+      sorting_featured: {% assign temp = 'collections.sorting.featured' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Featured" {% endunless %},
+      sorting_title_ascending: {% assign temp = 'collections.sorting.az' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Alphabetically, A-Z" {% endunless %},
+      sorting_title_descending: {% assign temp = 'collections.sorting.za' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Alphabetically, Z-A" {% endunless %},
+      sorting_price_ascending: {% assign temp = 'collections.sorting.price_ascending' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Lowest Price" {% endunless %},
+      sorting_price_descending: {% assign temp = 'collections.sorting.price_descending' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Highest Price" {% endunless %},
+      sorting_date_ascending: {% assign temp = 'collections.sorting.date_ascending' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Date, Old to New" {% endunless %},
+      sorting_date_descending: {% assign temp = 'collections.sorting.date_descending' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Date, New to Old" {% endunless %},
+      sorting_sale_descending: {% assign temp = 'collections.sorting.sale_descending' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "% Off" {% endunless %},
+      sorting_relevance: {% assign temp = 'collections.sorting.relevance' | t %} {% unless temp contains 'translation missing'  %} {{temp | json}} {% else %} "Relevance" {% endunless %},
+
+      sale: {{ 'collections.general.sale' | t | json }},
+      sold_out: {{ 'products.product.sold_out' | t | json }},
+      new: {{ 'collections.general.new' | t | json }},
+      coming_soon: {{ 'collections.general.coming_soon' | t | json }},
+      pre_order: {{ 'collections.general.pre_order' | t | json }},
+      quick_shop: {{ 'collections.general.quick_shop' | t | json }},
+      free_price: {{ settings.free_price_text | json }},
+      from_price: {{ 'products.general.from' | t | json }},
+      add_to_cart: {{ 'products.product.add_to_cart' | t | json }},
+      breadcrumb_page: {{ 'general.breadcrumbs.page' | t | json }},
+      paginate_prev: {{ 'shopify.pagination.previous' | t | json }},
+      paginate_next: {{ 'shopify.pagination.next' | t | json }}
+    },
+    custom: {
+      products_per_page: {% if section.settings.pagination_limit != nil %} {{ section.settings.pagination_limit | json }} {% else %} 48 {% endif %},
+      products_per_row: {% if section.settings.products_per_row != nil %} {{ section.settings.products_per_row }} {% else %} 3 {% endif %},
+      show_sidebar: {% if show_sidebar != nil %} {{ show_sidebar | json }} {% else %} true {% endif %},
+      align_height: {% if settings.align_height != nil %} {{ settings.align_height | json }} {% else %} false {% endif %},
+      collection_height: {% if settings.collection_height %} {{ settings.collection_height | json }} {% else %} 200 {% endif %},
+      collection_price_position: {% if settings.collection_price_position %} {{ settings.collection_price_position | json }} {% else %} 'left' {% endif %},
+      collection_secondary_image: {% if settings.collection_secondary_image != nil %} {{ settings.collection_secondary_image | json }} {% else %} false {% endif %},
+      collection_swatches: {% if settings.collection_swatches != nil %} {{ settings.collection_swatches | json }} {% else %} false {% endif %},
+      enable_shopify_collection_badges: {% if settings.enable_shopify_collection_badges != nil %} {{ settings.enable_shopify_collection_badges | json }} {% else %} false {% endif %},
+      display_vendor_collection: {% if settings.display_vendor_collection != nil %} {{ settings.display_vendor_collection | json }} {% else %} false {% endif %},
+      sale_banner_enabled: {% if settings.sale_banner_enabled != nil %} {{ settings.sale_banner_enabled | json }} {% else %} true {% endif %},
+      quick_shop_enabled: {% if settings.quick_shop_enabled != nil %} {{ settings.quick_shop_enabled | json }} {% else %} false {% endif %},
+      show_multiple_currencies: {% if settings.show_multiple_currencies != nil %} {{ settings.show_multiple_currencies | json }} {% else %} false {% endif %},
+    }
+  };
+</script>
+{% schema %}
+
+{
+  "name": "Collection banner",
+  "class": "collection-template-section collection-wide-template-section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "pagination_limit",
+      "label": "Products per page",
+      "min": 2,
+      "max": 50,
+      "step": 1,
+      "default": 48
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_breadcrumb",
+      "label": "Show breadcrumb links",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_tags",
+      "label": "Enable filtering by product tag"
+    },
+    {
+      "type": "checkbox",
+      "id": "collection_sort",
+      "label": "Enable collection sorting"
+    },
+    {
+      "type": "header",
+      "content": "Sidebar"
+    },
+    {
+      "type": "paragraph",
+      "content": "Create sidebar by adding content blocks."
+    },
+    {
+      "type": "checkbox",
+      "id": "toggle",
+      "label": "Toggle sidebar content",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "filter_by_tag",
+      "name": "Tag list",
+      "limit": 1
+    },
+    {
+      "type": "filter_by_collection",
+      "name": "Collection list",
+      "limit": 1
+    },
+    {
+      "type": "filter_by_type",
+      "name": "Type list",
+      "limit": 1
+    },
+    {
+      "type": "filter_by_vendor",
+      "name": "Vendor list",
+      "limit": 1
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "link_list",
+          "id": "custom_menu_linklist",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Text area can be used for special announcements or general information.</p>"
+        }
+      ]
+    },
+    {
+      "type": "page",
+      "name": "Page",
+      "settings": [
+        {
+          "type": "page",
+          "id": "content_page",
+          "label": "Page"
+        }
+      ]
+    }
+  ]
+}
+
+{% endschema %}

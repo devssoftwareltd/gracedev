@@ -1,0 +1,127 @@
+.loyalty-product-redemptions {
+    margin-top: 50px;
+}
+i.loyalty-slick-prev.slick-arrow {
+  	content: url({{'loyalty-arrow-left.png'}});
+    left: -45px;
+}
+
+i.loyalty-slick-next.slick-arrow {
+    content: url({{'loyalty-arrow-right.png'}});
+    right: -45px;
+} 
+
+
+.loyalty-product-redemptions i.loyalty-slick-next.slick-arrow, .loyalty-product-redemptions i.loyalty-slick-prev.slick-arrow  {
+      position: absolute;
+    background-color: transparent;
+   top: 30%;
+    height: 50px;
+    width: 50px;
+	border-radius: 50%;
+    padding: 0;
+}
+
+.hide {
+ 	display: none; 
+}
+
+.opaque {
+ opacity: 0.5; 
+}
+
+.loyalty-redemption-prod-container {
+    text-decoration: none;
+}
+
+.loyalty-redemption-prod-container:hover {
+color: #000000
+
+}
+
+.loyalty-redemption-img-container img {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    height: auto;
+}
+ 
+h3.loyalty-redemption-prod-name {
+    font-size: 16px;
+    text-align: center;
+    height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #5b5b5b;
+    text-transform: capitalize;
+    font-family: "Roboto Slab";
+    letter-spacing: 0;
+    line-height: 1.2;
+    max-width: 300px;
+    margin: 0 auto;
+    border-bottom: none;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loyalty-redemption-product-price {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+
+.loyalty-container .slick-dots button {
+    width: 15px;
+    min-width: unset;
+    height: 15px !important;
+    padding: 0;
+    color: transparent;
+    margin: 0 5px;
+    font-size: 1px;
+    border-radius: 50px;
+    background-color: #c1c1c1;
+    border: none;
+}
+
+
+.loyalty-container .slick-dots .slick-active button {
+    background-color: #f49688;
+}
+
+.loyalty-redemption-img-container img {
+    display: block;
+    margin: 0 auto;
+    width: auto;
+    height: auto;
+    max-width: 250px;
+}
+
+.loyalty-redemption-tagline {
+    color: rgb(64, 65, 55);
+    font-size: 18px;
+    font-family: Queulat;
+    font-style: normal;
+    text-align: center;
+}
+ 
+@media only screen and (max-width: 768px) {
+  .loyalty-product-redemptions {
+    width: 100%;
+}
+
+
+.loyalty-redemption-prod-container {
+    text-decoration: none;
+    padding: 0 10px;
+}
+.loyalty-slick-nav-container .slick-dots li {
+    list-style: none;
+}
+  
+  
+.loyalty-slick-nav-container .slick-dots {
+    display: flex;
+    justify-content: center;
+}
+}

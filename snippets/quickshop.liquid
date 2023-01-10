@@ -1,0 +1,228 @@
+<div class="product-{{ product.id }}">
+  <div
+    class="
+      js-product_section
+      product_section
+    "
+    id="product-{{ product.id }}{{ section.id }}{{ block.id }}"
+    data-product-media-supported="{% if product.media != null %}true{% else %}false{% endif %}"
+    data-thumbnails-enabled="{{ display_thumbnails }}"
+    data-gallery-arrows-enabled="{{ gallery_arrows }}"
+    data-slideshow-speed="{{ slideshow_speed }}"
+    data-slideshow-animation="{{ slideshow_transition }}"
+    data-thumbnails-position="{{ thumbnail_position }}"
+    data-thumbnails-slider-enabled="{{ enable_thumbnail_slider }}"
+    data-activate-zoom="{{ activate_zoom }}"
+    data-quickshop-gallery
+  >
+    <div class="quick-shop">
+      <div class="quick-shop__product-gallery">
+        {%
+          render 'product-images',
+          context: 'modal',
+          video_looping: video_looping,
+          quickshop: true
+        %}
+      </div>
+
+      <div class="quick-shop__product-description" data-product-details>
+        {% for block in section.blocks %}
+          <div
+            class="
+              product-block
+              product-block--{{ block.type }}
+              {% if forloop.first %}
+                product-block--first
+              {% endif %}
+            "
+            {{ block.shopify_attributes }}
+          >
+            {% case block.type %}
+              {% when '@app' %}
+                <div class="product-app">
+                  {% render block %}
+                </div>
+
+            {% when 'title' %}
+              <h3 class="{% unless block.settings.show_border %}hide-border{% endunless %}">
+                {{ product.title }}
+              </h3>
+
+              {% if settings.enable_shopify_product_badges %}
+                <span class="shopify-product-reviews-badge" data-id="{{ product.id }}"></span>
+              {% endif %}
+
+            {% when 'vendor' %}
+              <p class="vendor">
+                <span>{{ product.vendor | link_to_vendor }}</span>
+              </p>
+
+            {% when 'price' %}
+              <div class="product__price-container {% if variant.available == false %}product__price-container--sold-out{% endif %}">
+                {% if collection_handles contains 'coming-soon' %}
+                  <p class="product__price">
+                    {{ 'collections.general.coming_soon' | t }}
+                  </p>
+                {% else %}
+                  <p class="product__price">
+                    <span class="{% if variant.compare_at_price > variant.price %}sale{% endif %}" content="{{ variant.price | money_without_currency | remove: "," }}">
+                      <span class="current-price">
+                        {% if variant.price > 0 %}
+                          <span class="money">
+                            {%
+                              render 'price-element',
+                              price: variant.price
+                            %}
+                          </span>
+                        {% else %}
+                          {{ settings.free_price_text }}
+                        {% endif %}
+                      </span>
+                    </span>
+
+                    <span class="was-price">
+                      {% if variant.price < variant.compare_at_price and variant.available %}
+                        <span class="money">
+                          {%
+                            render 'price-element',
+                            price: variant.compare_at_price
+                          %}
+                        </span>
+                      {% endif %}
+                    </span>
+                  </p>
+
+                  <span class="sold-out-text">
+                    {% if variant.available == false %}
+                      &ndash; {{ 'products.product.sold_out' | t }}
+                    {% endif %}
+                  </span>
+                {% endif %}
+                <form data-payment-terms-target style="display: none;"></form>
+              </div>
+
+              {%
+                render 'unit-price',
+                item: variant,
+                class: 'product-details__unit-price'
+              %}
+
+              {% unless collection_handles contains 'coming-soon' %}
+                {%
+                  render 'product-notify-me',
+                  product: product
+                %}
+              {% endunless %}
+
+            {% when 'text' %}
+              <div class="product-text">
+                {{ block.settings.text }}
+              </div>
+
+            {% when 'size_chart' %}
+              <div class="size-chart__container size-chart--{{ block.settings.text_position }}">
+                {%- assign product_tags = product.tags | join: ' ' -%}
+                {% if product_tags contains 'meta-size-chart-' %}
+                  {% for tag in product.tags %}
+                    {% if tag contains 'meta-size-chart-' %}
+                      <a
+                        class="size_chart"
+                        href="javascript:;"
+                        data-fancybox
+                        data-src="#size-chart-{{ product.id }}"
+                      >
+                        {{ 'products.product.size_chart' | t }} <span class="icon-right-arrow"></span>
+                      </a>
+
+                      {%
+                        render 'size-chart-popup',
+                        product: product,
+                        block: block
+                      %}
+                    {% endif %}
+                  {% endfor %}
+                {% elsif block.settings.size_chart != blank %}
+                  <a
+                    class="size_chart"
+                    href="javascript:;"
+                    data-fancybox
+                    data-src="#size-chart-{{ product.id }}"
+                  >
+                    {{ 'products.product.size_chart' | t }} <span class="icon-right-arrow"></span>
+                  </a>
+
+                  {%
+                    render 'size-chart-popup',
+                    product: product,
+                    block: block
+                  %}
+                {% endif %}
+              </div>
+
+            {% when 'description' %}
+              {% if block.settings.description_words == "none" %}
+                {{ product.description | split: '<!-- split -->' | first }}
+              {% else %}
+                {% if tabs %}
+                  {{ product.description | split: '<!-- split -->' | first }}
+                {% else %}
+                  <p>{{ product.description | strip_html | truncatewords: block.settings.description_words }}</p>
+                {% endif %}
+              {% endif %}
+
+              <p>
+                <a
+                  class="view_product_info"
+                  href="{{ product.url | within: collection }}"
+                  title="{{ product.title | escape }}"
+                >
+                  {{ 'collections.general.view_product_details_html' | t }}
+                </a>
+              </p>
+
+              {% if block.settings.show_border %}
+                <hr />
+              {% endif %}
+
+            {% when 'rating' %}
+              {% if product.metafields.reviews.rating.value != blank %}
+                <div class="product__rating rating">
+                  {%
+                    render 'rating-stars',
+                    value: product.metafields.reviews.rating.value.rating,
+                    scale_max: product.metafields.reviews.rating.value.scale_max,
+                  %}
+
+                  <p class="rating__text">
+                    <span aria-hidden="true">
+                      {{ product.metafields.reviews.rating.value }} / {{ product.metafields.reviews.rating.value.scale_max }}
+                    </span>
+                  </p>
+
+                  <p class="rating__count">
+                    <span aria-hidden="true">
+                      ({{ product.metafields.reviews.rating_count }})
+                    </span>
+                    <span class="visually-hidden">
+                      {{ product.metafields.reviews.rating_count }} {{ "general.accessibility.total_reviews" | t }}
+                    </span>
+                  </p>
+                </div>
+              {% endif %}
+
+            {% when 'form' %}
+              {% unless collection_handles contains 'coming-soon' %}
+                {%
+                  render 'product-form',
+                  product: product,
+                  context: 'product',
+                  collection_handles: collection_handles
+                %}
+              {% endunless %}
+            {% endcase %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

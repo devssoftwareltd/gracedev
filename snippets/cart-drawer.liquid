@@ -1,0 +1,41 @@
+<div id="CartDrawer" class="drawer drawer--right cart-drawer">
+  <div class="cart-drawer-wrap">
+    <div class="cart-header">
+      {% if cart.item_count < 1 %}
+      <div class="cart-title">Cart</div>
+            {% else %}
+      <div class="cart-title"><span class="check_top">&#10004;</span> <span class="cart_title-title"> {{ settings.ajax_cart_title }}</span> </div>
+      {% endif %}
+
+      
+      {% comment %}
+      <span id="shipping_message_in_ajax" style="padding-top:20px;color:#b02428;display:inline-block;font-size:18px;width:100%;text-align:center;"></span>
+      
+      <div class="free-shipping-text" data-value="{{settings.cart_free_shipping_threshold}}">
+        {%- if settings.cart_show_free_shipping_threshold -%}
+        {%- assign threshold_in_cents = settings.cart_free_shipping_threshold | times: 100 -%}
+        {%- if cart.total_price >= threshold_in_cents -%}
+        {{- 'cart.general.free_shipping' | t -}}
+        {%- else -%}
+        {%- capture remaining_amount -%}<span class="wh-original-cart-total"><span class='wh-original-price'>{{ cart.total_price | minus: threshold_in_cents | abs | money_without_trailing_zeros }}</span></span><span class="wh-cart-total"></span>{%- endcapture -%}
+        {{- 'cart.general.free_shipping_remaining_html' | t: remaining_amount: remaining_amount -}}
+        {%- endif -%}
+        <!--     Spend an extra $20 to get FREE delivery! -->
+        {%- endif -%}
+      </div>
+      {% endcomment %}
+      <div class="cart-close js-drawer-close">
+        <span>X</span>
+      </div>
+    </div>
+    <div class="free_shipping">
+      <span id="shipping_message_in_ajax" style=""></span>
+      <div class="cart__shipping-progress">
+      <span data-cart-shipping-progress=""></span>
+      </div>
+    </div>
+    <div id="CartContainer"></div>
+    <div class="cart-footer">
+    </div>
+  </div>
+</div>

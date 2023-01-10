@@ -1,0 +1,121 @@
+<div class="homepage-newsletter container">
+  <div class="sixteen columns center">
+    <h2>{{ section.settings.title }}</h2>
+    <p>{{ section.settings.subheading }}</p>
+  </div>
+  <div class="sixteen columns center">
+    {% include 'newsletter' %}
+  </div>
+</div>
+
+<style>
+  #shopify-section-{{ section.id }} h2,
+  #shopify-section-{{ section.id }} p {
+    color: {{ section.settings.text_color }};
+  }
+  {% if section.settings.use_border == blank %}
+    #shopify-section-{{ section.id }} {
+      background-color: {{ section.settings.background_color }};
+    }
+  {% endif %}
+
+  {% if section.settings.use_border %}
+    #shopify-section-{{ section.id }} {
+      margin: 30px 0;
+    }
+    {% if section.settings.nav_border == 'double' %}
+      #shopify-section-{{ section.id }} .container {
+        border-top: double {{ settings.border_color }};
+        border-bottom: double {{ settings.border_color }};
+      }
+    {% elsif section.settings.nav_border == 'dashed' %}
+      #shopify-section-{{ section.id }} .container {
+        border-top: 1px dashed {{ settings.border_color }};
+        border-bottom: 1px dashed {{ settings.border_color }};
+      }
+    {% elsif section.settings.nav_border == 'dotted' %}
+      #shopify-section-{{ section.id }} .container {
+        border-top: 1px dotted {{ settings.border_color }};
+        border-bottom: 1px dotted {{ settings.border_color }};
+      }
+    {% elsif section.settings.nav_border == 'solid' %}
+      #shopify-section-{{ section.id }} .container {
+        border-top: 1px solid {{ settings.border_color }};
+        border-bottom: 1px solid {{ settings.border_color }};
+      }
+    {% endif %}
+  {% endif %}
+</style>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "class": "newsletter-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Sign up today"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Sign up to get 10% off your next order!"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_border",
+      "label": "Use border",
+      "info": "Disables background color"
+    },
+    {
+      "type": "select",
+      "id": "nav_border",
+      "label": "Border style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "dashed",
+          "label": "Dashed"
+        },
+        {
+          "value": "dotted",
+          "label": "Dotted"
+        },
+        {
+          "value": "double",
+          "label": "Double"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "double"
+    }
+  ],
+  "presets": [{
+    "name": "Newsletter",
+    "category": "Promotional",
+    "settings": {
+    }
+  }]
+}
+{% endschema %}

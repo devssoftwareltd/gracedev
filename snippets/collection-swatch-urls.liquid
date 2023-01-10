@@ -1,0 +1,73 @@
+<div class="collection_swatches_url">
+
+{% paginate collections.all.products by 2000 %}
+
+  {% for product2 in collections.all.products %}
+    {% if product2.tags contains group_prod_tag %}
+
+
+      {% assign prod_title = product2.title %}
+      {% assign prod_url = product2.url | within: collection %}
+
+      {% for image2 in product2.images %}
+        {% if forloop.index == 1 %}
+          {% assign prod_img1 = image2.src | img_url: '600x' %}
+        {% elsif forloop.index == 2 %}
+          {% assign prod_img2 = image2.src | img_url: '600x' %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+
+      {% assign prod_available = product2.available %}
+
+      {% if prod_available %}
+        {% assign prod_price = product2.price | money %}
+        {% if product2.price < product2.compare_at_price %}
+          {% assign prod_price_comp = product2.compare_at_price | money %}
+        {% else %}
+          {% assign prod_price_comp = '' %}
+        {% endif %}
+      {% else %}
+        {% assign prod_price = 'Sold Out' %}
+        {% assign prod_price_comp = '' %}
+      {% endif %}
+
+      {% for collection2 in product2.collections %}
+        {% if collection2.title == 'Sale Badge' %}
+          {% assign prod_badge = collection2.title %}
+          {% break %}
+        {% elsif collection2.title == 'New Color Badge' %}
+          {% assign prod_badge = collection2.title %}
+          {% break %}
+        {% elsif collection2.title == 'As-Is Badge' %}
+          {% assign prod_badge = collection2.title %}
+          {% break %}
+        {% elsif collection2.title == 'Final Sale Badge' %}
+          {% assign prod_badge = collection2.title %}
+          {% break %}
+        {% elsif collection2.title == 'New Relist Badge' %}
+          {% assign prod_badge = collection2.title %}
+          {% break %}
+        {% elsif collection2.title == 'New Item Badge' %}
+          {% assign prod_badge = collection2.title %}
+          {% break %}
+        {% else %}
+          {% assign prod_badge = '' %}
+        {% endif %}
+      {% endfor %}
+
+      {% for product_option in product2.options_with_values %}
+        {% if product_option.name == 'Color' %}
+          {% for value in product_option.values %}
+            <span class="swatch" style="background-image: url({{ value | handleize | append: '.png' | asset_img_url: '60x'}})" data-var-title="{{ prod_title }}" data-var-url="{{ prod_url }}" data-var-image1-url="{{ prod_img1 }}" data-var-image2-url="{{ prod_img2 }}" data-var-price="{{ prod_price }}" data-var-price-compare="{{ prod_price_comp }}" data-var-badge="{{ prod_badge }}">
+            </span>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+
+    {% endif %}
+  {% endfor %}
+{% endpaginate %}
+
+</div>

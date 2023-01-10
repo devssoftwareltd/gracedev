@@ -1,0 +1,11 @@
+{% if content_for_header contains 'shopifyorderlimits.s3.amazonaws.com' %}
+{% if shop.permanent_domain == 'grace-and-lace-inc.myshopify.com' %}
+<script type="text/javascript">
+minMaxifyContext={
+  customer: { id: {{ customer.id | json }}, tags: {{ customer.tags | json }} }
+};
+</script><script src="https://shopifyorderlimits.s3.amazonaws.com/limits/grace-and-lace-inc.myshopify.com?v=92d&r=20220907145245&shop=grace-and-lace-inc.myshopify.com"></script>
+{% endif %}
+{% else %}
+<script type="text/javascript">console.error("MinMaxify is deactivated for this website. Please don't forget to remove minmaxify-head.liquid still being referenced by theme.liquid")</script>
+{% endif %}

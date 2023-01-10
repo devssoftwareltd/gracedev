@@ -1,0 +1,37 @@
+{% if enable  and free_gift_product.available  %}
+
+    <script>
+
+        $('html').on('cartClassChanged', function() {
+            console.log('check');
+            var freeGiftInCart = false;
+            $.ajax({
+                type: 'GET',
+                url: '/cart.json',
+                dataType: 'json',
+                success: function (cart) {
+
+
+                    itemPrice=0;
+                        $(cart.items).each(function(index, item) {
+                            if(item.id == {{ free_gift_product.selected_or_first_available_variant.id  }}){
+
+                                freeGiftInCart  = true;
+                                itemPrice= item.price;
+                            }
+                        });
+                     property="Free Product";
+                     console.log('free',freeGiftInCart);
+                    if(cart.total_price > itemPrice&& freeGiftInCart==false ){
+                        CriquetCart.addToCart({{ free_gift_product.selected_or_first_available_variant.id  }}, 1,property);
+                    }else if(cart.total_price <= itemPrice && freeGiftInCart==true){
+                        CriquetCart.updateCart({{ free_gift_product.selected_or_first_available_variant.id  }}, 0);
+                    }
+
+                }
+            });
+        });
+
+
+    </script>
+{% endif %}

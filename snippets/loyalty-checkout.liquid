@@ -1,0 +1,260 @@
+ {% include 'loyalty-referral-modal' %}
+<style>
+  
+  .rangeslider__fill {
+    background: #00828b;
+    position: absolute;
+}
+
+.rangeslider--horizontal {
+    height: 10px;
+    width: 100%;
+}
+
+.rangeslider__handle {
+    background: #00828b;
+    border: none;
+    width: 20px;
+    height: 20px;
+    background-image: none;
+    background-size: 100%;
+    background-image: none;
+    background-image: none;
+    background-image: none;
+    -moz-box-shadow: 0 0 8px rgba(0,0,0,.3);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.rangeslider--horizontal .rangeslider__handle {
+    top: -6px;
+
+}
+
+.rangeslider {
+    background: #f69585;
+    position: relative;
+    box-shadow: none;
+}
+
+.input-holder {
+    margin: 30px auto;
+}
+
+#swell-checkout-redeem-btn {
+    float: right;
+    height: 50px;
+}
+
+.footer-holder {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.swell-redeem-explain {
+    font-size: 12px;
+}
+
+span.swell-point-balance, .loyalty-points-container {
+    color: #f49587;
+    font-weight: bold;
+}
+  
+  .loyalty-disclaim {
+    color: #515151;
+       font-size: 12px;
+    margin-top: 10px;
+  }
+</style>
+
+
+
+{% assign totalPriceForDiscount = 0 %}
+{% for p in checkout.line_items %}
+  {% assign collectionToApply = false %}
+  {% for c in p.product.collections %}
+    {% if c.id == 237981499584 %}
+      {% assign collectionToApply = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  {% if collectionToApply == true %}
+    {% assign totalPriceForDiscount = totalPriceForDiscount | plus:p.final_line_price %}
+  {% endif %}
+{% endfor %}
+
+
+
+<div class="order-summary__section order-summary__section--swell points-section swell-checkout-page" style="display:none;" data-type="apply-points" id="swell-checkout">
+  <div class="swell-attributes" style="display:none;">
+    <span id="swell-checkout-customer-id">{{ customer.id }}</span>
+    <span id="swell-checkout-customer-email">{{ customer.email }}</span>
+    <span id="swell-checkout-customer-tags">{{ customer.tags | json }}</span>
+    <span id="swell-checkout-total-price-cents">{{ checkout.subtotal_price }}</span>
+    <input id="swell-checkout-points-amount" value="0"></input>
+  </div>
+
+  <div class="swell-checkout-error-message" id="swell-checkout-error-message-amount" style="display:none;color:red;">
+    Some items in your cart are part of our current sales promotion and cannot be purchased using point redemptions at this time. If you wish to redeem these items for points please try again when the current promotion has ended.
+</div>
+  <div class="swell-checkout-error-message" id="swell-checkout-error-message-general" style="display:none;color:red;">Sorry something went wrong.  Try again and if the problem persists please contact support.</div>
+
+  <div class="fieldset">
+    <div class="field">
+      <label class="BrandonTextWeb-Bold redeem-credits-title">You have <span class="points-balance-color"><span class="swell-point-balance">0</span> Rewards Points </span> </label>
+
+      <div class="input-holder">
+      </div>
+
+      <div class="footer-holder">
+        <div class="loyalty-footer-text-container">
+      <span class="BrandonTextWeb-Bold redeem-content">Redeem: <span class="loyalty-points-container"> <span class="slider-point-balance"></span> Points <span class="points-balance-color ">($<span class="point-balance swell-adjusted-point-balance"></span>)</span></span></span>
+      <p class="swell-redeem-explain">(slide to select points to redeem)</p>
+    </div>
+      <button type="submit" id="swell-checkout-redeem-btn" class="field__input-btn btn btn--default swell-button">
+        <span class="btn__content visually-hidden-on-mobile">Apply</span>
+        <svg class="icon-svg icon-svg--size-16 btn__icon shown-on-mobile" aria-hidden="true" focusable="false"> <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow"></use> </svg>
+        <svg class="icon-svg icon-svg--size-18 btn__spinner icon-svg--spinner-button" aria-hidden="true" focusable="false"> <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#spinner-button"></use> </svg>
+        <i class="btn__content shown-on-mobile icon icon--arrow"></i>
+        <i style="display:none;" class="fa fa-spinner fa-spin"></i>
+      </button>
+      </div>
+      <div class="loyalty-disclaim">Remember: Rewards points can only be redeemed on full priced or sale merchandise when not included as part of a current promotion.</div>
+       {% if totalPriceForDiscount == 0 %}
+      
+<!--           <div class="loyalty-disclaim">Looks like you don't have any eligible items to apply discount.</div> -->
+        {% endif %}
+    </div>
+  </div>
+</div>
+<script>
+  if(window.location.href.indexOf("checkout") > -1 && window.location.href.indexOf("thank_you") == -1) {
+        var link = document.createElement("link");
+        link.rel = "stylesheet";
+        link.href = "https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.2/rangeslider.min.css";
+        document.getElementsByTagName("head")[0].appendChild(link);
+        var range_script = document.createElement("script");
+        range_script.src = "https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.2/rangeslider.min.js";
+        document.getElementsByTagName("head")[0].appendChild(range_script);
+  }
+  // initialize slider.....
+  $(document).on("swell:setup", function() {
+    var centsPerPoint = spapi.variableRedemptionOption ? spapi.variableRedemptionOption.discount_rate_cents : 1;
+//     var cartTotal = Swell.Checkout.getAmountDiscountedCents() + Swell.Checkout.getCheckoutTotalPriceCents();
+    var cartTotal = {{ totalPriceForDiscount }};
+    var customerAccountBal = roundPointBalance((spapi.customer.adjusted_points_balance * centsPerPoint)); 
+    var cartTotalAmmount = cartTotal/100;
+    $(".input-holder").append('<input type="range" class="swell-range-slider" min="10" max="' + customerAccountBal / 100 + '" step="0.1" value="'+ customerAccountBal / 100 + '">');
+    slider_value = parseFloat($(".swell-range-slider").val());
+    
+    if (slider_value > cartTotalAmmount)
+    {
+      balanceAvailable = roundPointBalance(cartTotalAmmount * 10);
+      $(".swell-adjusted-point-balance").html((roundPointBalance(cartTotalAmmount * 10) / 10).toFixed(2));
+    }
+    else
+    {
+//       balanceAvailable = parseFloat((slider_value / centsPerPoint) * 100.0);
+      	balanceAvailable = roundPointBalance((slider_value / centsPerPoint) * 100.0);
+//       $(".swell-adjusted-point-balance").html(slider_value.toFixed(2));
+            $(".swell-adjusted-point-balance").html((roundPointBalance(slider_value * 10) / 10).toFixed(2));
+    }
+    balanceAvailable = Math.ceil(balanceAvailable);
+    
+    $("#swell-checkout-points-amount").val(balanceAvailable);
+    $(".slider-point-balance").html(balanceAvailable);
+    $('input[type="range"]').rangeslider({
+      polyfill: false,
+      // Default CSS classes
+      rangeClass: 'rangeslider',
+      disabledClass: 'rangeslider--disabled',
+      horizontalClass: 'rangeslider--horizontal',
+      verticalClass: 'rangeslider--vertical',
+      fillClass: 'rangeslider__fill',
+      handleClass: 'rangeslider__handle',
+      // Callback function
+      onInit: function() {},
+      // Callback function
+      onSlide: function(position, value) {},
+      // Callback function
+      onSlideEnd: function(position, value) {}
+    });
+    $( ".swell-range-slider" ).change(function() {
+      $(".swell-range-slider").attr('step', 5);
+      var points_balance = Swell.Checkout.getCheckoutTotalPriceCents()/100;
+      var centsPerPoint = spapi.variableRedemptionOption.discount_rate_cents;
+      slider_value = parseFloat($(".swell-range-slider").val());
+      if (slider_value > cartTotalAmmount)
+      {
+      balanceAvailable = roundPointBalance(cartTotalAmmount * 10);
+      $(".swell-adjusted-point-balance").html((roundPointBalance(cartTotalAmmount * 10) / 10).toFixed(2));
+      }
+      else
+      {
+        balanceAvailable = parseFloat((slider_value / centsPerPoint) * 100.0);
+      $(".swell-adjusted-point-balance").html(slider_value.toFixed(2));
+      }
+      
+      balanceAvailable = Math.ceil(balanceAvailable);
+      $("#swell-checkout-points-amount").val(balanceAvailable.toFixed(2));
+      $(".slider-point-balance").html(balanceAvailable);
+      
+      //set slider max value
+      if (parseInt($(".swell-range-slider").val()) == parseInt($(".swell-range-slider").attr('max')))
+      {
+        $(".swell-range-slider").attr('step', 5);
+        slider_value = customerAccountBal / 100;
+        if (slider_value > cartTotalAmmount)
+        {
+      balanceAvailable = roundPointBalance(cartTotalAmmount * 10);
+      $(".swell-adjusted-point-balance").html((roundPointBalance(cartTotalAmmount * 10) / 10).toFixed(2));
+        }
+        else
+        {
+          balanceAvailable = parseFloat((slider_value / centsPerPoint) * 100.0);
+      $(".swell-adjusted-point-balance").html(slider_value.toFixed(2));
+        }
+        balanceAvailable = Math.ceil(balanceAvailable);
+       
+        $("#swell-checkout-points-amount").val(balanceAvailable);
+        $(".slider-point-balance").html(balanceAvailable);
+      }
+    });
+    //reset the last redeemPoints
+    $(document).on("swell:redemption", function(){
+      var lastRedeemPoints = $("#swell-checkout-points-amount").val();
+      setTimeout(function(){
+        $("#swell-checkout-points-amount").val(lastRedeemPoints);
+      }, 200);         
+    });
+  }); 
+
+    if ($(window).width() < 1000) {
+   $(".order-summary-toggle--show").click()
+  }
+  $(window).resize(function() {
+    if ($(window).width() < 1000) {
+       $(".order-summary-toggle--show").click()
+    }
+  });
+  
+  function roundPointBalance(number) {
+    let roundedDown = Math.floor(number / 100);
+    let roundedUp = Math.ceil(number / 100);
+
+    if (roundedUp - (number / 100) > 0.5) {
+        return roundedDown * 100;
+    } else {
+        if (roundedUp - (number / 100) === 0) {
+            return roundedDown * 100;
+        } else {
+           return (roundedDown + 0.5) * 100
+        }
+    }
+}
+</script>

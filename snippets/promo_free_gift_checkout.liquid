@@ -1,0 +1,48 @@
+{% if settings.enable_promo  %}
+<script>
+      (function($) {
+        if(Shopify.Checkout.step){
+          $(document).on("page:load page:change", function() {
+          var threshold ='{{ settings.promo_threshold | times: 100 }}';
+          threshold = parseInt(threshold);
+          var productHandle = '{{settings.promo_product}}';
+          var giftData = '/products/'+productHandle+'.js';
+          var get_product_id;
+          Checkout.$.getJSON(giftData, function(product) {
+            get_product_id = product.variants[0].id;
+          });
+          setTimeout(function(){  
+            var hasProduct = false;
+            var free_gift = get_product_id;
+            $('table.product-table tbody[data-order-summary-section="line-items"] .product').each(function(){
+              var get_id = $(this).data('variant-id');
+              if(get_id == free_gift){
+              	hasProduct = true;
+                return hasProduct;
+              }
+            });
+            if(hasProduct == true){
+              var get_total = $('.order-summary__emphasis.total-recap__final-price.skeleton-while-loading').data('checkout-payment-due-target');
+              if(get_total < threshold){
+                $.ajax({
+                  type: 'POST',
+                  url: '/cart/change.js',
+                  dataType: 'json',
+                  data: {
+                      quantity: 0,
+                      id: free_gift
+                  },
+                  success: function (data){
+                    $('.order-summary__section.order-summary__section--discount .tags-list .gift_removal').remove();
+                    $('table.product-table tbody[data-order-summary-section="line-items"] .product[data-variant-id="'+free_gift+'"]').hide();
+                    $('.order-summary__section.order-summary__section--discount .tags-list').append('<p class="gift_removal" style="margin-top: 10px;color: red;">Oh no! Your order no longer qualifies for our free gift. Please ensure your subtotal meets the promotional requirements after discounts have been applied.</p>');
+                  }
+                });
+              }
+            }
+            },1500);
+          });
+        }
+      })(Checkout.$);
+</script>
+{% endif %}

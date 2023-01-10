@@ -1,0 +1,841 @@
+{% comment %}
+{% if section.settings.show_announcement_message != blank and section.settings.announcement_message != blank %}
+  <div class="announcementBar">
+    <div class="announcementBar__message">
+      {% if section.settings.announcement_link and section.settings.announcement_message != blank %}
+        <a href="{{ section.settings.announcement_link }}">
+          <p>{{ section.settings.announcement_message }}</p>
+        </a>
+      {% elsif section.settings.announcement_message != blank %}
+        <p>{{ section.settings.announcement_message }}</p>
+      {% endif %}
+      <span class="ss-icon banner-close">&#x2421;</span>
+    </div>
+  </div>
+{% endif %}
+{% endcomment %}
+
+{% comment %}
+<div class="top_bar top_bar--fixed-{{section.settings.fix_top_bar}}">
+  <div class="container">
+    {% if section.settings.search_box_top_bar %}
+      <div class="four columns top_bar_search">
+        <form class="search" action="/search">
+          {% if settings.search_option != 'everything' %}
+            <input type="hidden" name="type" value="product" />
+          {% endif %}
+          <input type="text" name="q" class="search_box" placeholder="{{ 'general.search.placeholder' | t }}" value="{% if search and search.results.first.price %}{{ search.terms }}{% endif %}" autocapitalize="off" autocomplete="off" autocorrect="off" />
+          <button class="search-text-button" type="submit"><span><svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-search" viewBox="0 0 37 40"><path d="M35.6 36l-9.8-9.8c4.1-5.4 3.6-13.2-1.3-18.1-5.4-5.4-14.2-5.4-19.7 0-5.4 5.4-5.4 14.2 0 19.7 2.6 2.6 6.1 4.1 9.8 4.1 3 0 5.9-1 8.3-2.8l9.8 9.8c.4.4.9.6 1.4.6s1-.2 1.4-.6c.9-.9.9-2.1.1-2.9zm-20.9-8.2c-2.6 0-5.1-1-7-2.9-3.9-3.9-3.9-10.1 0-14C9.6 9 12.2 8 14.7 8s5.1 1 7 2.9c3.9 3.9 3.9 10.1 0 14-1.9 1.9-4.4 2.9-7 2.9z"></path></svg></span></button>
+        </form>
+      </div>
+    {% endif %}
+
+    {% if settings.show_multiple_currencies %}
+      <div class="four columns currencies-switcher mobile_hidden">
+        {% include 'currencies-switcher' %}
+      </div>
+    {% endif %}
+
+    <div class="columns {% if section.settings.search_box_top_bar and settings.show_multiple_currencies %}eight{% elsif section.settings.search_box_top_bar or settings.show_multiple_currencies %}twelve{% else %}sixteen{% endif %}">
+      <ul>
+        {% if section.settings.top_bar_linklist != blank %}
+
+          {% assign top_bar_menu = linklists[section.settings.top_bar_linklist] %}
+          {% for link in top_bar_menu.links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+            {% for sub_link in link.links %}
+              <li>
+                <a href="{{ sub_link.url }}">{{ sub_link.title }}</a>
+              </li>
+              {% for sub_sub_link in sub_link.links %}
+                <li>
+                  <a href="{{ sub_sub_link.url }}">{{ sub_sub_link.title }}</a>
+                </li>
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+
+        {% endif %}
+
+        {% if section.settings.phone_number != blank %}
+          <li>
+            <a href="tel:+{{ section.settings.phone_number | replace: ' ', '' | replace: '+', '' | replace: '-', '' }}">{{ section.settings.phone_number | escape }}</a>
+          </li>
+        {% endif %}
+
+        {% if shop.customer_accounts_enabled %}
+          {% if customer %}
+            <li>
+              {{ 'layout.customer.log_out' | t | customer_logout_link }}
+            </li>
+            {% if customer.name != blank %}
+              <li>
+                <a href="/account">{{ customer.name }}</a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li>
+              {{ 'layout.customer.log_in' | t | customer_login_link }}
+            </li>
+          {% endif %}
+        {% endif %}
+
+        <li>
+          <a href="/cart" class="cart_button"><span class="icon-cart"></span> {{ 'layout.general.cart' | t }} (<span class="cart_count">{{ cart.item_count }}</span>)</a>
+        </li>
+        {% comment %}
+        <li>
+          {% if cart.item_count == 0 %}
+            <a href="/cart" class="checkout">{{ 'layout.general.checkout' | t }}</a>
+          {% else %}
+            <a href="/checkout" class="checkout">{{ 'layout.general.checkout' | t }}</a>
+          {% endif %}
+        </li>
+        {% endcomment %}
+      </ul>
+    </div>
+</div>
+  </div>
+  {% endcomment %}
+
+<div class="container content">
+
+
+  <div class="sixteen columns logo_section_new clearfix" id="headerVariation">
+
+    <div class="eight columns">
+      <div class="logo header-logo">
+        <a href="/" title="{{ shop.name }}" class="logo-align--{{ section.settings.logo_alignment }}">
+          <img src="{{ 'gl_logo-mobile.png' | asset_url }}" alt="{{ shop.name }}" />
+          {% comment %}{% if section.settings.logo != nil %}
+            <img src="{{ section.settings.logo | img_url: '420x' }}" alt="{{ shop.name }}" />
+          {% else %}
+            {{ shop.name }}
+          {% endif %}{% endcomment %}
+        </a>
+      </div>
+    </div>
+
+    <div class="four columns">
+      <div class="search_icon">
+        <form class="search" action="/search">
+          {% if settings.search_option != 'everything' %}
+            <input type="hidden" name="type" value="product" />
+          {% endif %}
+          <input type="search" name="q" class="search_box" placeholder="{{ 'general.search.placeholder' | t }}" value="{% if search and search.results.first.price %}{{ search.terms }}{% endif %}" autocapitalize="off" autocomplete="off" autocorrect="off" />
+          <button class="search-text-button" type="submit" style="display: none;"><span class="icon-search"></span></button>
+        </form>
+
+      </div>
+      <div class="account_login">
+        {% if customer %}
+            <a href="/account">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-login" viewBox="0 0 28.33 37.68"><path d="M14.17 14.9a7.45 7.45 0 1 0-7.5-7.45 7.46 7.46 0 0 0 7.5 7.45zm0-10.91a3.45 3.45 0 1 1-3.5 3.46A3.46 3.46 0 0 1 14.17 4zM14.17 16.47A14.18 14.18 0 0 0 0 30.68c0 1.41.66 4 5.11 5.66a27.17 27.17 0 0 0 9.06 1.34c6.54 0 14.17-1.84 14.17-7a14.18 14.18 0 0 0-14.17-14.21zm0 17.21c-6.3 0-10.17-1.77-10.17-3a10.17 10.17 0 1 1 20.33 0c.01 1.23-3.86 3-10.16 3z"></path></svg>
+        	</a>
+      	{% else %}
+            <a href="/account">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-login" viewBox="0 0 28.33 37.68"><path d="M14.17 14.9a7.45 7.45 0 1 0-7.5-7.45 7.46 7.46 0 0 0 7.5 7.45zm0-10.91a3.45 3.45 0 1 1-3.5 3.46A3.46 3.46 0 0 1 14.17 4zM14.17 16.47A14.18 14.18 0 0 0 0 30.68c0 1.41.66 4 5.11 5.66a27.17 27.17 0 0 0 9.06 1.34c6.54 0 14.17-1.84 14.17-7a14.18 14.18 0 0 0-14.17-14.21zm0 17.21c-6.3 0-10.17-1.77-10.17-3a10.17 10.17 0 1 1 20.33 0c.01 1.23-3.86 3-10.16 3z"></path></svg>
+        	</a>
+        {% endif %}
+      </div>
+      <div class="wishlist_icon">
+        <a href="/a/wishlist">
+          <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-wishlist" viewBox="0 0 40 38">
+              <path d="M28.5376758,0 C28.8330333,0 29.1324369,0 29.4277944,0 C29.5329903,0.012 29.6422321,0.024 29.7474279,0.036 C30.1803492,0.084 30.6213625,0.112 31.0502379,0.188 C33.6841797,0.644 35.7759585,1.964 37.374126,4.076 C39.7167563,7.176 40.530001,10.608 39.6601124,14.396 C39.1503172,16.62 38.1914167,18.66 36.9654806,20.584 C35.8649703,22.316 34.5217004,23.852 33.0934647,25.316 C29.2902306,29.216 25.4789046,33.112 21.6756706,37.016 C21.2548872,37.448 20.8219659,37.86 20.2029289,38 C20.0127672,38 19.8266515,38 19.6364898,38 C19.0214987,37.86 18.5885774,37.464 18.1718401,37.028 C17.5325731,36.352 16.8730761,35.692 16.2216711,35.024 C12.6611967,31.352 9.09263028,27.692 5.54833983,24.004 C4.08369013,22.48 2.85370805,20.78 1.89076156,18.9 C0.859033178,16.884 0.150984288,14.768 0.0215124904,12.5 C-0.107959307,10.108 0.345191983,7.82 1.42951828,5.668 C2.65545436,3.244 4.54088741,1.544 7.1667373,0.696 C9.10072227,0.068 11.0832592,0.004 13.08198,0.324 C15.4124724,0.696 17.3707333,1.748 18.8879809,3.552 C19.2885343,4.028 19.6324438,4.544 20.0046752,5.044 C20.0410891,4.984 20.089641,4.904 20.142239,4.828 C21.8536943,2.16 24.2772445,0.564 27.4533495,0.112 C27.8134429,0.06 28.1775824,0.036 28.5376758,0 Z M19.8873414,33.816 C19.9723072,33.736 20.0087212,33.708 20.0410891,33.672 C23.8160012,29.796 27.5990053,25.928 31.3617794,22.048 C33.1784305,20.172 34.6147583,18.044 35.5898428,15.62 C36.059178,14.448 36.4071335,13.252 36.4637774,11.984 C36.5649272,9.74 35.8285564,7.768 34.4569645,6.008 C33.5830299,4.892 32.4663357,4.104 31.0745138,3.732 C29.9173597,3.42 28.7440215,3.416 27.5666373,3.616 C26.498495,3.8 25.5193645,4.188 24.6737519,4.868 C23.3709419,5.92 22.6062491,7.304 22.1895118,8.888 C22.051948,9.408 21.9669821,9.944 21.8577403,10.472 C21.8375103,10.568 21.8172803,10.668 21.7930044,10.764 C21.5826127,11.656 21.1415994,12.044 20.2191128,12.108 C19.9601693,12.128 19.6850417,12.132 19.4382361,12.068 C18.7423252,11.892 18.3134498,11.36 18.228484,10.656 C18.0302303,9.028 17.4840211,7.524 16.5170286,6.184 C15.630956,4.956 14.4657099,4.132 12.9565542,3.844 C11.6739742,3.596 10.3833023,3.572 9.09667627,3.792 C7.47018682,4.068 6.15928487,4.856 5.21252236,6.196 C4.09582811,7.776 3.55771095,9.548 3.525343,11.468 C3.49297505,13.352 3.99063227,15.116 4.77960104,16.812 C5.6980416,18.776 6.99275957,20.484 8.49786921,22.036 C12.2565973,25.908 16.0234174,29.768 19.7861915,33.636 C19.8266515,33.688 19.8509274,33.756 19.8873414,33.816 Z" id="Shape"></path>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cart_icon">
+        <a href="/cart" class="cart_button header_cart"><span class="cart-icon"><img src="{{ 'shopping-bag.svg' | asset_url }}" alt="Cart Icon"/></span> {{ 'layout.general.cart' | t }} (<span class="cart_count">{{ cart.item_count }}</span>)</a>
+      </div>
+
+      <div class="menu_bar">
+        <div id="mobile_nav1" class="slicknav_menu old-nav-mobile nav-align--{{ section.settings.menu_alignment }} nav-border--{{ section.settings.nav_border }}">
+          {% if settings.show_multiple_currencies %}
+            <div class="mobile_currency">
+              {% include 'currencies-switcher' %}
+            </div>
+          {% endif %}
+        </div>
+        <div id="nav" class=" nav-align--{{section.settings.menu_alignment}}
+                              nav-border--{{ section.settings.nav_border }}
+                              nav-separator--{{ section.settings.nav_separator }}">
+          <ul id="menu1" role="navigation">
+            {% assign main_menu = linklists[section.settings.main_linklist] %}
+            {% for link in main_menu.links %}
+              {% if link.links == blank %}
+                <li>
+                  <a href="{{ link.url }}" class="nav_link {% if link.active %}active{% endif %}">{{ link.title }}</a>
+                </li>
+              {% else %}
+                <li class="dropdown sub-menu" aria-haspopup="true" aria-expanded="false">
+                  {{ link.title }}
+                  <ul class="animated fadeIn">
+                    {% for sub_link in link.links %}
+                      {% if sub_link.links == blank %}
+                        {% if sub_link.title == "sep" %}
+                          {% continue %}
+                        {% endif %}
+                        <li><a href="{{ sub_link.url }}" class="nav_link">{{ sub_link.title }}</a></li>
+                      {% else %}
+                        <li class="sub-menu" aria-haspopup="true" aria-expanded="false">
+                          {{ sub_link.title }}
+                          <ul class="animated fadeIn">
+                            {% for sub_sub_link in sub_link.links %}
+                              <li><a href="{{ sub_sub_link.url }}" class="nav_link">{{ sub_sub_link.title }}</a></li>
+                            {% endfor %}
+                          </ul>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}
+  <div class="sixteen columns clearfix" id="headerVariation" style="display:none;">
+    <div class="columns four top_bar">
+      <ul>
+        {% if section.settings.top_bar_linklist != blank %}
+
+          {% assign top_bar_menu = linklists[section.settings.top_bar_linklist] %}
+          {% for link in top_bar_menu.links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+            {% for sub_link in link.links %}
+              <li>
+                <a href="{{ sub_link.url }}">{{ sub_link.title }}</a>
+              </li>
+              {% for sub_sub_link in sub_link.links %}
+                <li>
+                  <a href="{{ sub_sub_link.url }}">{{ sub_sub_link.title }}</a>
+                </li>
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+
+        {% endif %}
+
+        {% if section.settings.phone_number != blank %}
+          <li>
+            <a href="tel:+{{ section.settings.phone_number | replace: ' ', '' | replace: '+', '' | replace: '-', '' }}">{{ section.settings.phone_number | escape }}</a>
+          </li>
+        {% endif %}
+
+        {% if shop.customer_accounts_enabled %}
+          {% if customer %}
+            <li>
+              {{ 'layout.customer.log_out' | t | customer_logout_link }}
+            </li>
+            {% if customer.name != blank %}
+              <li>
+                <a href="/account">{{ customer.name }}</a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li>
+              {{ 'layout.customer.log_in' | t | customer_login_link }}
+            </li>
+          {% endif %}
+        {% endif %}
+
+        {% comment %}
+        <li>
+          <a href="/cart" class="cart_button original_cart"><span class="icon-cart"></span> {{ 'layout.general.cart' | t }} (<span class="cart_count">{{ cart.item_count }}</span>)</a>
+          <a href="/cart" class="cart_button header_cart" style="display: none;"><span class="icon-cart"></span> {{ 'layout.general.cart' | t }} (<span class="cart_count">{{ cart.item_count }}</span>)</a>
+        </li>
+        <li>
+          {% if cart.item_count == 0 %}
+            <a href="/cart" class="checkout">{{ 'layout.general.checkout' | t }}</a>
+          {% else %}
+            <a href="/checkout" class="checkout">{{ 'layout.general.checkout' | t }}</a>
+          {% endif %}
+        </li>
+        {% endcomment %}
+      </ul>
+    </div>
+  </div>
+
+
+  <div class="sixteen columns logo_section_new clearfix" id="headerVariation">
+    <div class="four columns">
+      <div id="mobile_nav1" class="old-nav-mobile nav-align--{{ section.settings.menu_alignment }} nav-border--{{ section.settings.nav_border }}">
+        {% if settings.show_multiple_currencies %}
+          <div class="mobile_currency">
+            {% include 'currencies-switcher' %}
+          </div>
+        {% endif %}
+      </div>
+      <div id="nav" class=" nav-align--{{section.settings.menu_alignment}}
+                            nav-border--{{ section.settings.nav_border }}
+                            nav-separator--{{ section.settings.nav_separator }}">
+        <ul id="menu1" role="navigation">
+          {% assign main_menu = linklists[section.settings.main_linklist] %}
+          {% for link in main_menu.links %}
+            {% if link.links == blank %}
+              <li>
+                <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>{{ link.title }}</a>
+              </li>
+            {% else %}
+              <li class="dropdown sub-menu" aria-haspopup="true" aria-expanded="false">
+                <a {% if link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' or link.url == '#' %}
+                    class="slicknav_item {% if link.active or link.child_active %}active{% endif %}" href
+                  {% else %}
+                    class="{% if link.active or link.child_active %}active{% endif %}" href="{{ link.url }}"
+                  {% endif %}>
+                  {{ link.title }}<span class="icon-down-arrow arrow"></span>
+                </a>
+                <ul class="animated fadeIn">
+                  {% for sub_link in link.links %}
+                    {% if sub_link.links == blank %}
+                      <li><a href="{{ sub_link.url }}">{{ sub_link.title }}</a></li>
+                    {% else %}
+                      <li class="sub-menu" aria-haspopup="true" aria-expanded="false">
+                        <a {% if sub_link.url == 'http://' or sub_link.url == '' or sub_link.url == '/' or sub_link.url == 'https://' or sub_link.url == '#' %}
+                            class="slicknav_item {% if sub_link.active or sub_link.child_active %}active{% endif %}" href
+                          {% else %}
+                            class="{% if sub_link.active or sub_link.child_active %}active{% endif %}" href="{{ sub_link.url }}"
+                          {% endif %}>
+                          {{ sub_link.title }} <span class="icon-right-arrow arrow"></span>
+                        </a>
+                        <ul class="animated fadeIn">
+                          {% for sub_sub_link in sub_link.links %}
+                            <li><a href="{{ sub_sub_link.url }}">{{ sub_sub_link.title }}</a></li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="eight columns">
+      <div class="logo header-logo">
+        <a href="/" title="{{ shop.name }}" class="logo-align--{{ section.settings.logo_alignment }}">
+          {% if section.settings.logo != nil %}
+            <img src="{{ section.settings.logo | img_url: '420x' }}" alt="{{ shop.name }}" />
+          {% else %}
+            {{ shop.name }}
+          {% endif %}
+        </a>
+      </div>
+    </div>
+
+    <div class="four columns">
+      <a href="/cart" class="cart_button header_cart"><span class="icon-cart"></span> {{ 'layout.general.cart' | t }} (<span class="cart_count">{{ cart.item_count }}</span>)</a>
+	</div>
+
+  </div>
+  {% endcomment %}
+
+  <div class="sixteen columns desktop-header" id="headerOriginal">
+    {% comment %}
+    {% if settings.header_social_icons %}
+      <div class="header_icons">
+        {% include 'social-icons' %}
+      </div>
+    {% endif %}
+    {% endcomment %}
+	<div class="four columns logo header-logo" id="headerOriginal">
+      <a href="/" title="{{ shop.name }}" class="logo-align--{{ section.settings.logo_alignment }}">
+        {% if section.settings.logo != nil %}
+          <img src="{{ section.settings.logo | img_url: '720x' }}" alt="{{ shop.name }}" />
+        {% else %}
+          {{ shop.name }}
+        {% endif %}
+      </a>
+    </div>
+
+    <div class="eight columns main_menu">
+      <div id="nav" class=" nav-align--{{section.settings.menu_alignment}}
+                            nav-border--{{ section.settings.nav_border }}
+                            nav-separator--{{ section.settings.nav_separator }}">
+        <ul class="main-nav" id="menu" role="navigation">
+          {% assign main_menu = linklists[section.settings.main_linklist] %}
+          {% for link in main_menu.links %}
+            {% if link.links == blank %}
+              <li>
+                <a class="main-nav__link{% if link.active %} active{% endif %}" href="{{ link.url }}">{{ link.title }}</a>
+              </li>
+            {% else %}
+              {%- assign three_level_nav = false -%}
+              {% if link.levels == 2 %}
+                {%- assign three_level_nav = true -%}
+              {% endif %}
+              <li class="main-nav__list-item dropdown sub-menu" aria-haspopup="true" aria-expanded="false">
+                <a {% if link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' or link.url == '#' %}
+                    class="main-nav__link slicknav_item{% if link.active or link.child_active %} active{% endif %}{% if link.title == 'Sale' %} is-highlighted{% endif %}" href
+                  {% else %}
+                    class="main-nav__link{% if link.active or link.child_active %} active{% endif %}{% if link.title == 'Sale' %} is-highlighted{% endif %}" href="{{ link.url }}"
+                  {% endif %}>
+                  {{ link.title }}
+                </a>
+                <div class="main-nav__dd-panel animated fadeIn">
+                  <div class="main-nav__dd-panel-container">
+                    {% if three_level_nav %}
+                      <div class="main-nav__dd-panel-inner">
+                        <ul class="main-nav__sub-list-group">
+                          {% if link.links != blank %}
+                            {% for childlink in link.links %}
+                              {% if childlink.title == "sep" %}
+                                </ul><ul class="main-nav__sub-list-group">
+                                {% continue %}
+                              {% endif %}
+                              <li class="main-nav__sub-list-item">
+                                <a 
+                                  {% if childlink.url == 'http://' or childlink.url == '' or childlink.url == '/' or childlink.url == 'https://' or childlink.url == '#' %}
+                                    href="javascript:void(0)"
+                                    class="main-nav__sub-list-link slicknav_item {% if childlink.active or childlink.child_active %}active{% endif %}"
+                                  {% else %}
+                                    href="{{ childlink.url }}"
+                                    class="main-nav__sub-list-link {% if childlink.active or childlink.child_active %}active{% endif %}"
+                                  {% endif %}>
+                                  {{ childlink.title | escape }}
+                                </a>
+
+                                {% if childlink.links != blank %}
+                                  <ul>
+                                    {% for grandchildlink in childlink.links %}
+                                      <li>
+                                        <a href="{{ grandchildlink.url }}"
+                                          class="main-nav__sub-list-link"
+                                          {% if grandchildlink.current %} aria-current="page"{% endif %}
+                                        >
+                                          {{ grandchildlink.title | escape }}
+                                        </a>
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                {% endif %}
+                              </li>
+                            {% endfor %}
+                          {% endif %}
+                        </ul>
+                      </div>
+                    {% else %}
+                      <ul>
+                        {% for childlink in link.links %}
+                          <li>
+                            <a href="{{ childlink.url }}"
+                              class="main-nav__sub-list-link"
+                              {% if childlink.current %} aria-current="page"{% endif %}
+                            >
+                              {{ childlink.title | escape }}
+                            </a>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </div>
+                </div>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    {% comment %}
+    {% if section.settings.search_box_top_bar %}
+      <div class="seven columns top_bar_search">
+        <form class="search" action="/search">
+          {% if settings.search_option != 'everything' %}
+            <input type="hidden" name="type" value="product" />
+          {% endif %}
+          <input type="text" name="q" class="search_box" placeholder="{{ 'general.search.placeholder' | t }}" value="{% if search and search.results.first.price %}{{ search.terms }}{% endif %}" autocapitalize="off" autocomplete="off" autocorrect="off" />
+          <button class="search-text-button" type="submit"><span><svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-search" viewBox="0 0 37 40"><path d="M35.6 36l-9.8-9.8c4.1-5.4 3.6-13.2-1.3-18.1-5.4-5.4-14.2-5.4-19.7 0-5.4 5.4-5.4 14.2 0 19.7 2.6 2.6 6.1 4.1 9.8 4.1 3 0 5.9-1 8.3-2.8l9.8 9.8c.4.4.9.6 1.4.6s1-.2 1.4-.6c.9-.9.9-2.1.1-2.9zm-20.9-8.2c-2.6 0-5.1-1-7-2.9-3.9-3.9-3.9-10.1 0-14C9.6 9 12.2 8 14.7 8s5.1 1 7 2.9c3.9 3.9 3.9 10.1 0 14-1.9 1.9-4.4 2.9-7 2.9z"></path></svg></span></button>
+        </form>
+      </div>
+    {% endif %}
+    {% endcomment %}
+
+    <div class="columns four top_bar" id="headerOriginal">
+
+      <div class="search_icon">
+        <div class="search_form_get">
+        	<img src="{{ 'search.svg' | asset_url }}" class= "search-icon" alt="Search Icon"/>
+        </div>
+        <div class="search_form_close" style="display: none;">
+          	<span class="search-close">X</span>
+        </div>
+
+      </div>
+      <div class="account_login">
+        {% if customer %}
+            <a href="/account">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-login" viewBox="0 0 28.33 37.68"><path d="M14.17 14.9a7.45 7.45 0 1 0-7.5-7.45 7.46 7.46 0 0 0 7.5 7.45zm0-10.91a3.45 3.45 0 1 1-3.5 3.46A3.46 3.46 0 0 1 14.17 4zM14.17 16.47A14.18 14.18 0 0 0 0 30.68c0 1.41.66 4 5.11 5.66a27.17 27.17 0 0 0 9.06 1.34c6.54 0 14.17-1.84 14.17-7a14.18 14.18 0 0 0-14.17-14.21zm0 17.21c-6.3 0-10.17-1.77-10.17-3a10.17 10.17 0 1 1 20.33 0c.01 1.23-3.86 3-10.16 3z"></path></svg>
+        	</a>
+      	{% else %}
+            <a href="/account">
+                <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-login" viewBox="0 0 28.33 37.68"><path d="M14.17 14.9a7.45 7.45 0 1 0-7.5-7.45 7.46 7.46 0 0 0 7.5 7.45zm0-10.91a3.45 3.45 0 1 1-3.5 3.46A3.46 3.46 0 0 1 14.17 4zM14.17 16.47A14.18 14.18 0 0 0 0 30.68c0 1.41.66 4 5.11 5.66a27.17 27.17 0 0 0 9.06 1.34c6.54 0 14.17-1.84 14.17-7a14.18 14.18 0 0 0-14.17-14.21zm0 17.21c-6.3 0-10.17-1.77-10.17-3a10.17 10.17 0 1 1 20.33 0c.01 1.23-3.86 3-10.16 3z"></path></svg>
+        	</a>
+        {% endif %}
+      </div>
+
+      <div class="wishlist_icon">
+        <a href="/a/wishlist">
+          <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-wishlist" viewBox="0 0 40 38" alt="Wishlist Icon">
+              <path d="M28.5376758,0 C28.8330333,0 29.1324369,0 29.4277944,0 C29.5329903,0.012 29.6422321,0.024 29.7474279,0.036 C30.1803492,0.084 30.6213625,0.112 31.0502379,0.188 C33.6841797,0.644 35.7759585,1.964 37.374126,4.076 C39.7167563,7.176 40.530001,10.608 39.6601124,14.396 C39.1503172,16.62 38.1914167,18.66 36.9654806,20.584 C35.8649703,22.316 34.5217004,23.852 33.0934647,25.316 C29.2902306,29.216 25.4789046,33.112 21.6756706,37.016 C21.2548872,37.448 20.8219659,37.86 20.2029289,38 C20.0127672,38 19.8266515,38 19.6364898,38 C19.0214987,37.86 18.5885774,37.464 18.1718401,37.028 C17.5325731,36.352 16.8730761,35.692 16.2216711,35.024 C12.6611967,31.352 9.09263028,27.692 5.54833983,24.004 C4.08369013,22.48 2.85370805,20.78 1.89076156,18.9 C0.859033178,16.884 0.150984288,14.768 0.0215124904,12.5 C-0.107959307,10.108 0.345191983,7.82 1.42951828,5.668 C2.65545436,3.244 4.54088741,1.544 7.1667373,0.696 C9.10072227,0.068 11.0832592,0.004 13.08198,0.324 C15.4124724,0.696 17.3707333,1.748 18.8879809,3.552 C19.2885343,4.028 19.6324438,4.544 20.0046752,5.044 C20.0410891,4.984 20.089641,4.904 20.142239,4.828 C21.8536943,2.16 24.2772445,0.564 27.4533495,0.112 C27.8134429,0.06 28.1775824,0.036 28.5376758,0 Z M19.8873414,33.816 C19.9723072,33.736 20.0087212,33.708 20.0410891,33.672 C23.8160012,29.796 27.5990053,25.928 31.3617794,22.048 C33.1784305,20.172 34.6147583,18.044 35.5898428,15.62 C36.059178,14.448 36.4071335,13.252 36.4637774,11.984 C36.5649272,9.74 35.8285564,7.768 34.4569645,6.008 C33.5830299,4.892 32.4663357,4.104 31.0745138,3.732 C29.9173597,3.42 28.7440215,3.416 27.5666373,3.616 C26.498495,3.8 25.5193645,4.188 24.6737519,4.868 C23.3709419,5.92 22.6062491,7.304 22.1895118,8.888 C22.051948,9.408 21.9669821,9.944 21.8577403,10.472 C21.8375103,10.568 21.8172803,10.668 21.7930044,10.764 C21.5826127,11.656 21.1415994,12.044 20.2191128,12.108 C19.9601693,12.128 19.6850417,12.132 19.4382361,12.068 C18.7423252,11.892 18.3134498,11.36 18.228484,10.656 C18.0302303,9.028 17.4840211,7.524 16.5170286,6.184 C15.630956,4.956 14.4657099,4.132 12.9565542,3.844 C11.6739742,3.596 10.3833023,3.572 9.09667627,3.792 C7.47018682,4.068 6.15928487,4.856 5.21252236,6.196 C4.09582811,7.776 3.55771095,9.548 3.525343,11.468 C3.49297505,13.352 3.99063227,15.116 4.77960104,16.812 C5.6980416,18.776 6.99275957,20.484 8.49786921,22.036 C12.2565973,25.908 16.0234174,29.768 19.7861915,33.636 C19.8266515,33.688 19.8509274,33.756 19.8873414,33.816 Z" id="Shape"></path>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cart_icon">
+        <a href="/cart" class="cart_button header_cart"><span class="cart-icon"><img src="{{ 'shopping-bag.svg' | asset_url }}" alt="Cart Icon"/></span><span class="cart_count">{{ cart.item_count }}</span></a>
+      </div>
+
+      {% comment %}
+      <ul>
+        {% if section.settings.top_bar_linklist != blank %}
+
+          {% assign top_bar_menu = linklists[section.settings.top_bar_linklist] %}
+          {% for link in top_bar_menu.links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+            {% for sub_link in link.links %}
+              <li>
+                <a href="{{ sub_link.url }}">{{ sub_link.title }}</a>
+              </li>
+              {% for sub_sub_link in sub_link.links %}
+                <li>
+                  <a href="{{ sub_sub_link.url }}">{{ sub_sub_link.title }}</a>
+                </li>
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+
+        {% endif %}
+
+        {% if section.settings.phone_number != blank %}
+          <li>
+            <a href="tel:+{{ section.settings.phone_number | replace: ' ', '' | replace: '+', '' | replace: '-', '' }}">{{ section.settings.phone_number | escape }}</a>
+          </li>
+        {% endif %}
+
+        {% if shop.customer_accounts_enabled %}
+          {% if customer %}
+            <li>
+              {{ 'layout.customer.log_out' | t | customer_logout_link }}
+            </li>
+            {% if customer.name != blank %}
+              <li>
+                <a href="/account">{{ customer.name }}</a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li>
+              {{ 'layout.customer.log_in' | t | customer_login_link }}
+            </li>
+          {% endif %}
+        {% endif %}
+
+        <li>
+          <a href="/cart" class="cart_button original_cart"><span class="icon-cart"></span> {{ 'layout.general.cart' | t }} (<span class="cart_count">{{ cart.item_count }}</span>)</a>
+          <a href="/cart" class="cart_button header_cart" style="display: none;"><span class="icon-cart"></span> {{ 'layout.general.cart' | t }} (<span class="cart_count">{{ cart.item_count }}</span>)</a>
+        </li>
+        {% comment %}
+        <li>
+          {% if cart.item_count == 0 %}
+            <a href="/cart" class="checkout">{{ 'layout.general.checkout' | t }}</a>
+          {% else %}
+            <a href="/checkout" class="checkout">{{ 'layout.general.checkout' | t }}</a>
+          {% endif %}
+        </li>
+        {% endcomment %}
+      </ul>
+      {% endcomment %}
+    </div>
+        <form class="search" action="/search" style="display:none;" id="desktop_search">
+          <div class="search-form">
+          	{% if settings.search_option != 'everything' %}
+              <input type="hidden" name="type" value="product" />
+            {% endif %}
+            <input type="search" name="q" class="search_box" autofocus placeholder="{{ 'general.search.placeholder' | t }}" value="{% if search and search.results.first.price %}{{ search.terms }}{% endif %}" autocapitalize="off" autocomplete="off" autocorrect="off" />
+            <button class="search-text-button" type="submit"><span class="icon-search"></span></button>
+          </div>
+        </form>
+  </div>
+
+  {% comment %}
+  <div class="sixteen columns clearfix" id="headerOriginal">
+    <div id="mobile_nav" class="old-nav-mobile nav-align--{{ section.settings.menu_alignment }} nav-border--{{ section.settings.nav_border }}">
+      {% if settings.show_multiple_currencies %}
+        <div class="mobile_currency">
+          {% include 'currencies-switcher' %}
+        </div>
+      {% endif %}
+    </div>
+    <div id="nav" class=" nav-align--{{section.settings.menu_alignment}}
+                          nav-border--{{ section.settings.nav_border }}
+                          nav-separator--{{ section.settings.nav_separator }}">
+      <ul id="menu" role="navigation">
+        {% assign main_menu = linklists[section.settings.main_linklist] %}
+        {% for link in main_menu.links %}
+          {% if link.links == blank %}
+            <li>
+              <a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>{{ link.title }}</a>
+            </li>
+          {% else %}
+            <li class="dropdown sub-menu" aria-haspopup="true" aria-expanded="false">
+              <a {% if link.url == 'http://' or link.url == '' or link.url == '/' or link.url == 'https://' or link.url == '#' %}
+                  class="slicknav_item {% if link.active or link.child_active %}active{% endif %}" href
+                {% else %}
+                  class="{% if link.active or link.child_active %}active{% endif %}" href="{{ link.url }}"
+                {% endif %}>
+                {{ link.title }}<span class="icon-down-arrow arrow"></span>
+              </a>
+              <ul class="animated fadeIn">
+                {% for sub_link in link.links %}
+                  {% if sub_link.links == blank %}
+                    <li><a href="{{ sub_link.url }}">{{ sub_link.title }}</a></li>
+                  {% else %}
+                    <li class="sub-menu" aria-haspopup="true" aria-expanded="false">
+                      <a {% if sub_link.url == 'http://' or sub_link.url == '' or sub_link.url == '/' or sub_link.url == 'https://' or sub_link.url == '#' %}
+                          class="slicknav_item {% if sub_link.active or sub_link.child_active %}active{% endif %}" href
+                        {% else %}
+                          class="{% if sub_link.active or sub_link.child_active %}active{% endif %}" href="{{ sub_link.url }}"
+                        {% endif %}>
+                        {{ sub_link.title }} <span class="icon-right-arrow arrow"></span>
+                      </a>
+                      <ul class="animated fadeIn">
+                        {% for sub_sub_link in sub_link.links %}
+                          <li><a href="{{ sub_sub_link.url }}">{{ sub_sub_link.title }}</a></li>
+                        {% endfor %}
+                      </ul>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+              </ul>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endcomment %}
+</div>
+{% comment %}
+<style>
+  .header-logo.logo a {
+    max-width: {{ section.settings.logo_width }}px;
+  }
+  .featured_content a, .featured_content p {
+    color: {{ section.settings.announcement_color }};
+  }
+
+  .promo_banner-show div.announcementBar {
+    background-color: {{ section.settings.announcement_color }};
+    {% if section.settings.announcement_homepage_only %}
+      display: none;
+    {% endif %}
+  }
+  {% if section.settings.announcement_homepage_only %}
+    .promo_banner-show.index div.announcementBar {
+      display: block;
+    }
+  {% endif %}
+
+  div.announcementBar__message a,
+  div.announcementBar__message p {
+    color: {{ section.settings.announcement_text_color }};
+  }
+</style>
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "header-section",
+  "settings": [
+    /*
+    {
+      "type": "header",
+      "content": "Announcement bar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_announcement_message",
+      "label": "Show announcement"
+    },
+    {
+      "type": "checkbox",
+      "id": "announcement_homepage_only",
+      "label": "Home page only"
+    },
+    {
+      "type": "text",
+      "id": "announcement_message",
+      "label": "Text",
+      "default": "Announcement message"
+    },
+    {
+      "type": "url",
+      "id": "announcement_link",
+      "label": "Link"
+    },
+    {
+      "type": "color",
+      "id": "announcement_color",
+      "label": "Bar",
+      "default": "#444"
+    },
+    {
+      "type": "color",
+      "id": "announcement_text_color",
+      "label": "Text",
+      "default": "#FFF"
+    },
+    */
+    {
+      "type": "header",
+      "content": "Top bar"
+    },
+    {
+     "type": "checkbox",
+     "id": "search_box_top_bar",
+     "label": "Show search form",
+     "default": true
+    },
+    {
+     "type": "checkbox",
+     "id": "fix_top_bar",
+     "label": "Fixed ('sticky') top bar",
+     "default": true
+    },
+    {
+     "type": "link_list",
+     "id": "top_bar_linklist",
+     "label": "Menu",
+     "info": "This menu won't show dropdown items"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone number",
+      "info": "1-800-555-5555"
+    },
+    {
+      "type": "header",
+      "content": "Main bar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image",
+      "info": "720px wide recommended"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo display width",
+      "step": 10,
+      "min": 100,
+      "max": 800,
+      "default": 360,
+      "unit": "px"
+    },
+    {
+      "type": "select",
+      "id": "logo_alignment",
+      "label": "Logo alignment",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "main_linklist",
+      "label": "Main menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "select",
+      "id": "menu_alignment",
+      "label": "Main menu alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "select",
+      "id": "nav_border",
+      "label": "Main menu border",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "dashed",
+          "label": "Dashed"
+        },
+        {
+          "value": "dotted",
+          "label": "Dotted"
+        },
+        {
+          "value": "double",
+          "label": "Double"
+        },
+        {
+          "value": "solid",
+          "label": "Solid"
+        }
+      ],
+      "default": "double"
+    },
+    {
+      "type": "select",
+      "id": "nav_separator",
+      "label": "Main menu link separator",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "solid",
+          "label": "Border"
+        }
+      ],
+      "default": "solid"
+    }
+  ]
+}
+{% endschema %}

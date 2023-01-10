@@ -1,0 +1,8 @@
+{% render 'shogun-products', content: collection %}
+{{collection.metafields.shogun.above}}
+{% comment %}
+  The contents of the collection.no-title-bc.liquid template can be found in /sections/collection-no-title-bc-template.liquid
+{% endcomment %}
+
+{% section 'collection-no-title-bc-template' %}
+{{collection.metafields.shogun.below}}

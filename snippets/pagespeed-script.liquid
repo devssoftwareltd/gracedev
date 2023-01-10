@@ -1,0 +1,83 @@
+<script>
+lazyLoadAsset('https:\/\/static.klaviyo.com\/onsite\/js\/klaviyo.js?company_id=MGYjN2\u0026shop=grace-and-lace-inc.myshopify.com',true,2000);
+lazyLoadAsset('https:\/\/assets.smartwishlist.webmarked.net\/static\/v6\/smartwishlist.js?shop=grace-and-lace-inc.myshopify.com',true,10000);
+//lazyLoadAsset('https:\/\/scripttags.jst.ai\/shopify_justuno_30476286_2e188910-46bb-11ea-95ce-db137ce2f79b.js?shop=grace-and-lace-inc.myshopify.com',true,10000);
+//lazyLoadAsset('https:\/\/cdn.hextom.com\/js\/quickannouncementbar.js?shop=grace-and-lace-inc.myshopify.com',true,10000);
+lazyLoadAsset('https://s3.amazonaws.com/lastsecondcoupon/js/quickannouncementbar.js?shop=grace-and-lace-inc.myshopify.com',true,10000);
+//lazyLoadAsset('https:\/\/s3.amazonaws.com\/jstags\/20341-cc9dca1acb2b.js?shop=grace-and-lace-inc.myshopify.com',true,10000);
+//lazyLoadAsset('https:\/\/cdn-loyalty.yotpo.com\/loader\/FOUsYawUt24zmz5czZz90g.js?shop=grace-and-lace-inc.myshopify.com',true,10000);
+
+lazyLoadAsset('https://cdn.attn.tv/graceandlace/dtag.js',true,10000);
+//lazyLoadAsset('//load.sumo.com/',true,10000,{"data-sumo-site-id":"c05b6839a67cd4cea633634889b7b093645b544c26fdb6c70a52172ce5f6a827"});
+lazyLoadAsset('https://cdn.equalweb.com/accessibility.js',true,10000,{"data-cfasync":"false"});
+       
+
+$(document).ready(function() { 
+
+    //load images
+    lazyloadImg();
+    window.addEventListener('scroll', function (event) { lazyloadImg(); }, false);
+
+    setTimeout(function(){ 
+        $("svg.loader").remove();
+    }, 10000);
+
+});
+
+function lazyloadImg(){
+    $('.bg-img').each(function(){
+        if($(this).isInViewport() && $(this).hasClass('gl-lazyload') && !$(this).hasClass('gl-lazyloaded')){
+            $(this).css('background-image','url('+$(this).attr('data-src')+')').addClass('gl-lazyloaded').removeClass('gl-lazyload');
+            
+        }
+    });
+    $('img.gl-lazyload').each(function(){
+        if($(this).isInViewport() && !$(this).hasClass('gl-lazyloaded')){
+            $(this).attr('src',$(this).attr('data-src')).addClass('gl-lazyloaded').removeClass('gl-lazyload');
+        }
+    });
+    $('iframe.gl-lazyload').each(function(){
+        if($(this).isInViewport() && !$(this).hasClass('gl-lazyloaded')){
+            $(this).attr('src',$(this).attr('data-src')).addClass('gl-lazyloaded').removeClass('gl-lazyload');
+        }
+    });
+}
+
+$.fn.isInViewport = function() {
+    var elementTop = $(this).offset().top;
+    var elementBottom = elementTop + $(this).outerHeight();
+  
+    var viewportTop = $(window).scrollTop();
+    var viewportBottom = viewportTop + $(window).height();
+  
+    var visible = true;
+    if( $(this).css("display") == "none" ) visible = false;
+    return elementBottom > viewportTop && elementTop < viewportBottom && visible;
+
+    //return elementBottom > viewportTop && elementTop < viewportBottom;
+};
+
+function lazyLoadAsset(src,isScript,delay,attr){
+    setTimeout(function(){
+        if(isScript){
+            var resource = document.createElement('script'); 
+            resource.defer = "true";
+            resource.src = src;
+            if(attr){
+                Object.keys(attr).forEach(function(key) {
+                    resource.setAttribute(key, attr[key]);
+                });
+            } 
+            var script = document.getElementsByTagName('script')[0];
+            script.parentNode.insertBefore(resource, script); 
+        }
+        else{
+            var link = document.createElement("link");
+            link.type = "text/css";
+            link.rel = "stylesheet";
+            link.href = src;
+            document.head.appendChild(link);
+        }
+    },delay);
+}
+</script>

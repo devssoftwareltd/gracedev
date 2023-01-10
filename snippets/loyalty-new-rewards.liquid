@@ -1,0 +1,114 @@
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+{% assign get_tag = false %}
+  {% for tag in customer.tags %}
+    {% if tag == 'tier: Diamond' or tag == 'tier: Gold' or tag == 'tier: Platinum' %}
+      {% assign get_tag = tag %}
+    {% endif %}
+  {% endfor %}
+<div id="loyalty-campaigns-grid" class="rewards-perks-section">
+  <h1>Rewards member perks</h1>
+  <div class="reward-perk">
+      <div class="reward-left">
+        {% if customer %}
+          <div class="top-spacing"></div>
+        {% else %}
+          <div class="top-spacing-half"></div>
+        {% endif %}
+          <div class="reward-left-text">
+              <ul>
+                  <li><b>Points Per Calendar Year</b></li>
+                  <li>Per $1 Spent</li>
+                  <li>Birthday Discount</li>
+                  <li>Free U.S. Shipping</li>
+                  <li>Rewards Marketplace</li>
+                  <li>Exclusive Promotions and Giveaways</li>
+              </ul>
+          </div>
+      </div>
+      <div class="reward-right">
+          <div class="reward-right-text">
+              <ul class="gold-bar">
+                {% if customer %}
+                	{% if get_tag == 'tier: Gold' or get_tag == false %}
+                      <li class="current-status no-bg">current status</li>
+                	  <li class="earn-active">Earn <span class = "remaining_points"></span> more points to earn Platinum</li>
+                	{% else %}
+                      <li class="no-bg"></li>
+                      <li></li>
+                	{% endif %}
+                {% endif %}
+                  <div class="inner-data {% if customer %}{% if get_tag == 'tier: Gold' or get_tag == false %}active{% endif %}{% endif %}">	
+                      <li class="no-bg heading">Gold</li>
+                      <li><b>0 - 6,749 Points</b></li>
+                      <li>5 Points</li>
+                      <li>$10 Coupon</li>
+                      <li>On Orders $85+</li>
+                      <li><i class="fa fa-times" aria-hidden="true"></i></li>
+                      <li><i class="fa fa-times" aria-hidden="true"></i></li>
+                  </div>
+              </ul>
+              <ul class="platinum-bar">
+                {% if customer %}
+                	{% if get_tag == 'tier: Platinum' %}
+                      <li class="current-status no-bg">current status</li>
+                      <li class="earn-active">Earn <span class = "remaining_points"></span> more points to earn Diamond</li>
+                	{% else %}
+                	  <li class="no-bg"></li>
+                      <li></li>
+                	{% endif %}
+                {% endif %}
+                  <div class="inner-data {% if customer %}{% if get_tag == 'tier: Platinum' %}active{% endif %}{% endif %}">
+                      <li class="no-bg heading">Platinum</li>
+                      <li><b>6,750 - 17,749 Points</b></li>
+                      <li>7 Points</li>
+                      <li>$12 Coupon</li>
+                      <li>On Orders $50+</li>
+                      <li><i class="fa fa-check" aria-hidden="true"></i></li>
+                      <li><i class="fa fa-times" aria-hidden="true"></i></li>
+                  </div>
+              </ul>
+              <ul class="diamond-bar">
+                {% if customer %}
+                  {% if get_tag == 'tier: Diamond' %}
+                      <li class="current-status no-bg">current status</li>
+                      <li class="earn-active">You are a Diamond Member</li>
+                  {% else %}
+                    <li class="no-bg"></li>
+                    <li></li>
+                  {% endif %}
+                {% endif %}
+                  <div class="inner-data {% if customer %}{% if get_tag == 'tier: Diamond' %}active{% endif %}{% endif %}">
+                      <li class="no-bg heading">Diamond</li>
+                      <li><b>17,750+ Points</b></li>
+                      <li>10 Points</li>
+                      <li>$15 Coupon</li>
+                      <li>On Orders $35+</li>
+                      <li><i class="fa fa-check" aria-hidden="true"></i></li>
+                      <li><i class="fa fa-check" aria-hidden="true"></i></li>
+                  </div>
+              </ul>
+          </div>
+      </div>
+  </div>
+</div>
+
+{% comment %}
+<div id="loyalty-campaigns-grid" class="rewards-section">
+<h1>Rewards</h1>
+<div data-lion-rewards-list></div>
+</div>
+{% endcomment %}
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<script>
+  if($(window).width() <= 850){
+    $('.reward-right-text').slick({
+      dots: false,
+      infinite: true,
+      speed: 300,
+      slidesToShow: 1,
+      adaptiveHeight: true,
+      prevArrow: '<button class="slide-arrow prev-arrow">❮❮</button>',
+      nextArrow: '<button class="slide-arrow next-arrow">❯❯</button>'
+    });
+  }
+</script>

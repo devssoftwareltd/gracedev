@@ -1,0 +1,45 @@
+{% if enable  and free_gift_product.available  %}
+
+    <script>
+        var threshold =parseInt('{{ settings.promo_threshold   }}');
+        var in_cart = '{{ prod_in_cart }}';
+
+        var cartTotalWithDiscount = parseFloat('{{ cart.total_price | divided_by:100 }}');
+       console.log('threshold',threshold);
+       console.log('in cart',in_cart);
+       console.log('cart total',cartTotalWithDiscount);
+        if(cartTotalWithDiscount > 0 && cartTotalWithDiscount >= threshold && in_cart =='false' ){
+            console.log(33);
+         addItem(1);
+
+            }else if(cartTotalWithDiscount < threshold && in_cart =='true'){
+            console.log(44);
+            removeItem()
+        }
+
+        function addItem() {
+            $.post('/cart/add.js', {
+                items: [
+                    {
+                        quantity: 1,
+                        id: '{{  free_gift_product.selected_or_first_available_variant.id }}',
+                        properties: {
+                            '_freeGift': 'Promo Free Product'
+                        }
+                    }
+                ]
+            }, function(){
+                location.reload();
+            });
+        }
+
+        function removeItem() {
+            jQuery.post('/cart/update.js', 'updates['+"{{  free_gift_product.selected_or_first_available_variant.id }}"+']=0',
+                function(){
+                    location.reload();
+                });
+
+
+        }
+    </script>
+{% endif %}

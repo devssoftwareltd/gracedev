@@ -1,0 +1,20 @@
+{{ 'loyalty-banner.css' | asset_url | stylesheet_tag }}
+
+
+<div class="loyalty-banner-container">
+
+ {{ 'reward-banner-F22.png' | asset_url | img_tag: shop.name }}
+	<p>As a Rewards member, you’ll get closer to earning
+exclusive rewards every time you shop.</p>
+
+{% if customer %}
+	<div></div>
+{% else %}
+	<div class="loyalty-banner-login-container">
+	<a href="/account/register" class="loyalty-button">sign up</a>
+
+		<div class="loyalty-sign-in-text">Already have a G&L account? <a href="/account/login">Sign In</a>.</div>
+	</div>
+
+{% endif %}
+</div>
